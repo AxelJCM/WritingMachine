@@ -3,6 +3,9 @@ from tkinter import font
 from tkinter import messagebox
 from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
+from tkinter.filedialog import *
+
+from archivos import escribirArchivo, leerArchivo
 
 #Variables
 fuente = "Consolas"
@@ -15,6 +18,22 @@ def texto(pantalla, mensaje, x, y, color, colorFondo = None):
 
     t = Label(pantalla, text=mensaje, font=(fuente, tamFuente), bg = colorFondo, fg= color)
     t.place(x=x, y=y)
+   
+def abrirArchivo():
+    path = askopenfilename(filetypes=[('Python Files', '*.py')])
+    with open(path, 'r') as file:
+        code = file.read()
+        areaTexto.delete('1.0', END)
+        areaTexto.insert('1.0', code)
+     
+def guardarArchivo():
+    path = asksaveasfilename(filetypes=[('Python Files', '*.py')])
+    with open(path, 'w') as file:
+        code = areaTexto.get('1.0', END)
+        file.write(code)
+    
+def borrarTexto():
+    areaTexto.delete(1.0, END)    
 
 # Creacion de la ventana del ide
 ide = Tk()
@@ -48,13 +67,13 @@ areaPrint.pack()
 baseCompi = Canvas(ide, width=100, height=545)
 baseCompi.place(x=905, y=2)
 # Botones del ide
-nuevoBtn = Button(baseCompi, text ="   NUEVO   ", activebackground='light blue', activeforeground='red')
+nuevoBtn = Button(baseCompi, text ="   NUEVO   ", activebackground='light blue', activeforeground='red', command=borrarTexto)
 nuevoBtn.pack(ipadx=10, ipady=0, expand=True)
 
-abrirBtn = Button(baseCompi, text ="    ABRIR     ", activebackground='light blue', activeforeground='red')
+abrirBtn = Button(baseCompi, text ="    ABRIR     ", activebackground='light blue', activeforeground='red', command=leerArchivo)
 abrirBtn.pack(ipadx=10, ipady=0, expand=True)
 
-guardarBtn = Button(baseCompi, text ="GUARDAR ", activebackground='light blue', activeforeground='red')
+guardarBtn = Button(baseCompi, text ="GUARDAR ", activebackground='light blue', activeforeground='red', command=guardarArchivo)
 guardarBtn.pack(ipadx=10, ipady=0, expand=True)
 
 compilarBtn = Button(baseCompi, text ="COMPILAR", activebackground='light blue', activeforeground='red')
