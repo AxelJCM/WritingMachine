@@ -14,3 +14,4 @@ def escribirArchivo(data):
     ar.write(data)
     ar.close()
 
+leerArchivo()

@@ -4,8 +4,6 @@ from tkinter import messagebox
 from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
 
-from archivos import leerArchivo
-
 #Variables
 fuente = "Consolas"
 tamFuente = 12
