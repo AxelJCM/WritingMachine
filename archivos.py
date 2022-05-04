@@ -14,3 +14,8 @@ def escribirArchivo(data):
     ar.write(data)
     ar.close()
 
+def Compilar():
+    print("El codigo compila!!")
+
+def Ejecutar():
+    print("El codigo se compila y se ejecuta!!")
