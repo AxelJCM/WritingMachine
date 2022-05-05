@@ -73,7 +73,7 @@ def prueba(texto):
 # Area de trabajo para escritura de codigo
 baseIde = Canvas(ide, width = 900, height= 545)
 baseIde.place(x=20, y=0)
-areaTexto = Text(baseIde, height=34, width=112)
+areaTexto = Text(baseIde, height=34, width=121)
 areaTexto.config(bg='#362f2e', fg='#d2ded1')
 Percolator(areaTexto).insertfilter(ColorDelegator()) # Hacer algo como esto para cuando se reconozca una palabra
 areaTexto.pack()
