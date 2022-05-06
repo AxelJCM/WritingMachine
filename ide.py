@@ -14,6 +14,20 @@ fuente = "Consolas"
 tamFuente = 12
 fondo = "#1D253C"
 guardado = False
+codigo = ""
+txt = ""
+valor = ""
+
+def mensajeInfo():
+    global valor
+    valor = messagebox.askquestion("¡Advertencia!","¿Quiere guadar el archivo actual?")
+    
+def textoModificado():
+    global txt
+    txt = areaTexto.get(1.0, END)
+    print(len(txt))
+    if (len(txt) == 1):
+        txt = ""
 
 def texto(pantalla, mensaje, x, y, color, colorFondo = None):
     if colorFondo == None:
@@ -24,11 +38,24 @@ def texto(pantalla, mensaje, x, y, color, colorFondo = None):
 
 # Se abre un archivo compatible con el lenguaje de programacion    
 def abrirArchivo():
+    global codigo, txt, valor
+    textoModificado()
+    # si se quiere abrir un nuevo archivo y no se ha guardado el que se esta editando
+    print(codigo)
+    print(txt)
+    if (codigo != txt):
+        # Se muestra una ventana con el mensaje de si se quiere guardar el archivo actual
+        mensajeInfo()
+        if (valor == "yes"):
+            guardarArchivo()
+    
     path = askopenfilename(filetypes=[('Python Files', '*.py')])
     with open(path, 'r') as file:
         code = file.readlines()
         areaTexto.delete('1.0', END)
         areaTexto.insert('1.0', code)
+        codigo = areaTexto.get(1.0, END)
+        txt = areaTexto.get(1.0, END)
 
 # Se guarda el texto que contenga el areaTexto dentro de un archivo .w     
 def guardarArchivo():
@@ -39,6 +66,16 @@ def guardarArchivo():
 
 # Se borran los textos escritos en cada una de las areas de texto del ide    
 def borrarTexto():
+    global txt, codigo
+    print (txt + "hola1")
+    print (codigo + "hola2")
+    textoModificado()
+    if (txt != codigo):
+        mensajeInfo()
+        if (valor == "yes"):
+            txt = ""
+            codigo = ""
+            guardarArchivo()
     areaTexto.delete(1.0, END)   
     areaConsola.delete(1.0, END)
     areaPrint.delete(1.0, END) 
