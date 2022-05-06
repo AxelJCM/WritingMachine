@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter as tk
 from tkinter import font
 from tkinter import messagebox
 from turtle import width
@@ -7,7 +8,7 @@ from idlelib.percolator import Percolator
 from tkinter.filedialog import *
 
 from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
-from numerosLinea import LineNumbers, TextLineNumbers
+from numerosLinea import ScrollText
 
 #Variables
 fuente = "Consolas"
@@ -24,7 +25,7 @@ def mensajeInfo():
     
 def textoModificado():
     global txt
-    txt = areaTexto.get(1.0, END)
+    txt = scroll.get(1.0, END)
     print(len(txt))
     if (len(txt) == 1):
         txt = ""
@@ -52,16 +53,16 @@ def abrirArchivo():
     path = askopenfilename(filetypes=[('Python Files', '*.py')])
     with open(path, 'r') as file:
         code = file.readlines()
-        areaTexto.delete('1.0', END)
-        areaTexto.insert('1.0', code)
-        codigo = areaTexto.get(1.0, END)
-        txt = areaTexto.get(1.0, END)
+        scroll.delete('1.0', END)
+        scroll.insert('1.0', code)
+        codigo = scroll.get(1.0, END)
+        txt = scroll.get(1.0, END)
 
 # Se guarda el texto que contenga el areaTexto dentro de un archivo .w     
 def guardarArchivo():
     path = asksaveasfilename(filetypes=[('Python Files', '*.py')])
     with open(path, 'w') as file:
-        code = areaTexto.get('1.0', END)
+        code = scroll.get('1.0', END)
         file.write(code)
 
 # Se borran los textos escritos en cada una de las areas de texto del ide    
@@ -76,9 +77,10 @@ def borrarTexto():
             txt = ""
             codigo = ""
             guardarArchivo()
-    areaTexto.delete(1.0, END)   
+    scroll.delete(1.0, END)   
     areaConsola.delete(1.0, END)
     areaPrint.delete(1.0, END) 
+
 
 # Creacion de la ventana del ide
 ide = Tk()
@@ -104,25 +106,20 @@ runMenu.add_command(label='Compilar y Ejecutar', command = Ejecutar)
 menu1.add_cascade(label='Compilar', menu=runMenu)
 ide.config(menu=menu1)
 
-def prueba(texto):
-    print(texto.index())
-
+scroll = ScrollText(ide)
+scroll.insert(tk.END,'')
+scroll.pack()
+scroll.text.focus()
+ide.after(200, scroll.redraw())
+'''
 # Area de trabajo para escritura de codigo
 baseIde = Canvas(ide, width = 900, height= 545)
 baseIde.place(x=20, y=0)
 areaTexto = Text(baseIde, height=34, width=121)
 areaTexto.config(bg='#362f2e', fg='#d2ded1')
-Percolator(areaTexto).insertfilter(ColorDelegator()) # Hacer algo como esto para cuando se reconozca una palabra
+Percolator(areaTexto).insertfilter(ColorDelegator()) # Identifica palabras reservadas de python # Hacer algo como esto para cuando se reconozca una palabra
 areaTexto.pack()
-
-#lineas = LineNumbers(ide, areaTexto, width=1, height=545)
-#lineas.place(x=0,y=0)
-
-lineas = TextLineNumbers(width = 20)
-lineas.attach(areaTexto)
-lineas.place(x=0,y=0)
-
-
+'''
 # Area donde se muestran los mensajes de compilador
 baseConsola = Canvas(ide, width=490, height=143)
 baseConsola.place(x=0, y=550)
@@ -138,3 +135,4 @@ areaPrint.pack()
 
 # Loop de la aplicacion
 ide.mainloop()
+    

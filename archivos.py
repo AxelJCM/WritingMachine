@@ -16,6 +16,14 @@ def escribirArchivo(data):
 
 def Compilar():
     print("El codigo compila!!")
+    # Escribir el codigo correspondiente para poder compilar el codigo contenido en areaTexto
+    # Si el codigo compila bien, se muesta un mensaje de "Compilado Correctamente!"
+    # Si el codigo no compila de forma correcta, se muestra un mensaje de "Error" segido del error especificando el
+    #    numero de linea en el que se encuentra dicho error.
 
 def Ejecutar():
-    print("El codigo se compila y se ejecuta!!")
+    Compilar()
+    print("El codigo se ejecuta!!")
+    # Si la compilacion es correcta, Se ejecuta el codigo de areaTexto y se imprimen los mensajes contenidos 
+    #   en los "print() dentro del areaPrints"
+    
