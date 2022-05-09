@@ -1,0 +1,3801 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> algorithm
+Rule 1     algorithm -> algorithm algorithm_function
+Rule 2     algorithm -> empty
+Rule 3     algorithm_function -> method_def
+Rule 4     algorithm_function -> function_def
+Rule 5     var_type -> BOOLEAN_TXT
+Rule 6     var_type -> INTEGER_TXT
+Rule 7     function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2
+Rule 8     method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2
+Rule 9     parameters -> parameters COMMA parameters
+Rule 10    parameters -> VARIABLE
+Rule 11    parameters -> empty
+Rule 12    operator -> PLUS
+Rule 13    operator -> MINUS
+Rule 14    operator -> INT_DIV
+Rule 15    operator -> DIVIDE
+Rule 16    operator -> EXP
+Rule 17    operator -> MULTIPLY
+Rule 18    fingers -> THUMB
+Rule 19    fingers -> INDEX
+Rule 20    fingers -> MIDDLE
+Rule 21    fingers -> ANULAR
+Rule 22    fingers -> PINKY
+Rule 23    fingers -> ALL
+Rule 24    fingerL_A -> SQ1 fingers COMMA fingerL_B
+Rule 25    fingerL_B -> fingers COMMA fingerL_B
+Rule 26    fingerL_B -> fingerL_C
+Rule 27    fingerL_C -> fingers SQ2
+Rule 28    fingerL_C -> empty
+Rule 29    hand -> fingerL_A fingerL_B fingerL_C
+Rule 30    function_move -> MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+Rule 31    function_move -> MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+Rule 32    function_move -> MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+Rule 33    function_move -> MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+Rule 34    stringL_A -> STR COMMA stringL_B
+Rule 35    stringL_A -> VARIABLE COMMA stringL_B
+Rule 36    stringL_A -> BOOLEAN COMMA stringL_B
+Rule 37    stringL_A -> INT COMMA stringL_B
+Rule 38    stringL_B -> STR COMMA stringL_B
+Rule 39    stringL_B -> VARIABLE COMMA stringL_B
+Rule 40    stringL_B -> INT COMMA stringL_B
+Rule 41    stringL_B -> BOOLEAN COMMA stringL_B
+Rule 42    stringL_B -> stringL_C
+Rule 43    stringL_C -> STR
+Rule 44    stringL_C -> VARIABLE
+Rule 45    stringL_C -> BOOLEAN
+Rule 46    stringL_C -> INT
+Rule 47    stringL_C -> empty
+Rule 48    Cstring -> stringL_A stringL_B stringL_C
+Rule 49    function_print -> PRINT OPEN_P STR CLOSE_P
+Rule 50    function_print -> PRINT OPEN_P VARIABLE CLOSE_P
+Rule 51    function_print -> PRINT OPEN_P BOOLEAN CLOSE_P
+Rule 52    function_print -> PRINT OPEN_P INT CLOSE_P
+Rule 53    function_print -> PRINT OPEN_P Cstring CLOSE_P
+Rule 54    expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+Rule 55    bool_operator -> EQUALS_EQUALS
+Rule 56    bool_operator -> DISTINCT
+Rule 57    bool_operator -> LESS_EQUAL
+Rule 58    bool_operator -> MORE_EQUAL
+Rule 59    bool_operator -> MORE_THAN
+Rule 60    bool_operator -> LESS_THAN
+Rule 61    expression -> expression bool_operator expression
+Rule 62    var_assign -> LET VARIABLE EQUALS expression
+Rule 63    for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2
+Rule 64    for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+Rule 65    for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2
+Rule 66    for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+Rule 67    if_else -> IF expression SB1 statement SB2 else_if
+Rule 68    else_if -> ELSE IF expression SB1 statement SB2 else_if
+Rule 69    else_if -> else_exp
+Rule 70    else_exp -> ELSE SB1 statement SB2
+Rule 71    else_exp -> empty
+Rule 72    statement -> statement statement_line
+Rule 73    statement -> empty
+Rule 74    statement_line -> if_else
+Rule 75    statement_line -> expression PyC
+Rule 76    statement_line -> var_assign PyC
+Rule 77    statement_line -> for_loop
+Rule 78    statement_line -> while_loop
+Rule 79    statement_line -> function_move PyC
+Rule 80    statement_line -> function_delay PyC
+Rule 81    statement_line -> function_print PyC
+Rule 82    time_param -> SEG
+Rule 83    time_param -> MIL
+Rule 84    time_param -> MIN
+Rule 85    function_delay -> DELAY OPEN_P INT COMMA time_param CLOSE_P
+Rule 86    statement_line -> RETURN expression PyC
+Rule 87    while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+Rule 88    empty -> <empty>
+Rule 89    expression -> INT
+Rule 90    expression -> BOOLEAN
+Rule 91    expression -> function_call
+Rule 92    expression -> VARIABLE
+Rule 93    function_call -> VARIABLE OPEN_P param_expressions CLOSE_P
+Rule 94    param_expressions -> param_expressions COMMA param_expressions
+Rule 95    param_expressions -> expression
+Rule 96    param_expressions -> empty
+
+Terminals, with rules where they appear
+
+ALL                  : 23
+ANULAR               : 21
+ARROW                : 7
+BOOLEAN              : 30 32 36 41 45 51 90
+BOOLEAN_TXT          : 5
+CLOSE_P              : 7 8 30 31 32 33 49 50 51 52 53 54 85 87 93
+COMMA                : 9 24 25 30 31 32 33 34 35 36 37 38 39 40 41 54 54 85 94
+DELAY                : 85
+DISTINCT             : 56
+DIVIDE               : 15
+ELSE                 : 68 70
+EQUALS               : 62
+EQUALS_EQUALS        : 55
+EXP                  : 16
+FOR                  : 63 64 65 66
+FUNCTION             : 7 8
+IF                   : 67 68
+IN                   : 63 64 65 66
+INDEX                : 19
+INT                  : 37 40 46 52 63 63 63 64 64 65 65 65 66 66 85 89
+INTEGER_TXT          : 6
+INT_DIV              : 14
+LESS_EQUAL           : 57
+LESS_THAN            : 60
+LET                  : 62
+MIDDLE               : 20
+MIL                  : 83
+MIN                  : 84
+MINUS                : 13
+MORE_EQUAL           : 58
+MORE_THAN            : 59
+MOVE                 : 30 31 32 33
+MULTIPLY             : 17
+OPEN_P               : 7 8 30 31 32 33 49 50 51 52 53 54 85 87 93
+OPERA                : 54
+PINKY                : 22
+PLUS                 : 12
+PRINT                : 49 50 51 52 53
+PyC                  : 75 76 79 80 81 86
+RETURN               : 86
+SB1                  : 7 8 63 64 65 66 67 68 70 87
+SB2                  : 7 8 63 64 65 66 67 68 70 87
+SEG                  : 82
+SQ1                  : 24
+SQ2                  : 27
+STR                  : 34 38 43 49
+THUMB                : 18
+VARIABLE             : 7 8 10 31 33 35 39 44 50 62 64 66 92 93
+WHILE                : 87
+dDOT                 : 63 64
+dDOT_E               : 65 66
+error                : 
+
+Nonterminals, with rules where they appear
+
+Cstring              : 53
+algorithm            : 1 0
+algorithm_function   : 1
+bool_operator        : 61
+else_exp             : 69
+else_if              : 67 68
+empty                : 2 11 28 47 71 73 96
+expression           : 54 54 61 61 62 67 68 75 86 87 95
+fingerL_A            : 29
+fingerL_B            : 24 25 29
+fingerL_C            : 26 29
+fingers              : 24 25 27 30 31
+for_loop             : 77
+function_call        : 91
+function_def         : 4
+function_delay       : 80
+function_move        : 79
+function_print       : 81
+hand                 : 32 33
+if_else              : 74
+method_def           : 3
+operator             : 54
+param_expressions    : 93 94 94
+parameters           : 7 8 9 9
+statement            : 7 8 63 64 65 66 67 68 70 72 87
+statement_line       : 72
+stringL_A            : 48
+stringL_B            : 34 35 36 37 38 39 40 41 48
+stringL_C            : 42 48
+time_param           : 85
+var_assign           : 76
+var_type             : 7
+while_loop           : 78
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . algorithm
+    (1) algorithm -> . algorithm algorithm_function
+    (2) algorithm -> . empty
+    (88) empty -> .
+
+    FUNCTION        reduce using rule 88 (empty -> .)
+    $end            reduce using rule 88 (empty -> .)
+
+    algorithm                      shift and go to state 1
+    empty                          shift and go to state 2
+
+state 1
+
+    (0) S' -> algorithm .
+    (1) algorithm -> algorithm . algorithm_function
+    (3) algorithm_function -> . method_def
+    (4) algorithm_function -> . function_def
+    (8) method_def -> . FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2
+    (7) function_def -> . FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2
+
+    FUNCTION        shift and go to state 6
+
+    algorithm_function             shift and go to state 3
+    method_def                     shift and go to state 4
+    function_def                   shift and go to state 5
+
+state 2
+
+    (2) algorithm -> empty .
+
+    FUNCTION        reduce using rule 2 (algorithm -> empty .)
+    $end            reduce using rule 2 (algorithm -> empty .)
+
+
+state 3
+
+    (1) algorithm -> algorithm algorithm_function .
+
+    FUNCTION        reduce using rule 1 (algorithm -> algorithm algorithm_function .)
+    $end            reduce using rule 1 (algorithm -> algorithm algorithm_function .)
+
+
+state 4
+
+    (3) algorithm_function -> method_def .
+
+    FUNCTION        reduce using rule 3 (algorithm_function -> method_def .)
+    $end            reduce using rule 3 (algorithm_function -> method_def .)
+
+
+state 5
+
+    (4) algorithm_function -> function_def .
+
+    FUNCTION        reduce using rule 4 (algorithm_function -> function_def .)
+    $end            reduce using rule 4 (algorithm_function -> function_def .)
+
+
+state 6
+
+    (8) method_def -> FUNCTION . VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2
+    (7) function_def -> FUNCTION . VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2
+
+    VARIABLE        shift and go to state 7
+
+
+state 7
+
+    (8) method_def -> FUNCTION VARIABLE . OPEN_P parameters CLOSE_P SB1 statement SB2
+    (7) function_def -> FUNCTION VARIABLE . OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2
+
+    OPEN_P          shift and go to state 8
+
+
+state 8
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P . parameters CLOSE_P SB1 statement SB2
+    (7) function_def -> FUNCTION VARIABLE OPEN_P . parameters CLOSE_P ARROW var_type SB1 statement SB2
+    (9) parameters -> . parameters COMMA parameters
+    (10) parameters -> . VARIABLE
+    (11) parameters -> . empty
+    (88) empty -> .
+
+    VARIABLE        shift and go to state 9
+    CLOSE_P         reduce using rule 88 (empty -> .)
+    COMMA           reduce using rule 88 (empty -> .)
+
+    parameters                     shift and go to state 10
+    empty                          shift and go to state 11
+
+state 9
+
+    (10) parameters -> VARIABLE .
+
+    CLOSE_P         reduce using rule 10 (parameters -> VARIABLE .)
+    COMMA           reduce using rule 10 (parameters -> VARIABLE .)
+
+
+state 10
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P parameters . CLOSE_P SB1 statement SB2
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters . CLOSE_P ARROW var_type SB1 statement SB2
+    (9) parameters -> parameters . COMMA parameters
+
+    CLOSE_P         shift and go to state 12
+    COMMA           shift and go to state 13
+
+
+state 11
+
+    (11) parameters -> empty .
+
+    CLOSE_P         reduce using rule 11 (parameters -> empty .)
+    COMMA           reduce using rule 11 (parameters -> empty .)
+
+
+state 12
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P . SB1 statement SB2
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P . ARROW var_type SB1 statement SB2
+
+    SB1             shift and go to state 14
+    ARROW           shift and go to state 15
+
+
+state 13
+
+    (9) parameters -> parameters COMMA . parameters
+    (9) parameters -> . parameters COMMA parameters
+    (10) parameters -> . VARIABLE
+    (11) parameters -> . empty
+    (88) empty -> .
+
+    VARIABLE        shift and go to state 9
+    COMMA           reduce using rule 88 (empty -> .)
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+    parameters                     shift and go to state 16
+    empty                          shift and go to state 11
+
+state 14
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 17
+    empty                          shift and go to state 18
+
+state 15
+
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW . var_type SB1 statement SB2
+    (5) var_type -> . BOOLEAN_TXT
+    (6) var_type -> . INTEGER_TXT
+
+    BOOLEAN_TXT     shift and go to state 20
+    INTEGER_TXT     shift and go to state 21
+
+    var_type                       shift and go to state 19
+
+state 16
+
+    (9) parameters -> parameters COMMA parameters .
+    (9) parameters -> parameters . COMMA parameters
+
+  ! shift/reduce conflict for COMMA resolved as shift
+    CLOSE_P         reduce using rule 9 (parameters -> parameters COMMA parameters .)
+    COMMA           shift and go to state 13
+
+  ! COMMA           [ reduce using rule 9 (parameters -> parameters COMMA parameters .) ]
+
+
+state 17
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 23
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 18
+
+    (73) statement -> empty .
+
+    SB2             reduce using rule 73 (statement -> empty .)
+    RETURN          reduce using rule 73 (statement -> empty .)
+    IF              reduce using rule 73 (statement -> empty .)
+    OPERA           reduce using rule 73 (statement -> empty .)
+    INT             reduce using rule 73 (statement -> empty .)
+    BOOLEAN         reduce using rule 73 (statement -> empty .)
+    VARIABLE        reduce using rule 73 (statement -> empty .)
+    LET             reduce using rule 73 (statement -> empty .)
+    FOR             reduce using rule 73 (statement -> empty .)
+    WHILE           reduce using rule 73 (statement -> empty .)
+    MOVE            reduce using rule 73 (statement -> empty .)
+    DELAY           reduce using rule 73 (statement -> empty .)
+    PRINT           reduce using rule 73 (statement -> empty .)
+
+
+state 19
+
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type . SB1 statement SB2
+
+    SB1             shift and go to state 45
+
+
+state 20
+
+    (5) var_type -> BOOLEAN_TXT .
+
+    SB1             reduce using rule 5 (var_type -> BOOLEAN_TXT .)
+
+
+state 21
+
+    (6) var_type -> INTEGER_TXT .
+
+    SB1             reduce using rule 6 (var_type -> INTEGER_TXT .)
+
+
+state 22
+
+    (92) expression -> VARIABLE .
+    (93) function_call -> VARIABLE . OPEN_P param_expressions CLOSE_P
+
+    PyC             reduce using rule 92 (expression -> VARIABLE .)
+    EQUALS_EQUALS   reduce using rule 92 (expression -> VARIABLE .)
+    DISTINCT        reduce using rule 92 (expression -> VARIABLE .)
+    LESS_EQUAL      reduce using rule 92 (expression -> VARIABLE .)
+    MORE_EQUAL      reduce using rule 92 (expression -> VARIABLE .)
+    MORE_THAN       reduce using rule 92 (expression -> VARIABLE .)
+    LESS_THAN       reduce using rule 92 (expression -> VARIABLE .)
+    SB1             reduce using rule 92 (expression -> VARIABLE .)
+    CLOSE_P         reduce using rule 92 (expression -> VARIABLE .)
+    COMMA           reduce using rule 92 (expression -> VARIABLE .)
+    OPEN_P          shift and go to state 46
+
+
+state 23
+
+    (8) method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2 .
+
+    FUNCTION        reduce using rule 8 (method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2 .)
+    $end            reduce using rule 8 (method_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P SB1 statement SB2 .)
+
+
+state 24
+
+    (72) statement -> statement statement_line .
+
+    SB2             reduce using rule 72 (statement -> statement statement_line .)
+    RETURN          reduce using rule 72 (statement -> statement statement_line .)
+    IF              reduce using rule 72 (statement -> statement statement_line .)
+    OPERA           reduce using rule 72 (statement -> statement statement_line .)
+    INT             reduce using rule 72 (statement -> statement statement_line .)
+    BOOLEAN         reduce using rule 72 (statement -> statement statement_line .)
+    VARIABLE        reduce using rule 72 (statement -> statement statement_line .)
+    LET             reduce using rule 72 (statement -> statement statement_line .)
+    FOR             reduce using rule 72 (statement -> statement statement_line .)
+    WHILE           reduce using rule 72 (statement -> statement statement_line .)
+    MOVE            reduce using rule 72 (statement -> statement statement_line .)
+    DELAY           reduce using rule 72 (statement -> statement statement_line .)
+    PRINT           reduce using rule 72 (statement -> statement statement_line .)
+
+
+state 25
+
+    (74) statement_line -> if_else .
+
+    SB2             reduce using rule 74 (statement_line -> if_else .)
+    RETURN          reduce using rule 74 (statement_line -> if_else .)
+    IF              reduce using rule 74 (statement_line -> if_else .)
+    OPERA           reduce using rule 74 (statement_line -> if_else .)
+    INT             reduce using rule 74 (statement_line -> if_else .)
+    BOOLEAN         reduce using rule 74 (statement_line -> if_else .)
+    VARIABLE        reduce using rule 74 (statement_line -> if_else .)
+    LET             reduce using rule 74 (statement_line -> if_else .)
+    FOR             reduce using rule 74 (statement_line -> if_else .)
+    WHILE           reduce using rule 74 (statement_line -> if_else .)
+    MOVE            reduce using rule 74 (statement_line -> if_else .)
+    DELAY           reduce using rule 74 (statement_line -> if_else .)
+    PRINT           reduce using rule 74 (statement_line -> if_else .)
+
+
+state 26
+
+    (75) statement_line -> expression . PyC
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    PyC             shift and go to state 47
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 27
+
+    (76) statement_line -> var_assign . PyC
+
+    PyC             shift and go to state 55
+
+
+state 28
+
+    (77) statement_line -> for_loop .
+
+    SB2             reduce using rule 77 (statement_line -> for_loop .)
+    RETURN          reduce using rule 77 (statement_line -> for_loop .)
+    IF              reduce using rule 77 (statement_line -> for_loop .)
+    OPERA           reduce using rule 77 (statement_line -> for_loop .)
+    INT             reduce using rule 77 (statement_line -> for_loop .)
+    BOOLEAN         reduce using rule 77 (statement_line -> for_loop .)
+    VARIABLE        reduce using rule 77 (statement_line -> for_loop .)
+    LET             reduce using rule 77 (statement_line -> for_loop .)
+    FOR             reduce using rule 77 (statement_line -> for_loop .)
+    WHILE           reduce using rule 77 (statement_line -> for_loop .)
+    MOVE            reduce using rule 77 (statement_line -> for_loop .)
+    DELAY           reduce using rule 77 (statement_line -> for_loop .)
+    PRINT           reduce using rule 77 (statement_line -> for_loop .)
+
+
+state 29
+
+    (78) statement_line -> while_loop .
+
+    SB2             reduce using rule 78 (statement_line -> while_loop .)
+    RETURN          reduce using rule 78 (statement_line -> while_loop .)
+    IF              reduce using rule 78 (statement_line -> while_loop .)
+    OPERA           reduce using rule 78 (statement_line -> while_loop .)
+    INT             reduce using rule 78 (statement_line -> while_loop .)
+    BOOLEAN         reduce using rule 78 (statement_line -> while_loop .)
+    VARIABLE        reduce using rule 78 (statement_line -> while_loop .)
+    LET             reduce using rule 78 (statement_line -> while_loop .)
+    FOR             reduce using rule 78 (statement_line -> while_loop .)
+    WHILE           reduce using rule 78 (statement_line -> while_loop .)
+    MOVE            reduce using rule 78 (statement_line -> while_loop .)
+    DELAY           reduce using rule 78 (statement_line -> while_loop .)
+    PRINT           reduce using rule 78 (statement_line -> while_loop .)
+
+
+state 30
+
+    (79) statement_line -> function_move . PyC
+
+    PyC             shift and go to state 56
+
+
+state 31
+
+    (80) statement_line -> function_delay . PyC
+
+    PyC             shift and go to state 57
+
+
+state 32
+
+    (81) statement_line -> function_print . PyC
+
+    PyC             shift and go to state 58
+
+
+state 33
+
+    (86) statement_line -> RETURN . expression PyC
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 59
+    function_call                  shift and go to state 38
+
+state 34
+
+    (67) if_else -> IF . expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 60
+    function_call                  shift and go to state 38
+
+state 35
+
+    (54) expression -> OPERA . OPEN_P operator COMMA expression COMMA expression CLOSE_P
+
+    OPEN_P          shift and go to state 61
+
+
+state 36
+
+    (89) expression -> INT .
+
+    PyC             reduce using rule 89 (expression -> INT .)
+    EQUALS_EQUALS   reduce using rule 89 (expression -> INT .)
+    DISTINCT        reduce using rule 89 (expression -> INT .)
+    LESS_EQUAL      reduce using rule 89 (expression -> INT .)
+    MORE_EQUAL      reduce using rule 89 (expression -> INT .)
+    MORE_THAN       reduce using rule 89 (expression -> INT .)
+    LESS_THAN       reduce using rule 89 (expression -> INT .)
+    SB1             reduce using rule 89 (expression -> INT .)
+    CLOSE_P         reduce using rule 89 (expression -> INT .)
+    COMMA           reduce using rule 89 (expression -> INT .)
+
+
+state 37
+
+    (90) expression -> BOOLEAN .
+
+    PyC             reduce using rule 90 (expression -> BOOLEAN .)
+    EQUALS_EQUALS   reduce using rule 90 (expression -> BOOLEAN .)
+    DISTINCT        reduce using rule 90 (expression -> BOOLEAN .)
+    LESS_EQUAL      reduce using rule 90 (expression -> BOOLEAN .)
+    MORE_EQUAL      reduce using rule 90 (expression -> BOOLEAN .)
+    MORE_THAN       reduce using rule 90 (expression -> BOOLEAN .)
+    LESS_THAN       reduce using rule 90 (expression -> BOOLEAN .)
+    SB1             reduce using rule 90 (expression -> BOOLEAN .)
+    CLOSE_P         reduce using rule 90 (expression -> BOOLEAN .)
+    COMMA           reduce using rule 90 (expression -> BOOLEAN .)
+
+
+state 38
+
+    (91) expression -> function_call .
+
+    PyC             reduce using rule 91 (expression -> function_call .)
+    EQUALS_EQUALS   reduce using rule 91 (expression -> function_call .)
+    DISTINCT        reduce using rule 91 (expression -> function_call .)
+    LESS_EQUAL      reduce using rule 91 (expression -> function_call .)
+    MORE_EQUAL      reduce using rule 91 (expression -> function_call .)
+    MORE_THAN       reduce using rule 91 (expression -> function_call .)
+    LESS_THAN       reduce using rule 91 (expression -> function_call .)
+    SB1             reduce using rule 91 (expression -> function_call .)
+    CLOSE_P         reduce using rule 91 (expression -> function_call .)
+    COMMA           reduce using rule 91 (expression -> function_call .)
+
+
+state 39
+
+    (62) var_assign -> LET . VARIABLE EQUALS expression
+
+    VARIABLE        shift and go to state 62
+
+
+state 40
+
+    (63) for_loop -> FOR . INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> FOR . VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> FOR . INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> FOR . VARIABLE IN INT dDOT_E INT SB1 statement SB2
+
+    INT             shift and go to state 63
+    VARIABLE        shift and go to state 64
+
+
+state 41
+
+    (87) while_loop -> WHILE . OPEN_P expression CLOSE_P SB1 statement SB2
+
+    OPEN_P          shift and go to state 65
+
+
+state 42
+
+    (30) function_move -> MOVE . OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> MOVE . OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> MOVE . OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> MOVE . OPEN_P hand COMMA VARIABLE CLOSE_P
+
+    OPEN_P          shift and go to state 66
+
+
+state 43
+
+    (85) function_delay -> DELAY . OPEN_P INT COMMA time_param CLOSE_P
+
+    OPEN_P          shift and go to state 67
+
+
+state 44
+
+    (49) function_print -> PRINT . OPEN_P STR CLOSE_P
+    (50) function_print -> PRINT . OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> PRINT . OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> PRINT . OPEN_P INT CLOSE_P
+    (53) function_print -> PRINT . OPEN_P Cstring CLOSE_P
+
+    OPEN_P          shift and go to state 68
+
+
+state 45
+
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 69
+    empty                          shift and go to state 18
+
+state 46
+
+    (93) function_call -> VARIABLE OPEN_P . param_expressions CLOSE_P
+    (94) param_expressions -> . param_expressions COMMA param_expressions
+    (95) param_expressions -> . expression
+    (96) param_expressions -> . empty
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (88) empty -> .
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    CLOSE_P         reduce using rule 88 (empty -> .)
+    COMMA           reduce using rule 88 (empty -> .)
+
+    param_expressions              shift and go to state 70
+    expression                     shift and go to state 71
+    empty                          shift and go to state 72
+    function_call                  shift and go to state 38
+
+state 47
+
+    (75) statement_line -> expression PyC .
+
+    SB2             reduce using rule 75 (statement_line -> expression PyC .)
+    RETURN          reduce using rule 75 (statement_line -> expression PyC .)
+    IF              reduce using rule 75 (statement_line -> expression PyC .)
+    OPERA           reduce using rule 75 (statement_line -> expression PyC .)
+    INT             reduce using rule 75 (statement_line -> expression PyC .)
+    BOOLEAN         reduce using rule 75 (statement_line -> expression PyC .)
+    VARIABLE        reduce using rule 75 (statement_line -> expression PyC .)
+    LET             reduce using rule 75 (statement_line -> expression PyC .)
+    FOR             reduce using rule 75 (statement_line -> expression PyC .)
+    WHILE           reduce using rule 75 (statement_line -> expression PyC .)
+    MOVE            reduce using rule 75 (statement_line -> expression PyC .)
+    DELAY           reduce using rule 75 (statement_line -> expression PyC .)
+    PRINT           reduce using rule 75 (statement_line -> expression PyC .)
+
+
+state 48
+
+    (61) expression -> expression bool_operator . expression
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 73
+    function_call                  shift and go to state 38
+
+state 49
+
+    (55) bool_operator -> EQUALS_EQUALS .
+
+    OPERA           reduce using rule 55 (bool_operator -> EQUALS_EQUALS .)
+    INT             reduce using rule 55 (bool_operator -> EQUALS_EQUALS .)
+    BOOLEAN         reduce using rule 55 (bool_operator -> EQUALS_EQUALS .)
+    VARIABLE        reduce using rule 55 (bool_operator -> EQUALS_EQUALS .)
+
+
+state 50
+
+    (56) bool_operator -> DISTINCT .
+
+    OPERA           reduce using rule 56 (bool_operator -> DISTINCT .)
+    INT             reduce using rule 56 (bool_operator -> DISTINCT .)
+    BOOLEAN         reduce using rule 56 (bool_operator -> DISTINCT .)
+    VARIABLE        reduce using rule 56 (bool_operator -> DISTINCT .)
+
+
+state 51
+
+    (57) bool_operator -> LESS_EQUAL .
+
+    OPERA           reduce using rule 57 (bool_operator -> LESS_EQUAL .)
+    INT             reduce using rule 57 (bool_operator -> LESS_EQUAL .)
+    BOOLEAN         reduce using rule 57 (bool_operator -> LESS_EQUAL .)
+    VARIABLE        reduce using rule 57 (bool_operator -> LESS_EQUAL .)
+
+
+state 52
+
+    (58) bool_operator -> MORE_EQUAL .
+
+    OPERA           reduce using rule 58 (bool_operator -> MORE_EQUAL .)
+    INT             reduce using rule 58 (bool_operator -> MORE_EQUAL .)
+    BOOLEAN         reduce using rule 58 (bool_operator -> MORE_EQUAL .)
+    VARIABLE        reduce using rule 58 (bool_operator -> MORE_EQUAL .)
+
+
+state 53
+
+    (59) bool_operator -> MORE_THAN .
+
+    OPERA           reduce using rule 59 (bool_operator -> MORE_THAN .)
+    INT             reduce using rule 59 (bool_operator -> MORE_THAN .)
+    BOOLEAN         reduce using rule 59 (bool_operator -> MORE_THAN .)
+    VARIABLE        reduce using rule 59 (bool_operator -> MORE_THAN .)
+
+
+state 54
+
+    (60) bool_operator -> LESS_THAN .
+
+    OPERA           reduce using rule 60 (bool_operator -> LESS_THAN .)
+    INT             reduce using rule 60 (bool_operator -> LESS_THAN .)
+    BOOLEAN         reduce using rule 60 (bool_operator -> LESS_THAN .)
+    VARIABLE        reduce using rule 60 (bool_operator -> LESS_THAN .)
+
+
+state 55
+
+    (76) statement_line -> var_assign PyC .
+
+    SB2             reduce using rule 76 (statement_line -> var_assign PyC .)
+    RETURN          reduce using rule 76 (statement_line -> var_assign PyC .)
+    IF              reduce using rule 76 (statement_line -> var_assign PyC .)
+    OPERA           reduce using rule 76 (statement_line -> var_assign PyC .)
+    INT             reduce using rule 76 (statement_line -> var_assign PyC .)
+    BOOLEAN         reduce using rule 76 (statement_line -> var_assign PyC .)
+    VARIABLE        reduce using rule 76 (statement_line -> var_assign PyC .)
+    LET             reduce using rule 76 (statement_line -> var_assign PyC .)
+    FOR             reduce using rule 76 (statement_line -> var_assign PyC .)
+    WHILE           reduce using rule 76 (statement_line -> var_assign PyC .)
+    MOVE            reduce using rule 76 (statement_line -> var_assign PyC .)
+    DELAY           reduce using rule 76 (statement_line -> var_assign PyC .)
+    PRINT           reduce using rule 76 (statement_line -> var_assign PyC .)
+
+
+state 56
+
+    (79) statement_line -> function_move PyC .
+
+    SB2             reduce using rule 79 (statement_line -> function_move PyC .)
+    RETURN          reduce using rule 79 (statement_line -> function_move PyC .)
+    IF              reduce using rule 79 (statement_line -> function_move PyC .)
+    OPERA           reduce using rule 79 (statement_line -> function_move PyC .)
+    INT             reduce using rule 79 (statement_line -> function_move PyC .)
+    BOOLEAN         reduce using rule 79 (statement_line -> function_move PyC .)
+    VARIABLE        reduce using rule 79 (statement_line -> function_move PyC .)
+    LET             reduce using rule 79 (statement_line -> function_move PyC .)
+    FOR             reduce using rule 79 (statement_line -> function_move PyC .)
+    WHILE           reduce using rule 79 (statement_line -> function_move PyC .)
+    MOVE            reduce using rule 79 (statement_line -> function_move PyC .)
+    DELAY           reduce using rule 79 (statement_line -> function_move PyC .)
+    PRINT           reduce using rule 79 (statement_line -> function_move PyC .)
+
+
+state 57
+
+    (80) statement_line -> function_delay PyC .
+
+    SB2             reduce using rule 80 (statement_line -> function_delay PyC .)
+    RETURN          reduce using rule 80 (statement_line -> function_delay PyC .)
+    IF              reduce using rule 80 (statement_line -> function_delay PyC .)
+    OPERA           reduce using rule 80 (statement_line -> function_delay PyC .)
+    INT             reduce using rule 80 (statement_line -> function_delay PyC .)
+    BOOLEAN         reduce using rule 80 (statement_line -> function_delay PyC .)
+    VARIABLE        reduce using rule 80 (statement_line -> function_delay PyC .)
+    LET             reduce using rule 80 (statement_line -> function_delay PyC .)
+    FOR             reduce using rule 80 (statement_line -> function_delay PyC .)
+    WHILE           reduce using rule 80 (statement_line -> function_delay PyC .)
+    MOVE            reduce using rule 80 (statement_line -> function_delay PyC .)
+    DELAY           reduce using rule 80 (statement_line -> function_delay PyC .)
+    PRINT           reduce using rule 80 (statement_line -> function_delay PyC .)
+
+
+state 58
+
+    (81) statement_line -> function_print PyC .
+
+    SB2             reduce using rule 81 (statement_line -> function_print PyC .)
+    RETURN          reduce using rule 81 (statement_line -> function_print PyC .)
+    IF              reduce using rule 81 (statement_line -> function_print PyC .)
+    OPERA           reduce using rule 81 (statement_line -> function_print PyC .)
+    INT             reduce using rule 81 (statement_line -> function_print PyC .)
+    BOOLEAN         reduce using rule 81 (statement_line -> function_print PyC .)
+    VARIABLE        reduce using rule 81 (statement_line -> function_print PyC .)
+    LET             reduce using rule 81 (statement_line -> function_print PyC .)
+    FOR             reduce using rule 81 (statement_line -> function_print PyC .)
+    WHILE           reduce using rule 81 (statement_line -> function_print PyC .)
+    MOVE            reduce using rule 81 (statement_line -> function_print PyC .)
+    DELAY           reduce using rule 81 (statement_line -> function_print PyC .)
+    PRINT           reduce using rule 81 (statement_line -> function_print PyC .)
+
+
+state 59
+
+    (86) statement_line -> RETURN expression . PyC
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    PyC             shift and go to state 74
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 60
+
+    (67) if_else -> IF expression . SB1 statement SB2 else_if
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    SB1             shift and go to state 75
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 61
+
+    (54) expression -> OPERA OPEN_P . operator COMMA expression COMMA expression CLOSE_P
+    (12) operator -> . PLUS
+    (13) operator -> . MINUS
+    (14) operator -> . INT_DIV
+    (15) operator -> . DIVIDE
+    (16) operator -> . EXP
+    (17) operator -> . MULTIPLY
+
+    PLUS            shift and go to state 77
+    MINUS           shift and go to state 78
+    INT_DIV         shift and go to state 79
+    DIVIDE          shift and go to state 80
+    EXP             shift and go to state 81
+    MULTIPLY        shift and go to state 82
+
+    operator                       shift and go to state 76
+
+state 62
+
+    (62) var_assign -> LET VARIABLE . EQUALS expression
+
+    EQUALS          shift and go to state 83
+
+
+state 63
+
+    (63) for_loop -> FOR INT . IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> FOR INT . IN INT dDOT_E INT SB1 statement SB2
+
+    IN              shift and go to state 84
+
+
+state 64
+
+    (64) for_loop -> FOR VARIABLE . IN INT dDOT INT SB1 statement SB2
+    (66) for_loop -> FOR VARIABLE . IN INT dDOT_E INT SB1 statement SB2
+
+    IN              shift and go to state 85
+
+
+state 65
+
+    (87) while_loop -> WHILE OPEN_P . expression CLOSE_P SB1 statement SB2
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 86
+    function_call                  shift and go to state 38
+
+state 66
+
+    (30) function_move -> MOVE OPEN_P . fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> MOVE OPEN_P . fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> MOVE OPEN_P . hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> MOVE OPEN_P . hand COMMA VARIABLE CLOSE_P
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+    (29) hand -> . fingerL_A fingerL_B fingerL_C
+    (24) fingerL_A -> . SQ1 fingers COMMA fingerL_B
+
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+    SQ1             shift and go to state 96
+
+    fingers                        shift and go to state 87
+    hand                           shift and go to state 88
+    fingerL_A                      shift and go to state 95
+
+state 67
+
+    (85) function_delay -> DELAY OPEN_P . INT COMMA time_param CLOSE_P
+
+    INT             shift and go to state 97
+
+
+state 68
+
+    (49) function_print -> PRINT OPEN_P . STR CLOSE_P
+    (50) function_print -> PRINT OPEN_P . VARIABLE CLOSE_P
+    (51) function_print -> PRINT OPEN_P . BOOLEAN CLOSE_P
+    (52) function_print -> PRINT OPEN_P . INT CLOSE_P
+    (53) function_print -> PRINT OPEN_P . Cstring CLOSE_P
+    (48) Cstring -> . stringL_A stringL_B stringL_C
+    (34) stringL_A -> . STR COMMA stringL_B
+    (35) stringL_A -> . VARIABLE COMMA stringL_B
+    (36) stringL_A -> . BOOLEAN COMMA stringL_B
+    (37) stringL_A -> . INT COMMA stringL_B
+
+    STR             shift and go to state 98
+    VARIABLE        shift and go to state 99
+    BOOLEAN         shift and go to state 100
+    INT             shift and go to state 101
+
+    Cstring                        shift and go to state 102
+    stringL_A                      shift and go to state 103
+
+state 69
+
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 104
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 70
+
+    (93) function_call -> VARIABLE OPEN_P param_expressions . CLOSE_P
+    (94) param_expressions -> param_expressions . COMMA param_expressions
+
+    CLOSE_P         shift and go to state 105
+    COMMA           shift and go to state 106
+
+
+state 71
+
+    (95) param_expressions -> expression .
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    CLOSE_P         reduce using rule 95 (param_expressions -> expression .)
+    COMMA           reduce using rule 95 (param_expressions -> expression .)
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 72
+
+    (96) param_expressions -> empty .
+
+    CLOSE_P         reduce using rule 96 (param_expressions -> empty .)
+    COMMA           reduce using rule 96 (param_expressions -> empty .)
+
+
+state 73
+
+    (61) expression -> expression bool_operator expression .
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+  ! shift/reduce conflict for EQUALS_EQUALS resolved as shift
+  ! shift/reduce conflict for DISTINCT resolved as shift
+  ! shift/reduce conflict for LESS_EQUAL resolved as shift
+  ! shift/reduce conflict for MORE_EQUAL resolved as shift
+  ! shift/reduce conflict for MORE_THAN resolved as shift
+  ! shift/reduce conflict for LESS_THAN resolved as shift
+    PyC             reduce using rule 61 (expression -> expression bool_operator expression .)
+    SB1             reduce using rule 61 (expression -> expression bool_operator expression .)
+    CLOSE_P         reduce using rule 61 (expression -> expression bool_operator expression .)
+    COMMA           reduce using rule 61 (expression -> expression bool_operator expression .)
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+  ! EQUALS_EQUALS   [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+  ! DISTINCT        [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+  ! LESS_EQUAL      [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+  ! MORE_EQUAL      [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+  ! MORE_THAN       [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+  ! LESS_THAN       [ reduce using rule 61 (expression -> expression bool_operator expression .) ]
+
+    bool_operator                  shift and go to state 48
+
+state 74
+
+    (86) statement_line -> RETURN expression PyC .
+
+    SB2             reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    RETURN          reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    IF              reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    OPERA           reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    INT             reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    BOOLEAN         reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    VARIABLE        reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    LET             reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    FOR             reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    WHILE           reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    MOVE            reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    DELAY           reduce using rule 86 (statement_line -> RETURN expression PyC .)
+    PRINT           reduce using rule 86 (statement_line -> RETURN expression PyC .)
+
+
+state 75
+
+    (67) if_else -> IF expression SB1 . statement SB2 else_if
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 107
+    empty                          shift and go to state 18
+
+state 76
+
+    (54) expression -> OPERA OPEN_P operator . COMMA expression COMMA expression CLOSE_P
+
+    COMMA           shift and go to state 108
+
+
+state 77
+
+    (12) operator -> PLUS .
+
+    COMMA           reduce using rule 12 (operator -> PLUS .)
+
+
+state 78
+
+    (13) operator -> MINUS .
+
+    COMMA           reduce using rule 13 (operator -> MINUS .)
+
+
+state 79
+
+    (14) operator -> INT_DIV .
+
+    COMMA           reduce using rule 14 (operator -> INT_DIV .)
+
+
+state 80
+
+    (15) operator -> DIVIDE .
+
+    COMMA           reduce using rule 15 (operator -> DIVIDE .)
+
+
+state 81
+
+    (16) operator -> EXP .
+
+    COMMA           reduce using rule 16 (operator -> EXP .)
+
+
+state 82
+
+    (17) operator -> MULTIPLY .
+
+    COMMA           reduce using rule 17 (operator -> MULTIPLY .)
+
+
+state 83
+
+    (62) var_assign -> LET VARIABLE EQUALS . expression
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 109
+    function_call                  shift and go to state 38
+
+state 84
+
+    (63) for_loop -> FOR INT IN . INT dDOT INT SB1 statement SB2
+    (65) for_loop -> FOR INT IN . INT dDOT_E INT SB1 statement SB2
+
+    INT             shift and go to state 110
+
+
+state 85
+
+    (64) for_loop -> FOR VARIABLE IN . INT dDOT INT SB1 statement SB2
+    (66) for_loop -> FOR VARIABLE IN . INT dDOT_E INT SB1 statement SB2
+
+    INT             shift and go to state 111
+
+
+state 86
+
+    (87) while_loop -> WHILE OPEN_P expression . CLOSE_P SB1 statement SB2
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    CLOSE_P         shift and go to state 112
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 87
+
+    (30) function_move -> MOVE OPEN_P fingers . COMMA BOOLEAN CLOSE_P
+    (31) function_move -> MOVE OPEN_P fingers . COMMA VARIABLE CLOSE_P
+
+    COMMA           shift and go to state 113
+
+
+state 88
+
+    (32) function_move -> MOVE OPEN_P hand . COMMA BOOLEAN CLOSE_P
+    (33) function_move -> MOVE OPEN_P hand . COMMA VARIABLE CLOSE_P
+
+    COMMA           shift and go to state 114
+
+
+state 89
+
+    (18) fingers -> THUMB .
+
+    COMMA           reduce using rule 18 (fingers -> THUMB .)
+    SQ2             reduce using rule 18 (fingers -> THUMB .)
+
+
+state 90
+
+    (19) fingers -> INDEX .
+
+    COMMA           reduce using rule 19 (fingers -> INDEX .)
+    SQ2             reduce using rule 19 (fingers -> INDEX .)
+
+
+state 91
+
+    (20) fingers -> MIDDLE .
+
+    COMMA           reduce using rule 20 (fingers -> MIDDLE .)
+    SQ2             reduce using rule 20 (fingers -> MIDDLE .)
+
+
+state 92
+
+    (21) fingers -> ANULAR .
+
+    COMMA           reduce using rule 21 (fingers -> ANULAR .)
+    SQ2             reduce using rule 21 (fingers -> ANULAR .)
+
+
+state 93
+
+    (22) fingers -> PINKY .
+
+    COMMA           reduce using rule 22 (fingers -> PINKY .)
+    SQ2             reduce using rule 22 (fingers -> PINKY .)
+
+
+state 94
+
+    (23) fingers -> ALL .
+
+    COMMA           reduce using rule 23 (fingers -> ALL .)
+    SQ2             reduce using rule 23 (fingers -> ALL .)
+
+
+state 95
+
+    (29) hand -> fingerL_A . fingerL_B fingerL_C
+    (25) fingerL_B -> . fingers COMMA fingerL_B
+    (26) fingerL_B -> . fingerL_C
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+    (27) fingerL_C -> . fingers SQ2
+    (28) fingerL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for THUMB resolved as shift
+  ! shift/reduce conflict for INDEX resolved as shift
+  ! shift/reduce conflict for MIDDLE resolved as shift
+  ! shift/reduce conflict for ANULAR resolved as shift
+  ! shift/reduce conflict for PINKY resolved as shift
+  ! shift/reduce conflict for ALL resolved as shift
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+    COMMA           reduce using rule 88 (empty -> .)
+
+  ! THUMB           [ reduce using rule 88 (empty -> .) ]
+  ! INDEX           [ reduce using rule 88 (empty -> .) ]
+  ! MIDDLE          [ reduce using rule 88 (empty -> .) ]
+  ! ANULAR          [ reduce using rule 88 (empty -> .) ]
+  ! PINKY           [ reduce using rule 88 (empty -> .) ]
+  ! ALL             [ reduce using rule 88 (empty -> .) ]
+
+    fingerL_B                      shift and go to state 115
+    fingerL_C                      shift and go to state 116
+    fingers                        shift and go to state 117
+    empty                          shift and go to state 118
+
+state 96
+
+    (24) fingerL_A -> SQ1 . fingers COMMA fingerL_B
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+
+    fingers                        shift and go to state 119
+
+state 97
+
+    (85) function_delay -> DELAY OPEN_P INT . COMMA time_param CLOSE_P
+
+    COMMA           shift and go to state 120
+
+
+state 98
+
+    (49) function_print -> PRINT OPEN_P STR . CLOSE_P
+    (34) stringL_A -> STR . COMMA stringL_B
+
+    CLOSE_P         shift and go to state 121
+    COMMA           shift and go to state 122
+
+
+state 99
+
+    (50) function_print -> PRINT OPEN_P VARIABLE . CLOSE_P
+    (35) stringL_A -> VARIABLE . COMMA stringL_B
+
+    CLOSE_P         shift and go to state 123
+    COMMA           shift and go to state 124
+
+
+state 100
+
+    (51) function_print -> PRINT OPEN_P BOOLEAN . CLOSE_P
+    (36) stringL_A -> BOOLEAN . COMMA stringL_B
+
+    CLOSE_P         shift and go to state 125
+    COMMA           shift and go to state 126
+
+
+state 101
+
+    (52) function_print -> PRINT OPEN_P INT . CLOSE_P
+    (37) stringL_A -> INT . COMMA stringL_B
+
+    CLOSE_P         shift and go to state 127
+    COMMA           shift and go to state 128
+
+
+state 102
+
+    (53) function_print -> PRINT OPEN_P Cstring . CLOSE_P
+
+    CLOSE_P         shift and go to state 129
+
+
+state 103
+
+    (48) Cstring -> stringL_A . stringL_B stringL_C
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 130
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 104
+
+    (7) function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2 .
+
+    FUNCTION        reduce using rule 7 (function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2 .)
+    $end            reduce using rule 7 (function_def -> FUNCTION VARIABLE OPEN_P parameters CLOSE_P ARROW var_type SB1 statement SB2 .)
+
+
+state 105
+
+    (93) function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .
+
+    PyC             reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    EQUALS_EQUALS   reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    DISTINCT        reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    LESS_EQUAL      reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    MORE_EQUAL      reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    MORE_THAN       reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    LESS_THAN       reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    SB1             reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    CLOSE_P         reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+    COMMA           reduce using rule 93 (function_call -> VARIABLE OPEN_P param_expressions CLOSE_P .)
+
+
+state 106
+
+    (94) param_expressions -> param_expressions COMMA . param_expressions
+    (94) param_expressions -> . param_expressions COMMA param_expressions
+    (95) param_expressions -> . expression
+    (96) param_expressions -> . empty
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (88) empty -> .
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    COMMA           reduce using rule 88 (empty -> .)
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+    param_expressions              shift and go to state 137
+    expression                     shift and go to state 71
+    empty                          shift and go to state 72
+    function_call                  shift and go to state 38
+
+state 107
+
+    (67) if_else -> IF expression SB1 statement . SB2 else_if
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 138
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    expression                     shift and go to state 26
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 108
+
+    (54) expression -> OPERA OPEN_P operator COMMA . expression COMMA expression CLOSE_P
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 139
+    function_call                  shift and go to state 38
+
+state 109
+
+    (62) var_assign -> LET VARIABLE EQUALS expression .
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    PyC             reduce using rule 62 (var_assign -> LET VARIABLE EQUALS expression .)
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 110
+
+    (63) for_loop -> FOR INT IN INT . dDOT INT SB1 statement SB2
+    (65) for_loop -> FOR INT IN INT . dDOT_E INT SB1 statement SB2
+
+    dDOT            shift and go to state 140
+    dDOT_E          shift and go to state 141
+
+
+state 111
+
+    (64) for_loop -> FOR VARIABLE IN INT . dDOT INT SB1 statement SB2
+    (66) for_loop -> FOR VARIABLE IN INT . dDOT_E INT SB1 statement SB2
+
+    dDOT            shift and go to state 142
+    dDOT_E          shift and go to state 143
+
+
+state 112
+
+    (87) while_loop -> WHILE OPEN_P expression CLOSE_P . SB1 statement SB2
+
+    SB1             shift and go to state 144
+
+
+state 113
+
+    (30) function_move -> MOVE OPEN_P fingers COMMA . BOOLEAN CLOSE_P
+    (31) function_move -> MOVE OPEN_P fingers COMMA . VARIABLE CLOSE_P
+
+    BOOLEAN         shift and go to state 145
+    VARIABLE        shift and go to state 146
+
+
+state 114
+
+    (32) function_move -> MOVE OPEN_P hand COMMA . BOOLEAN CLOSE_P
+    (33) function_move -> MOVE OPEN_P hand COMMA . VARIABLE CLOSE_P
+
+    BOOLEAN         shift and go to state 147
+    VARIABLE        shift and go to state 148
+
+
+state 115
+
+    (29) hand -> fingerL_A fingerL_B . fingerL_C
+    (27) fingerL_C -> . fingers SQ2
+    (28) fingerL_C -> . empty
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+    (88) empty -> .
+
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+    COMMA           reduce using rule 88 (empty -> .)
+
+    fingerL_C                      shift and go to state 149
+    fingers                        shift and go to state 150
+    empty                          shift and go to state 118
+
+state 116
+
+    (26) fingerL_B -> fingerL_C .
+
+    THUMB           reduce using rule 26 (fingerL_B -> fingerL_C .)
+    INDEX           reduce using rule 26 (fingerL_B -> fingerL_C .)
+    MIDDLE          reduce using rule 26 (fingerL_B -> fingerL_C .)
+    ANULAR          reduce using rule 26 (fingerL_B -> fingerL_C .)
+    PINKY           reduce using rule 26 (fingerL_B -> fingerL_C .)
+    ALL             reduce using rule 26 (fingerL_B -> fingerL_C .)
+    COMMA           reduce using rule 26 (fingerL_B -> fingerL_C .)
+
+
+state 117
+
+    (25) fingerL_B -> fingers . COMMA fingerL_B
+    (27) fingerL_C -> fingers . SQ2
+
+    COMMA           shift and go to state 151
+    SQ2             shift and go to state 152
+
+
+state 118
+
+    (28) fingerL_C -> empty .
+
+    THUMB           reduce using rule 28 (fingerL_C -> empty .)
+    INDEX           reduce using rule 28 (fingerL_C -> empty .)
+    MIDDLE          reduce using rule 28 (fingerL_C -> empty .)
+    ANULAR          reduce using rule 28 (fingerL_C -> empty .)
+    PINKY           reduce using rule 28 (fingerL_C -> empty .)
+    ALL             reduce using rule 28 (fingerL_C -> empty .)
+    COMMA           reduce using rule 28 (fingerL_C -> empty .)
+
+
+state 119
+
+    (24) fingerL_A -> SQ1 fingers . COMMA fingerL_B
+
+    COMMA           shift and go to state 153
+
+
+state 120
+
+    (85) function_delay -> DELAY OPEN_P INT COMMA . time_param CLOSE_P
+    (82) time_param -> . SEG
+    (83) time_param -> . MIL
+    (84) time_param -> . MIN
+
+    SEG             shift and go to state 155
+    MIL             shift and go to state 156
+    MIN             shift and go to state 157
+
+    time_param                     shift and go to state 154
+
+state 121
+
+    (49) function_print -> PRINT OPEN_P STR CLOSE_P .
+
+    PyC             reduce using rule 49 (function_print -> PRINT OPEN_P STR CLOSE_P .)
+
+
+state 122
+
+    (34) stringL_A -> STR COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 158
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 123
+
+    (50) function_print -> PRINT OPEN_P VARIABLE CLOSE_P .
+
+    PyC             reduce using rule 50 (function_print -> PRINT OPEN_P VARIABLE CLOSE_P .)
+
+
+state 124
+
+    (35) stringL_A -> VARIABLE COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 159
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 125
+
+    (51) function_print -> PRINT OPEN_P BOOLEAN CLOSE_P .
+
+    PyC             reduce using rule 51 (function_print -> PRINT OPEN_P BOOLEAN CLOSE_P .)
+
+
+state 126
+
+    (36) stringL_A -> BOOLEAN COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 160
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 127
+
+    (52) function_print -> PRINT OPEN_P INT CLOSE_P .
+
+    PyC             reduce using rule 52 (function_print -> PRINT OPEN_P INT CLOSE_P .)
+
+
+state 128
+
+    (37) stringL_A -> INT COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 161
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 129
+
+    (53) function_print -> PRINT OPEN_P Cstring CLOSE_P .
+
+    PyC             reduce using rule 53 (function_print -> PRINT OPEN_P Cstring CLOSE_P .)
+
+
+state 130
+
+    (48) Cstring -> stringL_A stringL_B . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+    STR             shift and go to state 163
+    VARIABLE        shift and go to state 164
+    BOOLEAN         shift and go to state 165
+    INT             shift and go to state 166
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+    stringL_C                      shift and go to state 162
+    empty                          shift and go to state 136
+
+state 131
+
+    (42) stringL_B -> stringL_C .
+
+    STR             reduce using rule 42 (stringL_B -> stringL_C .)
+    VARIABLE        reduce using rule 42 (stringL_B -> stringL_C .)
+    BOOLEAN         reduce using rule 42 (stringL_B -> stringL_C .)
+    INT             reduce using rule 42 (stringL_B -> stringL_C .)
+    CLOSE_P         reduce using rule 42 (stringL_B -> stringL_C .)
+
+
+state 132
+
+    (38) stringL_B -> STR . COMMA stringL_B
+    (43) stringL_C -> STR .
+
+    COMMA           shift and go to state 167
+    STR             reduce using rule 43 (stringL_C -> STR .)
+    VARIABLE        reduce using rule 43 (stringL_C -> STR .)
+    BOOLEAN         reduce using rule 43 (stringL_C -> STR .)
+    INT             reduce using rule 43 (stringL_C -> STR .)
+    CLOSE_P         reduce using rule 43 (stringL_C -> STR .)
+
+
+state 133
+
+    (39) stringL_B -> VARIABLE . COMMA stringL_B
+    (44) stringL_C -> VARIABLE .
+
+    COMMA           shift and go to state 168
+    STR             reduce using rule 44 (stringL_C -> VARIABLE .)
+    VARIABLE        reduce using rule 44 (stringL_C -> VARIABLE .)
+    BOOLEAN         reduce using rule 44 (stringL_C -> VARIABLE .)
+    INT             reduce using rule 44 (stringL_C -> VARIABLE .)
+    CLOSE_P         reduce using rule 44 (stringL_C -> VARIABLE .)
+
+
+state 134
+
+    (40) stringL_B -> INT . COMMA stringL_B
+    (46) stringL_C -> INT .
+
+    COMMA           shift and go to state 169
+    STR             reduce using rule 46 (stringL_C -> INT .)
+    VARIABLE        reduce using rule 46 (stringL_C -> INT .)
+    BOOLEAN         reduce using rule 46 (stringL_C -> INT .)
+    INT             reduce using rule 46 (stringL_C -> INT .)
+    CLOSE_P         reduce using rule 46 (stringL_C -> INT .)
+
+
+state 135
+
+    (41) stringL_B -> BOOLEAN . COMMA stringL_B
+    (45) stringL_C -> BOOLEAN .
+
+    COMMA           shift and go to state 170
+    STR             reduce using rule 45 (stringL_C -> BOOLEAN .)
+    VARIABLE        reduce using rule 45 (stringL_C -> BOOLEAN .)
+    BOOLEAN         reduce using rule 45 (stringL_C -> BOOLEAN .)
+    INT             reduce using rule 45 (stringL_C -> BOOLEAN .)
+    CLOSE_P         reduce using rule 45 (stringL_C -> BOOLEAN .)
+
+
+state 136
+
+    (47) stringL_C -> empty .
+
+    STR             reduce using rule 47 (stringL_C -> empty .)
+    VARIABLE        reduce using rule 47 (stringL_C -> empty .)
+    BOOLEAN         reduce using rule 47 (stringL_C -> empty .)
+    INT             reduce using rule 47 (stringL_C -> empty .)
+    CLOSE_P         reduce using rule 47 (stringL_C -> empty .)
+
+
+state 137
+
+    (94) param_expressions -> param_expressions COMMA param_expressions .
+    (94) param_expressions -> param_expressions . COMMA param_expressions
+
+  ! shift/reduce conflict for COMMA resolved as shift
+    CLOSE_P         reduce using rule 94 (param_expressions -> param_expressions COMMA param_expressions .)
+    COMMA           shift and go to state 106
+
+  ! COMMA           [ reduce using rule 94 (param_expressions -> param_expressions COMMA param_expressions .) ]
+
+
+state 138
+
+    (67) if_else -> IF expression SB1 statement SB2 . else_if
+    (68) else_if -> . ELSE IF expression SB1 statement SB2 else_if
+    (69) else_if -> . else_exp
+    (70) else_exp -> . ELSE SB1 statement SB2
+    (71) else_exp -> . empty
+    (88) empty -> .
+
+    ELSE            shift and go to state 172
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    else_if                        shift and go to state 171
+    else_exp                       shift and go to state 173
+    empty                          shift and go to state 174
+
+state 139
+
+    (54) expression -> OPERA OPEN_P operator COMMA expression . COMMA expression CLOSE_P
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    COMMA           shift and go to state 175
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 140
+
+    (63) for_loop -> FOR INT IN INT dDOT . INT SB1 statement SB2
+
+    INT             shift and go to state 176
+
+
+state 141
+
+    (65) for_loop -> FOR INT IN INT dDOT_E . INT SB1 statement SB2
+
+    INT             shift and go to state 177
+
+
+state 142
+
+    (64) for_loop -> FOR VARIABLE IN INT dDOT . INT SB1 statement SB2
+
+    INT             shift and go to state 178
+
+
+state 143
+
+    (66) for_loop -> FOR VARIABLE IN INT dDOT_E . INT SB1 statement SB2
+
+    INT             shift and go to state 179
+
+
+state 144
+
+    (87) while_loop -> WHILE OPEN_P expression CLOSE_P SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 180
+    empty                          shift and go to state 18
+
+state 145
+
+    (30) function_move -> MOVE OPEN_P fingers COMMA BOOLEAN . CLOSE_P
+
+    CLOSE_P         shift and go to state 181
+
+
+state 146
+
+    (31) function_move -> MOVE OPEN_P fingers COMMA VARIABLE . CLOSE_P
+
+    CLOSE_P         shift and go to state 182
+
+
+state 147
+
+    (32) function_move -> MOVE OPEN_P hand COMMA BOOLEAN . CLOSE_P
+
+    CLOSE_P         shift and go to state 183
+
+
+state 148
+
+    (33) function_move -> MOVE OPEN_P hand COMMA VARIABLE . CLOSE_P
+
+    CLOSE_P         shift and go to state 184
+
+
+state 149
+
+    (29) hand -> fingerL_A fingerL_B fingerL_C .
+
+    COMMA           reduce using rule 29 (hand -> fingerL_A fingerL_B fingerL_C .)
+
+
+state 150
+
+    (27) fingerL_C -> fingers . SQ2
+
+    SQ2             shift and go to state 152
+
+
+state 151
+
+    (25) fingerL_B -> fingers COMMA . fingerL_B
+    (25) fingerL_B -> . fingers COMMA fingerL_B
+    (26) fingerL_B -> . fingerL_C
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+    (27) fingerL_C -> . fingers SQ2
+    (28) fingerL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for THUMB resolved as shift
+  ! shift/reduce conflict for INDEX resolved as shift
+  ! shift/reduce conflict for MIDDLE resolved as shift
+  ! shift/reduce conflict for ANULAR resolved as shift
+  ! shift/reduce conflict for PINKY resolved as shift
+  ! shift/reduce conflict for ALL resolved as shift
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+    COMMA           reduce using rule 88 (empty -> .)
+
+  ! THUMB           [ reduce using rule 88 (empty -> .) ]
+  ! INDEX           [ reduce using rule 88 (empty -> .) ]
+  ! MIDDLE          [ reduce using rule 88 (empty -> .) ]
+  ! ANULAR          [ reduce using rule 88 (empty -> .) ]
+  ! PINKY           [ reduce using rule 88 (empty -> .) ]
+  ! ALL             [ reduce using rule 88 (empty -> .) ]
+
+    fingers                        shift and go to state 117
+    fingerL_B                      shift and go to state 185
+    fingerL_C                      shift and go to state 116
+    empty                          shift and go to state 118
+
+state 152
+
+    (27) fingerL_C -> fingers SQ2 .
+
+    THUMB           reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    INDEX           reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    MIDDLE          reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    ANULAR          reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    PINKY           reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    ALL             reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+    COMMA           reduce using rule 27 (fingerL_C -> fingers SQ2 .)
+
+
+state 153
+
+    (24) fingerL_A -> SQ1 fingers COMMA . fingerL_B
+    (25) fingerL_B -> . fingers COMMA fingerL_B
+    (26) fingerL_B -> . fingerL_C
+    (18) fingers -> . THUMB
+    (19) fingers -> . INDEX
+    (20) fingers -> . MIDDLE
+    (21) fingers -> . ANULAR
+    (22) fingers -> . PINKY
+    (23) fingers -> . ALL
+    (27) fingerL_C -> . fingers SQ2
+    (28) fingerL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for THUMB resolved as shift
+  ! shift/reduce conflict for INDEX resolved as shift
+  ! shift/reduce conflict for MIDDLE resolved as shift
+  ! shift/reduce conflict for ANULAR resolved as shift
+  ! shift/reduce conflict for PINKY resolved as shift
+  ! shift/reduce conflict for ALL resolved as shift
+    THUMB           shift and go to state 89
+    INDEX           shift and go to state 90
+    MIDDLE          shift and go to state 91
+    ANULAR          shift and go to state 92
+    PINKY           shift and go to state 93
+    ALL             shift and go to state 94
+    COMMA           reduce using rule 88 (empty -> .)
+
+  ! THUMB           [ reduce using rule 88 (empty -> .) ]
+  ! INDEX           [ reduce using rule 88 (empty -> .) ]
+  ! MIDDLE          [ reduce using rule 88 (empty -> .) ]
+  ! ANULAR          [ reduce using rule 88 (empty -> .) ]
+  ! PINKY           [ reduce using rule 88 (empty -> .) ]
+  ! ALL             [ reduce using rule 88 (empty -> .) ]
+
+    fingers                        shift and go to state 117
+    fingerL_B                      shift and go to state 186
+    fingerL_C                      shift and go to state 116
+    empty                          shift and go to state 118
+
+state 154
+
+    (85) function_delay -> DELAY OPEN_P INT COMMA time_param . CLOSE_P
+
+    CLOSE_P         shift and go to state 187
+
+
+state 155
+
+    (82) time_param -> SEG .
+
+    CLOSE_P         reduce using rule 82 (time_param -> SEG .)
+
+
+state 156
+
+    (83) time_param -> MIL .
+
+    CLOSE_P         reduce using rule 83 (time_param -> MIL .)
+
+
+state 157
+
+    (84) time_param -> MIN .
+
+    CLOSE_P         reduce using rule 84 (time_param -> MIN .)
+
+
+state 158
+
+    (34) stringL_A -> STR COMMA stringL_B .
+
+    STR             reduce using rule 34 (stringL_A -> STR COMMA stringL_B .)
+    VARIABLE        reduce using rule 34 (stringL_A -> STR COMMA stringL_B .)
+    INT             reduce using rule 34 (stringL_A -> STR COMMA stringL_B .)
+    BOOLEAN         reduce using rule 34 (stringL_A -> STR COMMA stringL_B .)
+    CLOSE_P         reduce using rule 34 (stringL_A -> STR COMMA stringL_B .)
+
+
+state 159
+
+    (35) stringL_A -> VARIABLE COMMA stringL_B .
+
+    STR             reduce using rule 35 (stringL_A -> VARIABLE COMMA stringL_B .)
+    VARIABLE        reduce using rule 35 (stringL_A -> VARIABLE COMMA stringL_B .)
+    INT             reduce using rule 35 (stringL_A -> VARIABLE COMMA stringL_B .)
+    BOOLEAN         reduce using rule 35 (stringL_A -> VARIABLE COMMA stringL_B .)
+    CLOSE_P         reduce using rule 35 (stringL_A -> VARIABLE COMMA stringL_B .)
+
+
+state 160
+
+    (36) stringL_A -> BOOLEAN COMMA stringL_B .
+
+    STR             reduce using rule 36 (stringL_A -> BOOLEAN COMMA stringL_B .)
+    VARIABLE        reduce using rule 36 (stringL_A -> BOOLEAN COMMA stringL_B .)
+    INT             reduce using rule 36 (stringL_A -> BOOLEAN COMMA stringL_B .)
+    BOOLEAN         reduce using rule 36 (stringL_A -> BOOLEAN COMMA stringL_B .)
+    CLOSE_P         reduce using rule 36 (stringL_A -> BOOLEAN COMMA stringL_B .)
+
+
+state 161
+
+    (37) stringL_A -> INT COMMA stringL_B .
+
+    STR             reduce using rule 37 (stringL_A -> INT COMMA stringL_B .)
+    VARIABLE        reduce using rule 37 (stringL_A -> INT COMMA stringL_B .)
+    INT             reduce using rule 37 (stringL_A -> INT COMMA stringL_B .)
+    BOOLEAN         reduce using rule 37 (stringL_A -> INT COMMA stringL_B .)
+    CLOSE_P         reduce using rule 37 (stringL_A -> INT COMMA stringL_B .)
+
+
+state 162
+
+    (48) Cstring -> stringL_A stringL_B stringL_C .
+
+    CLOSE_P         reduce using rule 48 (Cstring -> stringL_A stringL_B stringL_C .)
+
+
+state 163
+
+    (43) stringL_C -> STR .
+
+    CLOSE_P         reduce using rule 43 (stringL_C -> STR .)
+
+
+state 164
+
+    (44) stringL_C -> VARIABLE .
+
+    CLOSE_P         reduce using rule 44 (stringL_C -> VARIABLE .)
+
+
+state 165
+
+    (45) stringL_C -> BOOLEAN .
+
+    CLOSE_P         reduce using rule 45 (stringL_C -> BOOLEAN .)
+
+
+state 166
+
+    (46) stringL_C -> INT .
+
+    CLOSE_P         reduce using rule 46 (stringL_C -> INT .)
+
+
+state 167
+
+    (38) stringL_B -> STR COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 188
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 168
+
+    (39) stringL_B -> VARIABLE COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 189
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 169
+
+    (40) stringL_B -> INT COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 190
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 170
+
+    (41) stringL_B -> BOOLEAN COMMA . stringL_B
+    (38) stringL_B -> . STR COMMA stringL_B
+    (39) stringL_B -> . VARIABLE COMMA stringL_B
+    (40) stringL_B -> . INT COMMA stringL_B
+    (41) stringL_B -> . BOOLEAN COMMA stringL_B
+    (42) stringL_B -> . stringL_C
+    (43) stringL_C -> . STR
+    (44) stringL_C -> . VARIABLE
+    (45) stringL_C -> . BOOLEAN
+    (46) stringL_C -> . INT
+    (47) stringL_C -> . empty
+    (88) empty -> .
+
+  ! shift/reduce conflict for STR resolved as shift
+  ! shift/reduce conflict for VARIABLE resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+    STR             shift and go to state 132
+    VARIABLE        shift and go to state 133
+    INT             shift and go to state 134
+    BOOLEAN         shift and go to state 135
+    CLOSE_P         reduce using rule 88 (empty -> .)
+
+  ! STR             [ reduce using rule 88 (empty -> .) ]
+  ! VARIABLE        [ reduce using rule 88 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 88 (empty -> .) ]
+  ! INT             [ reduce using rule 88 (empty -> .) ]
+
+    stringL_B                      shift and go to state 191
+    stringL_C                      shift and go to state 131
+    empty                          shift and go to state 136
+
+state 171
+
+    (67) if_else -> IF expression SB1 statement SB2 else_if .
+
+    SB2             reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    RETURN          reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    IF              reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    OPERA           reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    INT             reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    BOOLEAN         reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    VARIABLE        reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    LET             reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    FOR             reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    WHILE           reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    MOVE            reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    DELAY           reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+    PRINT           reduce using rule 67 (if_else -> IF expression SB1 statement SB2 else_if .)
+
+
+state 172
+
+    (68) else_if -> ELSE . IF expression SB1 statement SB2 else_if
+    (70) else_exp -> ELSE . SB1 statement SB2
+
+    IF              shift and go to state 192
+    SB1             shift and go to state 193
+
+
+state 173
+
+    (69) else_if -> else_exp .
+
+    SB2             reduce using rule 69 (else_if -> else_exp .)
+    RETURN          reduce using rule 69 (else_if -> else_exp .)
+    IF              reduce using rule 69 (else_if -> else_exp .)
+    OPERA           reduce using rule 69 (else_if -> else_exp .)
+    INT             reduce using rule 69 (else_if -> else_exp .)
+    BOOLEAN         reduce using rule 69 (else_if -> else_exp .)
+    VARIABLE        reduce using rule 69 (else_if -> else_exp .)
+    LET             reduce using rule 69 (else_if -> else_exp .)
+    FOR             reduce using rule 69 (else_if -> else_exp .)
+    WHILE           reduce using rule 69 (else_if -> else_exp .)
+    MOVE            reduce using rule 69 (else_if -> else_exp .)
+    DELAY           reduce using rule 69 (else_if -> else_exp .)
+    PRINT           reduce using rule 69 (else_if -> else_exp .)
+
+
+state 174
+
+    (71) else_exp -> empty .
+
+    SB2             reduce using rule 71 (else_exp -> empty .)
+    RETURN          reduce using rule 71 (else_exp -> empty .)
+    IF              reduce using rule 71 (else_exp -> empty .)
+    OPERA           reduce using rule 71 (else_exp -> empty .)
+    INT             reduce using rule 71 (else_exp -> empty .)
+    BOOLEAN         reduce using rule 71 (else_exp -> empty .)
+    VARIABLE        reduce using rule 71 (else_exp -> empty .)
+    LET             reduce using rule 71 (else_exp -> empty .)
+    FOR             reduce using rule 71 (else_exp -> empty .)
+    WHILE           reduce using rule 71 (else_exp -> empty .)
+    MOVE            reduce using rule 71 (else_exp -> empty .)
+    DELAY           reduce using rule 71 (else_exp -> empty .)
+    PRINT           reduce using rule 71 (else_exp -> empty .)
+
+
+state 175
+
+    (54) expression -> OPERA OPEN_P operator COMMA expression COMMA . expression CLOSE_P
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 194
+    function_call                  shift and go to state 38
+
+state 176
+
+    (63) for_loop -> FOR INT IN INT dDOT INT . SB1 statement SB2
+
+    SB1             shift and go to state 195
+
+
+state 177
+
+    (65) for_loop -> FOR INT IN INT dDOT_E INT . SB1 statement SB2
+
+    SB1             shift and go to state 196
+
+
+state 178
+
+    (64) for_loop -> FOR VARIABLE IN INT dDOT INT . SB1 statement SB2
+
+    SB1             shift and go to state 197
+
+
+state 179
+
+    (66) for_loop -> FOR VARIABLE IN INT dDOT_E INT . SB1 statement SB2
+
+    SB1             shift and go to state 198
+
+
+state 180
+
+    (87) while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 199
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    expression                     shift and go to state 26
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 181
+
+    (30) function_move -> MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P .
+
+    PyC             reduce using rule 30 (function_move -> MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P .)
+
+
+state 182
+
+    (31) function_move -> MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P .
+
+    PyC             reduce using rule 31 (function_move -> MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P .)
+
+
+state 183
+
+    (32) function_move -> MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P .
+
+    PyC             reduce using rule 32 (function_move -> MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P .)
+
+
+state 184
+
+    (33) function_move -> MOVE OPEN_P hand COMMA VARIABLE CLOSE_P .
+
+    PyC             reduce using rule 33 (function_move -> MOVE OPEN_P hand COMMA VARIABLE CLOSE_P .)
+
+
+state 185
+
+    (25) fingerL_B -> fingers COMMA fingerL_B .
+
+    THUMB           reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    INDEX           reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    MIDDLE          reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    ANULAR          reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    PINKY           reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    ALL             reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+    COMMA           reduce using rule 25 (fingerL_B -> fingers COMMA fingerL_B .)
+
+
+state 186
+
+    (24) fingerL_A -> SQ1 fingers COMMA fingerL_B .
+
+    THUMB           reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    INDEX           reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    MIDDLE          reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    ANULAR          reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    PINKY           reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    ALL             reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+    COMMA           reduce using rule 24 (fingerL_A -> SQ1 fingers COMMA fingerL_B .)
+
+
+state 187
+
+    (85) function_delay -> DELAY OPEN_P INT COMMA time_param CLOSE_P .
+
+    PyC             reduce using rule 85 (function_delay -> DELAY OPEN_P INT COMMA time_param CLOSE_P .)
+
+
+state 188
+
+    (38) stringL_B -> STR COMMA stringL_B .
+
+    STR             reduce using rule 38 (stringL_B -> STR COMMA stringL_B .)
+    VARIABLE        reduce using rule 38 (stringL_B -> STR COMMA stringL_B .)
+    BOOLEAN         reduce using rule 38 (stringL_B -> STR COMMA stringL_B .)
+    INT             reduce using rule 38 (stringL_B -> STR COMMA stringL_B .)
+    CLOSE_P         reduce using rule 38 (stringL_B -> STR COMMA stringL_B .)
+
+
+state 189
+
+    (39) stringL_B -> VARIABLE COMMA stringL_B .
+
+    STR             reduce using rule 39 (stringL_B -> VARIABLE COMMA stringL_B .)
+    VARIABLE        reduce using rule 39 (stringL_B -> VARIABLE COMMA stringL_B .)
+    BOOLEAN         reduce using rule 39 (stringL_B -> VARIABLE COMMA stringL_B .)
+    INT             reduce using rule 39 (stringL_B -> VARIABLE COMMA stringL_B .)
+    CLOSE_P         reduce using rule 39 (stringL_B -> VARIABLE COMMA stringL_B .)
+
+
+state 190
+
+    (40) stringL_B -> INT COMMA stringL_B .
+
+    STR             reduce using rule 40 (stringL_B -> INT COMMA stringL_B .)
+    VARIABLE        reduce using rule 40 (stringL_B -> INT COMMA stringL_B .)
+    BOOLEAN         reduce using rule 40 (stringL_B -> INT COMMA stringL_B .)
+    INT             reduce using rule 40 (stringL_B -> INT COMMA stringL_B .)
+    CLOSE_P         reduce using rule 40 (stringL_B -> INT COMMA stringL_B .)
+
+
+state 191
+
+    (41) stringL_B -> BOOLEAN COMMA stringL_B .
+
+    STR             reduce using rule 41 (stringL_B -> BOOLEAN COMMA stringL_B .)
+    VARIABLE        reduce using rule 41 (stringL_B -> BOOLEAN COMMA stringL_B .)
+    BOOLEAN         reduce using rule 41 (stringL_B -> BOOLEAN COMMA stringL_B .)
+    INT             reduce using rule 41 (stringL_B -> BOOLEAN COMMA stringL_B .)
+    CLOSE_P         reduce using rule 41 (stringL_B -> BOOLEAN COMMA stringL_B .)
+
+
+state 192
+
+    (68) else_if -> ELSE IF . expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+
+    expression                     shift and go to state 200
+    function_call                  shift and go to state 38
+
+state 193
+
+    (70) else_exp -> ELSE SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 201
+    empty                          shift and go to state 18
+
+state 194
+
+    (54) expression -> OPERA OPEN_P operator COMMA expression COMMA expression . CLOSE_P
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    CLOSE_P         shift and go to state 202
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 195
+
+    (63) for_loop -> FOR INT IN INT dDOT INT SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 203
+    empty                          shift and go to state 18
+
+state 196
+
+    (65) for_loop -> FOR INT IN INT dDOT_E INT SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 204
+    empty                          shift and go to state 18
+
+state 197
+
+    (64) for_loop -> FOR VARIABLE IN INT dDOT INT SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 205
+    empty                          shift and go to state 18
+
+state 198
+
+    (66) for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 . statement SB2
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 206
+    empty                          shift and go to state 18
+
+state 199
+
+    (87) while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .
+
+    SB2             reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    RETURN          reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    IF              reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    OPERA           reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    INT             reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    VARIABLE        reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    LET             reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    FOR             reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    WHILE           reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    MOVE            reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    DELAY           reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+    PRINT           reduce using rule 87 (while_loop -> WHILE OPEN_P expression CLOSE_P SB1 statement SB2 .)
+
+
+state 200
+
+    (68) else_if -> ELSE IF expression . SB1 statement SB2 else_if
+    (61) expression -> expression . bool_operator expression
+    (55) bool_operator -> . EQUALS_EQUALS
+    (56) bool_operator -> . DISTINCT
+    (57) bool_operator -> . LESS_EQUAL
+    (58) bool_operator -> . MORE_EQUAL
+    (59) bool_operator -> . MORE_THAN
+    (60) bool_operator -> . LESS_THAN
+
+    SB1             shift and go to state 207
+    EQUALS_EQUALS   shift and go to state 49
+    DISTINCT        shift and go to state 50
+    LESS_EQUAL      shift and go to state 51
+    MORE_EQUAL      shift and go to state 52
+    MORE_THAN       shift and go to state 53
+    LESS_THAN       shift and go to state 54
+
+    bool_operator                  shift and go to state 48
+
+state 201
+
+    (70) else_exp -> ELSE SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 208
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 202
+
+    (54) expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .
+
+    PyC             reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    EQUALS_EQUALS   reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    DISTINCT        reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    LESS_EQUAL      reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    MORE_EQUAL      reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    MORE_THAN       reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    LESS_THAN       reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    SB1             reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    CLOSE_P         reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+    COMMA           reduce using rule 54 (expression -> OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P .)
+
+
+state 203
+
+    (63) for_loop -> FOR INT IN INT dDOT INT SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 209
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 204
+
+    (65) for_loop -> FOR INT IN INT dDOT_E INT SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 210
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 205
+
+    (64) for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 211
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 206
+
+    (66) for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement . SB2
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 212
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    expression                     shift and go to state 26
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 207
+
+    (68) else_if -> ELSE IF expression SB1 . statement SB2 else_if
+    (72) statement -> . statement statement_line
+    (73) statement -> . empty
+    (88) empty -> .
+
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    statement                      shift and go to state 213
+    empty                          shift and go to state 18
+
+state 208
+
+    (70) else_exp -> ELSE SB1 statement SB2 .
+
+    SB2             reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    RETURN          reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    IF              reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    OPERA           reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    INT             reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    VARIABLE        reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    LET             reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    FOR             reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    WHILE           reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    MOVE            reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    DELAY           reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+    PRINT           reduce using rule 70 (else_exp -> ELSE SB1 statement SB2 .)
+
+
+state 209
+
+    (63) for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .
+
+    SB2             reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    RETURN          reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    IF              reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    OPERA           reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    INT             reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    VARIABLE        reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    LET             reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    FOR             reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    WHILE           reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    MOVE            reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    DELAY           reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+    PRINT           reduce using rule 63 (for_loop -> FOR INT IN INT dDOT INT SB1 statement SB2 .)
+
+
+state 210
+
+    (65) for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .
+
+    SB2             reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    RETURN          reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    IF              reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    OPERA           reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    INT             reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    VARIABLE        reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    LET             reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    FOR             reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    WHILE           reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    MOVE            reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    DELAY           reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+    PRINT           reduce using rule 65 (for_loop -> FOR INT IN INT dDOT_E INT SB1 statement SB2 .)
+
+
+state 211
+
+    (64) for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .
+
+    SB2             reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    RETURN          reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    IF              reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    OPERA           reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    INT             reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    VARIABLE        reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    LET             reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    FOR             reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    WHILE           reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    MOVE            reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    DELAY           reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+    PRINT           reduce using rule 64 (for_loop -> FOR VARIABLE IN INT dDOT INT SB1 statement SB2 .)
+
+
+state 212
+
+    (66) for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .
+
+    SB2             reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    RETURN          reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    IF              reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    OPERA           reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    INT             reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    BOOLEAN         reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    VARIABLE        reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    LET             reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    FOR             reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    WHILE           reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    MOVE            reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    DELAY           reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+    PRINT           reduce using rule 66 (for_loop -> FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2 .)
+
+
+state 213
+
+    (68) else_if -> ELSE IF expression SB1 statement . SB2 else_if
+    (72) statement -> statement . statement_line
+    (74) statement_line -> . if_else
+    (75) statement_line -> . expression PyC
+    (76) statement_line -> . var_assign PyC
+    (77) statement_line -> . for_loop
+    (78) statement_line -> . while_loop
+    (79) statement_line -> . function_move PyC
+    (80) statement_line -> . function_delay PyC
+    (81) statement_line -> . function_print PyC
+    (86) statement_line -> . RETURN expression PyC
+    (67) if_else -> . IF expression SB1 statement SB2 else_if
+    (54) expression -> . OPERA OPEN_P operator COMMA expression COMMA expression CLOSE_P
+    (61) expression -> . expression bool_operator expression
+    (89) expression -> . INT
+    (90) expression -> . BOOLEAN
+    (91) expression -> . function_call
+    (92) expression -> . VARIABLE
+    (62) var_assign -> . LET VARIABLE EQUALS expression
+    (63) for_loop -> . FOR INT IN INT dDOT INT SB1 statement SB2
+    (64) for_loop -> . FOR VARIABLE IN INT dDOT INT SB1 statement SB2
+    (65) for_loop -> . FOR INT IN INT dDOT_E INT SB1 statement SB2
+    (66) for_loop -> . FOR VARIABLE IN INT dDOT_E INT SB1 statement SB2
+    (87) while_loop -> . WHILE OPEN_P expression CLOSE_P SB1 statement SB2
+    (30) function_move -> . MOVE OPEN_P fingers COMMA BOOLEAN CLOSE_P
+    (31) function_move -> . MOVE OPEN_P fingers COMMA VARIABLE CLOSE_P
+    (32) function_move -> . MOVE OPEN_P hand COMMA BOOLEAN CLOSE_P
+    (33) function_move -> . MOVE OPEN_P hand COMMA VARIABLE CLOSE_P
+    (85) function_delay -> . DELAY OPEN_P INT COMMA time_param CLOSE_P
+    (49) function_print -> . PRINT OPEN_P STR CLOSE_P
+    (50) function_print -> . PRINT OPEN_P VARIABLE CLOSE_P
+    (51) function_print -> . PRINT OPEN_P BOOLEAN CLOSE_P
+    (52) function_print -> . PRINT OPEN_P INT CLOSE_P
+    (53) function_print -> . PRINT OPEN_P Cstring CLOSE_P
+    (93) function_call -> . VARIABLE OPEN_P param_expressions CLOSE_P
+
+    SB2             shift and go to state 214
+    RETURN          shift and go to state 33
+    IF              shift and go to state 34
+    OPERA           shift and go to state 35
+    INT             shift and go to state 36
+    BOOLEAN         shift and go to state 37
+    VARIABLE        shift and go to state 22
+    LET             shift and go to state 39
+    FOR             shift and go to state 40
+    WHILE           shift and go to state 41
+    MOVE            shift and go to state 42
+    DELAY           shift and go to state 43
+    PRINT           shift and go to state 44
+
+    expression                     shift and go to state 26
+    statement_line                 shift and go to state 24
+    if_else                        shift and go to state 25
+    var_assign                     shift and go to state 27
+    for_loop                       shift and go to state 28
+    while_loop                     shift and go to state 29
+    function_move                  shift and go to state 30
+    function_delay                 shift and go to state 31
+    function_print                 shift and go to state 32
+    function_call                  shift and go to state 38
+
+state 214
+
+    (68) else_if -> ELSE IF expression SB1 statement SB2 . else_if
+    (68) else_if -> . ELSE IF expression SB1 statement SB2 else_if
+    (69) else_if -> . else_exp
+    (70) else_exp -> . ELSE SB1 statement SB2
+    (71) else_exp -> . empty
+    (88) empty -> .
+
+    ELSE            shift and go to state 172
+    SB2             reduce using rule 88 (empty -> .)
+    RETURN          reduce using rule 88 (empty -> .)
+    IF              reduce using rule 88 (empty -> .)
+    OPERA           reduce using rule 88 (empty -> .)
+    INT             reduce using rule 88 (empty -> .)
+    BOOLEAN         reduce using rule 88 (empty -> .)
+    VARIABLE        reduce using rule 88 (empty -> .)
+    LET             reduce using rule 88 (empty -> .)
+    FOR             reduce using rule 88 (empty -> .)
+    WHILE           reduce using rule 88 (empty -> .)
+    MOVE            reduce using rule 88 (empty -> .)
+    DELAY           reduce using rule 88 (empty -> .)
+    PRINT           reduce using rule 88 (empty -> .)
+
+    else_if                        shift and go to state 215
+    else_exp                       shift and go to state 173
+    empty                          shift and go to state 174
+
+state 215
+
+    (68) else_if -> ELSE IF expression SB1 statement SB2 else_if .
+
+    SB2             reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    RETURN          reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    IF              reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    OPERA           reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    INT             reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    BOOLEAN         reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    VARIABLE        reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    LET             reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    FOR             reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    WHILE           reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    MOVE            reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    DELAY           reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+    PRINT           reduce using rule 68 (else_if -> ELSE IF expression SB1 statement SB2 else_if .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for COMMA in state 16 resolved as shift
+WARNING: shift/reduce conflict for EQUALS_EQUALS in state 73 resolved as shift
+WARNING: shift/reduce conflict for DISTINCT in state 73 resolved as shift
+WARNING: shift/reduce conflict for LESS_EQUAL in state 73 resolved as shift
+WARNING: shift/reduce conflict for MORE_EQUAL in state 73 resolved as shift
+WARNING: shift/reduce conflict for MORE_THAN in state 73 resolved as shift
+WARNING: shift/reduce conflict for LESS_THAN in state 73 resolved as shift
+WARNING: shift/reduce conflict for THUMB in state 95 resolved as shift
+WARNING: shift/reduce conflict for INDEX in state 95 resolved as shift
+WARNING: shift/reduce conflict for MIDDLE in state 95 resolved as shift
+WARNING: shift/reduce conflict for ANULAR in state 95 resolved as shift
+WARNING: shift/reduce conflict for PINKY in state 95 resolved as shift
+WARNING: shift/reduce conflict for ALL in state 95 resolved as shift
+WARNING: shift/reduce conflict for STR in state 103 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 103 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 103 resolved as shift
+WARNING: shift/reduce conflict for INT in state 103 resolved as shift
+WARNING: shift/reduce conflict for STR in state 122 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 122 resolved as shift
+WARNING: shift/reduce conflict for INT in state 122 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 122 resolved as shift
+WARNING: shift/reduce conflict for STR in state 124 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 124 resolved as shift
+WARNING: shift/reduce conflict for INT in state 124 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 124 resolved as shift
+WARNING: shift/reduce conflict for STR in state 126 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 126 resolved as shift
+WARNING: shift/reduce conflict for INT in state 126 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 126 resolved as shift
+WARNING: shift/reduce conflict for STR in state 128 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 128 resolved as shift
+WARNING: shift/reduce conflict for INT in state 128 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 128 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 137 resolved as shift
+WARNING: shift/reduce conflict for THUMB in state 151 resolved as shift
+WARNING: shift/reduce conflict for INDEX in state 151 resolved as shift
+WARNING: shift/reduce conflict for MIDDLE in state 151 resolved as shift
+WARNING: shift/reduce conflict for ANULAR in state 151 resolved as shift
+WARNING: shift/reduce conflict for PINKY in state 151 resolved as shift
+WARNING: shift/reduce conflict for ALL in state 151 resolved as shift
+WARNING: shift/reduce conflict for THUMB in state 153 resolved as shift
+WARNING: shift/reduce conflict for INDEX in state 153 resolved as shift
+WARNING: shift/reduce conflict for MIDDLE in state 153 resolved as shift
+WARNING: shift/reduce conflict for ANULAR in state 153 resolved as shift
+WARNING: shift/reduce conflict for PINKY in state 153 resolved as shift
+WARNING: shift/reduce conflict for ALL in state 153 resolved as shift
+WARNING: shift/reduce conflict for STR in state 167 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 167 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 167 resolved as shift
+WARNING: shift/reduce conflict for INT in state 167 resolved as shift
+WARNING: shift/reduce conflict for STR in state 168 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 168 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 168 resolved as shift
+WARNING: shift/reduce conflict for INT in state 168 resolved as shift
+WARNING: shift/reduce conflict for STR in state 169 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 169 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 169 resolved as shift
+WARNING: shift/reduce conflict for INT in state 169 resolved as shift
+WARNING: shift/reduce conflict for STR in state 170 resolved as shift
+WARNING: shift/reduce conflict for VARIABLE in state 170 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 170 resolved as shift
+WARNING: shift/reduce conflict for INT in state 170 resolved as shift
