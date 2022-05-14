@@ -218,8 +218,8 @@ def t_STR(t):
     t.type = 'STR'
     return t
 
-def t_COMMENT(t): # se identifican los comentarios
-    r'\@.*'
+def t_COMMENTARIO(t): # se identifican los comentarios
+    r'\//.*'
     pass
 
 def t_newline(t): # se identifica una nueva linea
@@ -246,12 +246,12 @@ def t_SQ1(t): # verifica si es un parentesis cuadrado
     t.type = 'SQ1'
     return t
 
-def t_SQ2(t):
+def t_SQ2(t): 
     r'\]'
     t.type = 'SQ2'
     return t
 
-def t_ID(t):
+def t_ID(t): #funcion para los identificadores (nombres de variables)
     r'[a-zA-Z#_?][a-zA-Z0-9#_?]{0,14}'
     t.type = reserved.get(t.value,'VARIABLE')    # Se busca t en el diccionario de palabras reservadas
     if t.value == 'true':
@@ -266,7 +266,7 @@ def t_ID(t):
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
-    global GUI
-    GUI.println("Frase ilegal '{}' en línea {}".format(t.value, t.lexer.lineno))
+    global GUI ## hacer variable global para llamar esta funcion desde el ide
+    GUI.println("Frase ilegal '{}' en línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se teine que imprimir en el ide en caso de error
 
 lexer = lex.lex() # Se llama al analizador lexico
