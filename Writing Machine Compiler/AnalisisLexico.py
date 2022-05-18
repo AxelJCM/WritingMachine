@@ -96,72 +96,17 @@ t_MENOR_QUE = r'\<'
 t_MAYOR_IGUAL = r'\>='
 t_MAYOR_QUE = r'\>'
 t_dDOT_E = r'\.\.\='
-t_dDOT = r'\.\.'
-
-t_IF = r'If'
-t_IFELSE = r'IfElse'
-t_FOR = r'For'
-t_RETURN = r'return'
-t_DELAY = r'delay'
-t_DEF = r'Def'
-t_PUT = r'Put'
-t_ADD = r'Add'
-t_CONTINUEUP = r'ContinueUp'
-t_CONTINUEDOWN = r'ContinueDown'
-t_CONTINUERIGHT = r'ContinueRight'
-t_CONTINUELEFT = r'ContinueLeft'
-t_POS = r'Pos'
-t_POSX = r'PosX'
-t_POSY = r'PosY'
-t_USECOLOR = r'UseColor'
-t_DOWN = r'Down'
-t_UP = r'Up'
-t_BEGINNING = r'Beginnig'
-t_SPEED = r'Speed'
-t_RUN = r'Run'
-t_REPEAT = r'Repeat'
-t_IF = r'If'
-t_IFELSE = r'IfElse'
-t_UNTIL = r'Until'
-t_WHILE = r'While'
-t_EQUAL = r'Equal'
-t_AND = r'And'
-t_OR = r'Or'
-t_GREATER = r'Greater'
-t_SMALLER = r'Smaller'
-t_SUBSTR = r'Substr'
-t_RANDOM = r'Random'
-t_MULT = r'Mult'
-t_DIV = r'Div'
-t_SUM = r'Sum'
-t_PRINTLINE = r'PrintLine'
-
-
-
-
+t_dDOT = r'\.\.'    
 t_ignore = r'\t\n'
 
 """Definicion de algunos tokens como funciones(nota: definir palabras especificas antes de la definicion de variable)"""
 
-############################## Esta vara se usa cuando se escribe el codigo #############################
-# board = pyfirmata.Arduino('COM3')
-#
-# it = pyfirmata.util.Iterator(board)
-# it.start()
-# angle = 0
-#
-# pin3 = board.get_pin('d:3:s')
-# pin5 = board.get_pin('d:5:s')
-# pin6 = board.get_pin('d:6:s')
-# pin9 = board.get_pin('d:9:s')
-# pin10 = board.get_pin('d:10:s')
-#
-# pin3.write(angle)
-# pin5.write(angle)
-# pin6.write(angle)
-# pin9.write(angle)
-# pin10.write(angle)
-########################################################################################################
+
+def t_COMMENT(t):
+    r'\#.*'
+    pass
+
+
 
 
 def t_THUMB(t): # para pulgar 
