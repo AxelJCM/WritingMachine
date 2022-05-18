@@ -1,4 +1,5 @@
   // Stepper Motor X
+  #include <Servo.h>
   const int stepPinX = 2; //X.STEP
   const int dirPinX = 5; // X.DIR
   const int stepPinY = 3; //X.STEP
@@ -13,6 +14,9 @@
  pinMode(stepPinY,OUTPUT); 
  pinMode(dirPinY,OUTPUT);
  delay(5000);
+ Servo servo;
+ //servo.attach(11);
+ //servo.write(0);
  }
  void loop() {
 //X/ Derecha
