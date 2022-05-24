@@ -1,4 +1,8 @@
 from ast import If
+import keyword
+import re
+import codecs
+import os
 import ply.lex as lex
 import ply.yacc as yacc
 import sys
@@ -6,7 +10,7 @@ import time
 #import pyfirmata
 
 # diccionario de palabras reservadas
-reserved = {
+reservadas = {
     'for'	         : 'FOR',
     'true'	         : 'BOOLEAN',
     'false'	         : 'BOOLEAN',
@@ -49,6 +53,8 @@ reserved = {
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
 tokens = [
+    'ASIGNACION',
+    'ID', # para el identificador de las variables
     'EXPONENTE', # **
     'IMPRIMIR', # impresion    
     'SUMA', # +
@@ -72,10 +78,13 @@ tokens = [
     'MENOR_QUE', # <
     'dDOT_E', #
     'dDOT', #
-] + list(set(reserved.values())) # first turn into a set to remove duplicate BOOLEAN values
+    'NUMERO'
+] + list(set(reservadas.values())) # first turn into a set to remove duplicate BOOLEAN values
+# ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
-t_EXPONENETE = r'\*\*'
+t_ASIGNACION = r'='
+t_EXPONENETE = r'\**' # verificar que este cambio funciona. # antes: \*\*
 t_SUMA = r'\+'
 t_RESTA = r'\-'
 t_DIV_ENTERA = r'\//'
@@ -96,71 +105,35 @@ t_MENOR_QUE = r'\<'
 t_MAYOR_IGUAL = r'\>='
 t_MAYOR_QUE = r'\>'
 t_dDOT_E = r'\.\.\='
-t_dDOT = r'\.\.'    
-t_ignore = r'\t\n'
+t_dDOT = r'\.\.'
+t_ignore = r'\ \t\n' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 """Definicion de algunos tokens como funciones(nota: definir palabras especificas antes de la definicion de variable)"""
 
+############################## Esta vara se usa cuando se escribe el codigo #############################
+# board = pyfirmata.Arduino('COM3')
+#
+# it = pyfirmata.util.Iterator(board)
+# it.start()
+# angle = 0
+#
+# pin3 = board.get_pin('d:3:s')
+# pin5 = board.get_pin('d:5:s')
+# pin6 = board.get_pin('d:6:s')
+# pin9 = board.get_pin('d:9:s')
+# pin10 = board.get_pin('d:10:s')
+#
+# pin3.write(angle)
+# pin5.write(angle)
+# pin6.write(angle)
+# pin9.write(angle)
+# pin10.write(angle)
+########################################################################################################
 
-def t_COMMENT(t):
-    r'\#.*'
-    pass
 
-
-
-
-def t_THUMB(t): # para pulgar 
-    r'\"P\"'
-    t.type = 'THUMB'
-    return t
-def t_INDEX(t): # para dedo indice
-    r'\"I\"'
-    t.type = 'INDEX'
-    return t
-def t_MIDDLE(t): # para dedo medio
-    r'\"M\"'
-    t.type = 'MIDDLE'
-    return t
-def t_ANULAR(t): # para dedo anular
-    r'\"A\"'
-    t.type = 'ANULAR'
-    return t
-def t_PINKY(t): # para dedo meñique
-    r'\"Q\"'
-    t.type = 'PINKY'
-    return t
-
-def t_ALL(t): # supongo que ALL son todos lo dedos
-    r'\"T\"'
-    t.type = 'ALL'
-    return t
-
-def t_SEG(t):
-    r'\"Seg\"'
-    t.value = "Seg"
-    t.type = 'SEG'
-    return t
 def t_PRINT(t):
     r'println\!'
     t.type = 'PRINT'
-    return t
-
-def t_MIL(t):
-    r'\"Mil\"'
-    t.value = "Mil"
-    t.type = 'MIL'
-    return t
-
-def t_MIN(t):
-    r'\"Min\"'
-    t.value = "Min"
-    t.type = 'MIN'
-    return t
-
-def t_STR(t):
-    r"\"[a-zA-Z ]+\""
-    t.value = t.value[1:-1]
-    t.type = 'STR'
     return t
 
 def t_COMMENTARIO(t): # se identifican los comentarios
@@ -186,25 +159,29 @@ def t_SB2(t):
     t.type = 'SB2'
     return t
 
-def t_SQ1(t): # verifica si es un parentesis cuadrado
+def t_BRACKET1(t): # verifica si es un parentesis cuadrado
     r'\['
-    t.type = 'SQ1'
+    t.type = 'BRACKET1'
     return t
 
-def t_SQ2(t): 
+def t_BRACKET2(t): 
     r'\]'
-    t.type = 'SQ2'
+    t.type = 'BRACKET2'
     return t
 
 def t_ID(t): #funcion para los identificadores (nombres de variables)
-    r'[a-zA-Z#_?][a-zA-Z0-9#_?]{0,14}'
-    t.type = reserved.get(t.value,'VARIABLE')    # Se busca t en el diccionario de palabras reservadas
-    if t.value == 'true':
+    r'[a-z][a-zA-Z0-9@_]*'
+    t.type = reservadas.get(t.value,'VARIABLE')    # Se busca t en el diccionario de palabras reservadas
+    if(t.type == 'VARIABLE' and ((len(t.value) < 3) or (len(t.value) > 10))):
+        return t_error(t)
+    if t.value.upper() in reservadas:
+        t.value = t.value.upper()
+        t.type = t.value
+    # para cuando las variables son booleanas
+    if t.value == 'true': 
         t.value = True
     elif t.value == 'false':
         t.value = False
-    if(t.type == 'VARIABLE' and len(t.value) < 3):
-        return t_error(t)
     #print("Lexer info")
     #print(t.value)
     #print(t.type)
@@ -212,6 +189,7 @@ def t_ID(t): #funcion para los identificadores (nombres de variables)
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
     global GUI ## hacer variable global para llamar esta funcion desde el ide
-    GUI.println("Frase ilegal '{}' en línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se teine que imprimir en el ide en caso de error
+    GUI.println("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se tiene que imprimir en el ide en caso de error
+# verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
 
 lexer = lex.lex() # Se llama al analizador lexico
