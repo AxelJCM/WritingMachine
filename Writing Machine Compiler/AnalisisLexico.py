@@ -129,21 +129,18 @@ t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabula
 # pin10.write(angle)
 ########################################################################################################
 
-
-def t_PRINT(t):
-    r'println\!'
-    t.type = 'PRINT'
-    return t
-
-def t_COMMENTARIO(t): # se identifican los comentarios
+# se identifican los comentarios
+def t_COMMENTARIO(t): 
     r'\//.*'
     pass
 
-def t_newline(t): # se identifica una nueva linea
-    r'\n+'
+# se identifica una nueva linea
+def t_newline(t): 
+    r'\n+' 
     t.lexer.lineno += len(t.value)
 
-def t_NUMERO(t): # se verifica que t sea un entero
+# se verifica que t sea un entero
+def t_NUMERO(t): 
     r'\d+'
     try:
         t.value = int(t.value)
@@ -152,27 +149,26 @@ def t_NUMERO(t): # se verifica que t sea un entero
         t.value = 0
     return t
 
-def t_ID(t): #funcion para los identificadores (nombres de variables)
+#funcion para los identificadores 
+def t_ID(t): 
     r'[a-z][a-zA-Z0-9@_]{0,10}'
-    t.type = reservadas.get(t.value,'ID')    # Check for reserved words
+    t.type = reservadas.get(t.value,'ID')  # Se busca en las palabras resevadas
+    # Si el valor de la variable es booleana
     if t.value == 'true':
         t.value = True
     elif t.value == 'false':
         t.value = False
-    print(len(t.value))
+    # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
     if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10))):
         return t_error(t)
-    #print("Lexer info")
-    #print(t.value)
-    #print(t.type)
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
     global GUI ## hacer variable global para llamar esta funcion desde el ide
     GUI.println("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se tiene que imprimir en el ide en caso de error
-# verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
+    # verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
 
-lexer = lex.lex() # Se llama al analizador lexico
+lexer = lex.lex() # Se crea un objeto de tipo analizador lexico para realizar el analisis
 
 
 # se generan todos los tokens del codigo fuente y se imprimen
@@ -184,6 +180,7 @@ def GenerarTok(cadena):
         if not tok:
             break
         print(tok)
-        
-cad = "mario@_ = 1"     
+
+# Prueba para verificar que se identifican todos los tokens e identificadores        
+cad = "mario@_ = true"     
 GenerarTok(cad)
