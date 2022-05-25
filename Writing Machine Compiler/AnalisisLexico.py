@@ -53,15 +53,13 @@ reservadas = {
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
 tokens = [
-    'ASIGNACION',
     'ID', # para el identificador de las variables
-    'EXPONENTE', # **
-    'IMPRIMIR', # impresion    
+    'EXPONENTE', # ** 
     'SUMA', # +
     'RESTA', # -
     'DIVISION', # /
     'DIV_ENTERA', # //
-    'MULT', # *
+    'MULTI', # *
     'IGUAL', # =
     'ABRE_P', # (
     'CIERRA_P', # )
@@ -83,13 +81,12 @@ tokens = [
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
-t_ASIGNACION = r'='
-t_EXPONENETE = r'\**' # verificar que este cambio funciona. # antes: \*\*
+t_EXPONENTE = r'\*\*' # verificar que este cambio funciona. # antes: \*\*
 t_SUMA = r'\+'
 t_RESTA = r'\-'
-t_DIV_ENTERA = r'\//'
+t_DIV_ENTERA = r'\/\*'
 t_DIVISION = r'\/'
-t_MULT = r'\*'
+t_MULTI = r'\*'
 t_IGUAL_IGUAL = r'\=='
 t_IGUAL = r'\='
 t_ABRE_P = r'\('
@@ -106,7 +103,9 @@ t_MAYOR_IGUAL = r'\>='
 t_MAYOR_QUE = r'\>'
 t_dDOT_E = r'\.\.\='
 t_dDOT = r'\.\.'
-t_ignore = r'\ \t\n' # verificar que funciona para espacios, saltos de linea y tabulaciones
+t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabulaciones
+
+
 
 """Definicion de algunos tokens como funciones(nota: definir palabras especificas antes de la definicion de variable)"""
 
@@ -144,44 +143,25 @@ def t_newline(t): # se identifica una nueva linea
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-def t_INT(t): # se verifica que t sea un entero
+def t_NUMERO(t): # se verifica que t sea un entero
     r'\d+'
-    t.value = int(t.value)
-    return t
-
-def t_SB1(t):
-    r'\{'
-    t.type = 'SB1'
-    return t
-
-def t_SB2(t):
-    r'\}'
-    t.type = 'SB2'
-    return t
-
-def t_BRACKET1(t): # verifica si es un parentesis cuadrado
-    r'\['
-    t.type = 'BRACKET1'
-    return t
-
-def t_BRACKET2(t): 
-    r'\]'
-    t.type = 'BRACKET2'
+    try:
+        t.value = int(t.value)
+    except ValueError:
+        print("Integer value too large %s" % t.value)
+        t.value = 0
     return t
 
 def t_ID(t): #funcion para los identificadores (nombres de variables)
-    r'[a-z][a-zA-Z0-9@_]*'
-    t.type = reservadas.get(t.value,'VARIABLE')    # Se busca t en el diccionario de palabras reservadas
-    if(t.type == 'VARIABLE' and ((len(t.value) < 3) or (len(t.value) > 10))):
-        return t_error(t)
-    if t.value.upper() in reservadas:
-        t.value = t.value.upper()
-        t.type = t.value
-    # para cuando las variables son booleanas
-    if t.value == 'true': 
+    r'[a-z][a-zA-Z0-9@_]{0,10}'
+    t.type = reservadas.get(t.value,'ID')    # Check for reserved words
+    if t.value == 'true':
         t.value = True
     elif t.value == 'false':
         t.value = False
+    print(len(t.value))
+    if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10))):
+        return t_error(t)
     #print("Lexer info")
     #print(t.value)
     #print(t.type)
@@ -193,3 +173,17 @@ def t_error(t): # Si se detecta un error durante la compilacion, se imprime dich
 # verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
 
 lexer = lex.lex() # Se llama al analizador lexico
+
+
+# se generan todos los tokens del codigo fuente y se imprimen
+def GenerarTok(cadena):
+    lexer.lineno = 0
+    lexer.input(cadena)
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
+        print(tok)
+        
+cad = "mario@_ = 1"     
+GenerarTok(cad)
