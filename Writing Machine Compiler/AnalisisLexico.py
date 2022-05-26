@@ -143,5 +143,5 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-cad = "printLine(hola = true, yes = 2)"     
+cad = "printLine(hola = true, yes = 2)"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
 GenerarTok(cad)
