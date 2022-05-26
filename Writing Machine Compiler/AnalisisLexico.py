@@ -1,61 +1,18 @@
-from ast import If
-import keyword
-import re
-import codecs
-import os
 import ply.lex as lex
-import ply.yacc as yacc
-import sys
-import time
-#import pyfirmata
 
 # diccionario de palabras reservadas
-reservadas = {
-    'for'	         : 'FOR',
-    'true'	         : 'BOOLEAN',
-    'false'	         : 'BOOLEAN',
-    'return'         : 'RETURN',
-    'Delay'          : 'DELAY',
-    'Def'            : 'DEF',
-    'Put'            : 'PUT',
-    'Add'            : 'ADD',
-    'ContinueUp'     : 'CONTINUEUP',
-    'ContinueDown'   : 'CONTINUEDOWN',
-    'ContinueRight'  : 'CONTINUERIGHT',
-    'ContinueLeft'   : 'CONTINUELEFT',
-    'Pos'            : 'POS',
-    'PosX'           : 'POSX',
-    'PosY'           : 'POSY',
-    'UseColor'       : 'USECOLOR',
-    'Down'           : 'DOWN',
-    'Up'             : 'UP',
-    'Beginning'      : 'BEGINNING',
-    'Speed'          : 'SPEED',
-    'Run'            : 'RUN',
-    'Repeat'         : 'REPEAT',
-    'If'             : 'IF',
-    'IfElse'         : 'IFELSE',
-    'Until'          : 'UNTIL',
-    'While'          : 'WHILE',
-    'Equal'          : 'EQUAL',
-    'And'            : 'AND',
-    'Or'             : 'OR',
-    'Greater'        : 'GREATER',
-    'Smaller'        : 'SMALLER',
-    'Substr'         : 'SUBSTR',
-    'Random'         : 'RANDOM',
-    'Mult'           : 'MULT',
-    'Div'            : 'DIV',
-    'Sum'            : 'SUM',
-    'PrintLine'      : 'PRINTLINE'
-}     
+reservadas = ['FOR','TRUE','FALSE','RETURN','DELAY','DEF','PUT','ADD','CONTINUEUP','CONTINUEDOWN',
+              'CONTINUERIGHT','CONTINUELEFT','POS','POSX', 'POSY','USECOLOR','DOWN','UP', 'BEGINNING',
+              'SPEED','RUN',  'REPEAT','IF','IFELSE','UNTIL','WHILE', 'EQUAL','AND','OR','GREATER',
+              'SMALLER','SUBSTR','RANDOM','MULT','DIV','SUM','PRINTLINE'
+              ]     
 
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
-tokens = [
+tokens = reservadas + [
     'ID', # para el identificador de las variables
-    'EXPONENTE', # ** 
-    'SUMA', # +
+    'EXPONENTE', # **   
+    'SUMA', # +     
     'RESTA', # -
     'DIVISION', # /
     'DIV_ENTERA', # //
@@ -77,7 +34,7 @@ tokens = [
     'dDOT_E', #
     'dDOT', #
     'NUMERO'
-] + list(set(reservadas.values())) # first turn into a set to remove duplicate BOOLEAN values
+] # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
@@ -152,11 +109,14 @@ def t_NUMERO(t):
 #funcion para los identificadores 
 def t_ID(t): 
     r'[a-z][a-zA-Z0-9@_]{0,10}'
-    t.type = reservadas.get(t.value,'ID')  # Se busca en las palabras resevadas
+    #t.type = reservadas.get(t.value,'ID')  # Se busca en las palabras resevadas
     # Si el valor de la variable es booleana
-    if t.value == 'true':
+    if t.value.upper() in reservadas:
+        t.value = t.value.upper()
+        t.type = t.value
+    if t.value == 'TRUE':
         t.value = True
-    elif t.value == 'false':
+    elif t.value == 'FALSE':
         t.value = False
     # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
     if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10))):
@@ -164,9 +124,10 @@ def t_ID(t):
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
-    global GUI ## hacer variable global para llamar esta funcion desde el ide
-    GUI.println("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se tiene que imprimir en el ide en caso de error
+    #global GUI ## hacer variable global para llamar esta funcion desde el ide
+    #GUI.println("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se tiene que imprimir en el ide en caso de error
     # verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
+    print("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno))
 
 lexer = lex.lex() # Se crea un objeto de tipo analizador lexico para realizar el analisis
 
@@ -182,5 +143,5 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-cad = "mario@_ = true"     
+cad = "printLine(hola = true, yes = 2)"     
 GenerarTok(cad)
