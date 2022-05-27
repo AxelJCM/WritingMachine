@@ -1,15 +1,60 @@
 import ply.lex as lex
 
 # diccionario de palabras reservadas
-reservadas = ['FOR','TRUE','FALSE','RETURN','DELAY','DEF','PUT','ADD','CONTINUEUP','CONTINUEDOWN',
-              'CONTINUERIGHT','CONTINUELEFT','POS','POSX', 'POSY','USECOLOR','DOWN','UP', 'BEGINNING',
-              'SPEED','RUN',  'REPEAT','IF','IFELSE','UNTIL','WHILE', 'EQUAL','AND','OR','GREATER',
-              'SMALLER','SUBSTR','RANDOM','MULT','DIV','SUM','PRINTLINE'
-              ]     
+reservadas = {
+    'fin'    : 'FIN',
+    'para'   : 'PARA',
+    'let'	 : 'LET',
+    'while'	 : 'WHILE',
+    'for'	 : 'FOR',
+    'if'	 : 'IF',
+    'else'	 : 'ELSE',
+    'in'	 : 'IN',
+    'OPERA'	 : 'OPERA',
+    'true'	 : 'BOOLEAN',
+    'false'	 : 'BOOLEAN',
+    'boolean': 'BOOLEAN_TXT',
+    'integer': 'INTEGER_TXT',
+    'return' : 'RETURN',
+    'Move'   : 'MOVE',
+    'Def'   : 'DEF',
+    'Put'   : 'PUT',
+    'Add'   : 'ADD',
+    'ContinueUp'   : 'CONTINUEUP',
+    'ContinueDown'   : 'CONTINUEDOWN',
+    'ContinueRight'   : 'CONTINUERIGHT',
+    'ContinueLeft'   : 'CONTINUELEFT',
+    'Pos'   : 'POS',
+    'PosX'   : 'POSX',
+    'PosY'   : 'POSY',
+    'UseColor'   : 'USECOLOR',
+    'Down'   : 'DOWN',
+    'Up'   : 'UP',
+    'Beginning'   : 'BEGINNING',
+    'Speed'   : 'SPEED',
+    'Run'   : 'RUN',
+    'Repeat'   : 'REPEAT',
+    'IfElse'   : 'IFELSE',
+    'Until'   : 'UNTIL',
+    'While'   : 'WHILE',
+    'Equal'   : 'EQUAL',
+    'And'   : 'AND',
+    'Or'   : 'OR',
+    'Greater'   : 'GREATER',
+    'Smaller'   : 'SMALLER',
+    'Substr'   : 'SUBSTR',
+    'Random'   : 'RANDOM',
+    'Mult'   : 'MULT',
+    'Div'   : 'DIV',
+    'Sum'   : 'SUM',
+    'printLine'   : 'PRINTLINE',
+    'Delay'  : 'DELAY'
+}  
 
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
-tokens = reservadas + [
+tokens = [
+    'VAR',
     'ID', # para el identificador de las variables
     'EXPONENTE', # **   
     'SUMA', # +     
@@ -34,7 +79,7 @@ tokens = reservadas + [
     'dDOT_E', #
     'dDOT', #
     'NUMERO'
-] # first turn into a set to remove duplicate BOOLEAN values
+] + list(set(reservadas.values()))# first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
@@ -106,21 +151,23 @@ def t_NUMERO(t):
         t.value = 0
     return t
 
+def t_VAR(t):
+    r'[a-z][a-zA-Z0-9_@]{3,10}'
+    return t
+
 #funcion para los identificadores 
 def t_ID(t): 
-    r'[a-z][a-zA-Z0-9@_]{0,10}'
-    #t.type = reservadas.get(t.value,'ID')  # Se busca en las palabras resevadas
+    r'[A-Za-z][a-zA-Z]*'
+ # Se busca en las palabras resevadas
     # Si el valor de la variable es booleana
-    if t.value.upper() in reservadas:
+    if t.value.upper() in reservadas: 
         t.value = t.value.upper()
         t.type = t.value
-    if t.value == 'TRUE':
+    if t.value == 'true':
         t.value = True
-    elif t.value == 'FALSE':
+    elif t.value == 'false':
         t.value = False
     # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
-    if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10))):
-        return t_error(t)
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
@@ -143,5 +190,5 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-cad = "printLine(hola = true, yes = 2)"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
+cad = "(hola = true, yes = 2, IF)"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
 GenerarTok(cad)

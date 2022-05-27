@@ -93,7 +93,7 @@ tokens = [
     'LESS_THAN',
     'PyC',
     'dDOT_E',
-    'dDOT',
+    'dDOT'
 ] + list(set(reserved.values())) # first turn into a set to remove duplicate BOOLEAN values
 """Le dice a lex como se ven los tokens definidos anteriormente"""
 

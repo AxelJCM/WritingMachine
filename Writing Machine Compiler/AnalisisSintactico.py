@@ -1,0 +1,762 @@
+import ply.yacc as yacc
+import os
+import codecs
+import re
+from AnalisisLexico import tokens
+from sys import stdin
+from pip._vendor.distlib.compat import raw_input
+import random
+
+precedence = (
+    ('right', 'PUNTO_COMA'),
+    ('left', 'DIFERENTE'),
+    ('left', 'BRACKET2'),
+    ('right', 'BRACKET1'),
+    ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
+    ('right', 'COMA'),
+    ('left', 'SUMA', 'RESTA'),
+    ('left', 'MENOR_IGUAL', 'MAYOR_IGUAL', 'MAYOR_QUE', 'MENOR_QUE'),
+    ('left', 'DIVISION', 'DIV_ENTERA', 'MULTI'),
+    ('left', 'EXPONENTE'),
+    ('left', 'CIERRA_P'),
+    ('right', 'ABRE_P'), 
+)
+
+
+# Define las listas necesarias
+
+nombres = {}
+
+errores = []
+
+data = []
+
+# Funciones para el arbol
+
+def p_Start(p):
+    '''
+    Start : comment
+    '''
+    # runSemanticAnalizer(p[1])
+
+def p_comment(p):
+    '''
+    comment : code
+    '''
+    if p[0] == '\//.*':
+        p[0] = p[1]
+    else:
+        p_error(p) # se genera un error
+        
+def p_Code(p):
+    '''
+    code : PARA ID BRACKET1 ID BRACKET2 cuerpo 
+    '''
+    p[0] =  p[6]
+    
+
+
+def p_cuerpo(p):
+    '''
+    cuerpo : variable
+           | expresion        
+    '''
+    p[0] = p[1]
+
+
+def p_Variable(p):
+    '''
+    variable : variable1 cuerpo
+            | variable2 cuerpo
+            | variable3 cuerpo
+            | variable4 cuerpo
+            | empty empty
+    '''
+    if (p[2] != '$'):
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
+
+
+def p_Variable1(p):
+    '''
+    variable1 : DEF ID PUNTOCOMA
+    '''
+    p[0] = (p[1], p[2])
+    print(p[1], p[2])
+
+
+def p_Variable2(p):
+    '''
+    variable2 : DEF ID IGUAL NUMERO PUNTOCOMA
+              
+    '''
+    nombres[p[2]] = p[4]
+    p[0] = (p[1], p[2], p[3], p[4])
+    print(p[2], p[3], p[4])
+    print(nombres)
+
+
+def p_Variable3(p):
+    '''
+    variable3 : PUT ID IGUAL NUMERO PUNTOCOMA
+              
+    '''
+    nombres[p[2]] = p[4]
+    p[0] = (p[1], p[2], p[3], p[4])
+    print(p[2], p[3], p[4])
+    print(nombres)
+
+def p_Variable4(p):
+    '''
+    variable4 : PUT ID IGUAL expresion_alge1 PUNTOCOMA
+              | PUT ID IGUAL expresion_alge2 PUNTOCOMA
+              
+    '''
+    nombres[p[2]] = p[4]
+    p[0] = (p[1], p[2], p[3], p[4])
+    print(p[2], p[3], p[4])
+    print(nombres)
+    
+
+
+
+def p_expresion(p):
+    '''
+    expresion : NUMERO expresion
+              | funcion expresion
+              | ID expresion
+              | condicion expresion
+              | expresion_alge1 expresion
+              | expresion_alge2 expresion
+              | Sum expresion
+              | Substr expresion
+              | Mult expresion
+              | Div expresion
+              | Power expresion
+              | empty empty
+                        
+    '''
+
+    if (p[2] != '$'):
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[1]
+        
+
+def p_funcion(p):
+    '''
+    funcion : Random
+            | Begin
+            | ContinueUp
+            | ContinueDown
+            | ContinueRight
+            | ContinueLeft
+            | Up
+            | Down
+            | Speed
+            | Pos
+            | PosX
+            | PosY
+            | UseColor
+            | Run
+            | If
+            | IfElse
+            | Repeat
+            | Until
+            | While
+            | Print
+            | And
+            | Or
+            | Add
+         
+            
+            
+            
+            
+    '''
+    p[0] = p[1]
+
+
+def p_condicion(p):
+    '''
+    condicion : Equal expresion
+              | Greater expresion
+              | Smaller expresion
+              | Igual expresion
+              | Diferente expresion
+              | Mayor expresion
+              | Menor expresion
+              | Mayorigual expresion
+              | Menorigual expresion 
+    '''
+    
+
+
+def expresion_alge(p):
+    '''
+    expresion_alge : expresion_alge1
+                   | expresion_alge2
+                   
+                   | 
+    '''
+    
+
+    
+
+def p_expresion_alge1(p):
+
+    '''
+    expresion_alge1 : NUMERO SUMA NUMERO 
+                   | NUMERO RESTA NUMERO 
+                   | NUMERO MULTIPLICA NUMERO 
+                   | NUMERO DIVIDE NUMERO
+                   | NUMERO POTENCIA NUMERO
+                   
+    '''
+
+    if p[2] == '+' : p[0] = p[1]+p[3]
+    elif p[2] == '-' : p[0] = p[1]-p[3]
+    elif p[2] == '*' : p[0] = p[1]*p[3]
+    elif p[2] == '/' : p[0] = p[1]/p[3]
+    elif p[2] == '^' : p[0] = p[1]**p[3]
+
+    print(p[0])
+
+def p_expresion_alge2(p):
+
+    '''
+    expresion_alge2 : PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER SUMA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER RESTA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER MULTIPLICA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER DIVIDE PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER POTENCIA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+                   
+    '''
+
+    if p[4] == '+' : p[0] = p[2]+p[6]
+    elif p[4] == '-' : p[0] = p[2]-p[6]
+    elif p[4] == '*' : p[0] = p[2]*p[6]
+    elif p[4] == '/' : p[0] = p[2]/p[6]
+    elif p[4] == '^' : p[0] = p[2]**p[6]
+    
+
+def p_Sum(p):
+    '''
+    Sum : SUM PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
+        | SUM PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
+        | SUM PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+    '''
+
+    p[0] = p[3] + int(p[5])
+    print(p[0])
+
+
+def p_Substr(p):
+    '''
+    Substr : SUBSTR PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
+           | SUBSTR PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
+           | SUBSTR PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+           | SUBSTR PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
+           | SUBSTR PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    '''
+
+    p[0] = p[3] - p[5]
+    print(p[0])
+
+def p_Mult(p):
+    '''
+    Mult : MULT PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
+         | MULT PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
+         | MULT PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+         | MULT PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
+         | MULT PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    '''
+
+    p[0] = p[3] * p[5]
+    print(p[0])
+
+def p_Div(p):
+    '''
+    Div : DIV PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
+        | DIV PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
+        | DIV PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+        | DIV PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
+        | DIV PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    '''
+
+    p[0] = p[3] / p[5]
+    print(p[0])
+
+def p_Power(p):
+    '''
+    Power  : POWER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
+           | POWER PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
+           | POWER PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+           | POWER PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
+           | POWER PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    '''
+
+    p[0] = p[3] ** p[5]
+    print(p[0])
+
+
+
+def p_Equal(p):
+    '''
+    Equal : EQUAL PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    '''
+
+    if p[3] == p[5]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+def p_Greater(p):
+    '''
+    Greater : GREATER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    '''
+    
+    if p[3] > p[5]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+
+def p_Smaller(p):
+    '''
+    Smaller : SMALLER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    '''
+    
+    if p[3] < p[5]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+
+
+def p_And(p):
+    ''' And : AND PARENTESIS_IZQ expresion COMA expresion PARENTESIS_DER PUNTOCOMA '''
+    
+    if p[3] == True and p[5] == True:
+        p[0] = True
+    else:
+        p[0] = False
+
+
+
+
+def p_Or(p):
+    ''' Or : OR PARENTESIS_IZQ expresion COMA expresion PARENTESIS_DER PUNTOCOMA '''
+
+    p[0] = p[2] or p[5]
+
+
+
+
+def p_Igual(p):
+    '''
+    Igual : NUMERO SIMILAR NUMERO
+          | ID SIMILAR ID
+          | NUMERO SIMILAR ID
+          | ID SIMILAR NUMERO
+    '''
+    if p[1] == p[3]:
+        p[0] = True
+
+        print(p[0])
+
+
+def p_Diferente(p):
+    '''
+    Diferente : NUMERO DIFERENTE NUMERO
+          | ID DIFERENTE ID
+          | NUMERO DIFERENTE ID
+          | ID DIFERENTE NUMERO
+    '''
+
+    if p[1] != p[3]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+
+def p_Mayor(p):
+    '''
+    Mayor : NUMERO MAYOR NUMERO
+          | ID MAYOR ID
+          | NUMERO MAYOR ID
+          | ID MAYOR NUMERO
+    '''
+
+    if p[1] > p[3]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+def p_Menor(p):
+    '''
+    Menor : NUMERO MENOR NUMERO
+          | ID MENOR ID
+          | NUMERO MENOR ID
+          | ID MENOR NUMERO
+    '''
+
+    if p[1] < p[3]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+def p_Mayorigual (p):
+    '''
+    Mayorigual  : NUMERO MAYORIGUAL NUMERO
+          | ID MAYORIGUAL ID
+          | NUMERO MAYORIGUAL ID
+          | ID MAYORIGUAL NUMERO
+    '''
+
+    if p[1] >= p[3]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+def p_Menorigual (p):
+    '''
+    Menorigual  : NUMERO MENORIGUAL NUMERO
+          | ID MENORIGUAL ID
+          | NUMERO MENORIGUAL ID
+          | ID MENORIGUAL NUMERO
+    '''
+
+    if p[1] <= p[3]:
+        p[0] = True
+    else:
+        p[0] = False
+
+    print(p[0])
+
+
+def p_If(p):
+
+    '''
+    If : IF  condicion  PARENTESISC_IZQ funcion PARENTESISC_DER ENDIF
+    '''
+
+    print(p[3])
+
+    if(p[3]):
+        p[0] = p[6]
+
+def p_IfElse(p):
+
+    '''
+    IfElse : IFELSE condicion PARENTESISC_IZQ funcion PARENTESISC_DER PARENTESISC_IZQ funcion PARENTESISC_DER
+    '''
+
+    if p[2]:
+        p[0] = p[4]
+    else:
+        p[0] = p[7]
+
+def p_While(p):
+
+    ''' While : WHILE PARENTESISC_IZQ condicion PARENTESISC_DER PARENTESISC_IZQ funcion PARENTESISC_DER '''
+
+
+    print(p[3])
+
+    while(p[3]):
+        p[0] = p[6]
+
+def p_Repeat(p):
+
+    ''' Repeat : REPEAT NUMERO funcion
+    '''
+
+    p[0] = p[3]*p[2]
+
+def p_until(p):
+
+    ''' Until : UNTIL PARENTESISC_IZQ funcion PARENTESISC_DER PARENTESISC_IZQ condicion PARENTESISC_DER    '''
+
+def p_add(p):
+
+    '''Add : ADD PARENTESISC_IZQ NUMERO empty PARENTESISC_DER
+           | ADD PARENTESISC_IZQ NUMERO  NUMERO PARENTESISC_DER
+    '''
+
+    p[0]= p[3]+ p[4]
+    
+
+def p_procedimiento(p):
+    
+    '''
+        procedimiento : PARA ID PARENTESISC_IZQ condicion   PARENTESISC_DER  funcion   FIN
+                     | empty empty empty empty empty empty empty empty empty empty empty
+    '''
+    if p[11] != '$':
+        p[0] = (p[1], p[2], p[4], p[6], p[8], p[9], p[10])
+    elif p[11] == '$' and p[1] != '$':
+        p[0] = (p[1], p[2], p[4], p[6], p[8], p[9])
+    else:
+        p[0] = p[1]
+
+
+def p_parametro(p):
+    '''
+    parametro : ID COMA parametro
+              | ID empty empty
+              | NUMERO COMA parametro
+              | NUMERO empty empty
+              | empty empty empty
+    '''
+    if p[3] != '$' and p[2] != '$':
+        p[0] = (p[1], p[3])
+    else:
+        p[0] = p[1]
+
+def p_begin(p):
+    '''
+    Begin : BEGIN PUNTOCOMA
+    '''
+    p[0] = p[1]
+    print("Begin")
+    #data.append("Begin:")
+    #data.append(str(0))
+    #writeToJSONFile(path,fileName,data)
+
+def p_random(p):
+    '''
+    Random : RANDOM PARENTESIS_IZQ NUMERO PARENTESIS_DER PUNTOCOMA'''
+    
+    p[0] = random.randrange(p[3])
+    print(p[0])
+
+
+def p_ContinueUp(p):
+    '''
+    ContinueUp : CONTINUEUP NUMERO PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print("ContinueUp " + str(p[2]))
+    #data['ContinueUp'] = str(p[2])
+    #data.append("ContinueUp:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+def p_ContinueDown(p):
+    '''
+    ContinueDown : CONTINUEDOWN NUMERO PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print("ContinueDown " + str(p[2]))
+    #data['ContinueDown'] = str(p[2])
+    #data.append("ContinueDown:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+def p_ContinueRight(p):
+    '''
+    ContinueRight : CONTINUERIGHT NUMERO PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print("ContinueRight " + str(p[2]))
+    #data['ContinueRight'] = str(p[2])
+    #data.append("ContinueRight:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+def p_ContinueLeft(p):
+    '''
+    ContinueLeft : CONTINUELEFT NUMERO PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print("ContinueLeft " + str(p[2]))
+    #data['ContinueLeft'] = str(p[2])
+    #data.append("ContinueLeft:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+
+def p_Up(p):
+    '''
+    Up : UP PUNTOCOMA
+    '''
+    data.append("Up:")
+    data.append(str(0))
+    p[0] = p[1]
+    print(p[0])
+    #data['Lapiz'] = 'Up'
+    
+    #writeToJSONFile(path,fileName,data)
+
+def p_Down(p):
+    '''
+    Down : DOWN PUNTOCOMA
+    '''
+
+    p[0] = p[1]
+    print(p[0])
+    #data['Lapiz'] = 'Down'
+    #data.append("Down:")
+    #data.append(str(0))
+    #writeToJSONFile(path,fileName,data)
+
+def p_Speed(p):
+    '''
+    Speed : SPEED NUMERO PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print("Velocidad = " + str(p[2]))
+    #data['Speed'] = str(p[2])
+    #data.append("Speed:")
+    #data.append(str(p[2]))
+
+    #writeToJSONFile(path,fileName,data)
+
+def p_Pos(p):
+    '''
+    Pos : POS PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    '''
+
+    p[0] = (p[3],p[5])
+    print ("Coordenada X = "+ str(p[3]))
+    print("Coordenada Y = "+ str(p[5]))
+    #data['Pos'] = str(p[3]) + "," + str(p[5])
+    #data.append("PosicionX:")
+    #data.append(str(p[3]))
+    #data.append("PosicionY:")
+    #data.append(str(p[5]))
+
+
+    #writeToJSONFile(path,fileName,data)
+
+def p_PosX(p):
+    
+    '''
+    PosX : POSX  NUMERO  PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print ("Coordenada X = "+ str(p[2]))
+    #data['PosX'] = str(p[2])
+    #data.append("PosicionX:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+ 
+
+def p_PosY(p):
+    
+    '''
+    PosY : POSY  NUMERO  PUNTOCOMA
+    '''
+
+    p[0] = p[2]
+    print ("Coordenada Y = "+ str(p[2]))
+    #data['PosY'] = str(p[2])
+    #data.append("PosicionY:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+def p_UseColor(p):
+    
+    '''
+    UseColor : USECOLOR  NUMERO  PUNTOCOMA
+    '''
+
+    if p[2] in range(1,4):
+        print("UseColor "+ str(p[2]))
+    else:
+        print("Error")
+
+    #data['Color'] = str(p[2])
+    #data.append("Color:")
+    #data.append(str(p[2]))
+    #writeToJSONFile(path,fileName,data)
+
+
+def p_Run(p):
+
+    '''
+    Run : RUN PARENTESISC_IZQ funcion PARENTESISC_DER
+    '''
+
+    p[0] = p[3]
+    print ("Running " + str(p[3]))
+
+def p_Print(p):
+
+    ''' Print : PRINT PARENTESIS_IZQ expresion PARENTESIS_DER PUNTOCOMA'''
+    p[0] = p[3]
+    print(nombres[1].value)
+ 
+
+def p_empty(p):
+    '''
+    empty :
+    '''
+    p[0] = '$'
+
+
+def p_error(p):
+    errores.append("Error de sintáxis en linea "+str(p.lineno))
+    #errores.pop[len(errores)]
+    print("error de sintaxis " + str(p))
+    print("error en la linea " + str(p.lineno))
+
+
+def sintacticAnalizer(cadena):
+    parser = yacc.yacc()
+    parser.parse(cadena)
+
+
+#def writeToJSONFile(path, fileName, data):
+ #   filePathNameWExt = './' + path + '/' + fileName + '.json'
+   # with open(filePathNameWExt, 'w') as fp:
+   #     json.dump(data,fp)
+
+#path = './'
+#fileName = 'datosJSON'
+
+
+
+#################################### tester ############################################
+
+def buscarFichero(directorio):
+    ficheros = []
+    numArchivo = ''
+    respuesta = False
+    cont = 1
+    for base, dirs, files in os.walk(directorio):
+        ficheros.append(files)
+    for file in files:
+        print(str(cont) + ". " + file)
+        cont += 1
+    while respuesta == False:
+        numArchivo = raw_input('\n')
+        for file in files:
+            if file == files[int(numArchivo) - 1]:
+                respuesta = True
+                break
+    return files[int(numArchivo) - 1]
+
+
