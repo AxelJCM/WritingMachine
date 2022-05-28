@@ -74,8 +74,6 @@ tokens = [
     'MAYOR_IGUAL', # >=
     'MAYOR_QUE', # >
     'MENOR_QUE', # <
-    'dDOT_E', #
-    'dDOT', #
     'NUMERO'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
@@ -101,8 +99,6 @@ t_MENOR_IGUAL = r'\<='
 t_MENOR_QUE = r'\<'
 t_MAYOR_IGUAL = r'\>='
 t_MAYOR_QUE = r'\>'
-t_dDOT_E = r'\.\.\='
-t_dDOT = r'\.\.'
 t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 
