@@ -2,52 +2,51 @@ import ply.lex as lex
 
 # diccionario de palabras reservadas
 reservadas = {
-    'fin'    : 'FIN',
-    'para'   : 'PARA',
-    'let'	 : 'LET',
+    'Beginning' : 'BEGINNING',
+    'Start'  : 'START',
+    'Add'    : 'ADD',
+    'Def'    : 'DEF',
+    'Fin'    : 'FIN',
+    'Para'   : 'PARA',
     'while'	 : 'WHILE',
     'for'	 : 'FOR',
-    'if'	 : 'IF',
+    'If'	 : 'IF',
+    'EndIf'  : 'ENDIF',
     'else'	 : 'ELSE',
-    'in'	 : 'IN',
-    'opera'	 : 'OPERA',
-    'true'	 : 'BOOLEAN_T',
-    'false'	 : 'BOOLEAN_F',
-    'boolean': 'BOOLEAN_TXT',
-    'integer': 'INTEGER_TXT',
-    'return' : 'RETURN',
-    'move'   : 'MOVE',
-    'def'   : 'DEF',
-    'put'   : 'PUT',
-    'add'   : 'ADD',
-    'continueUp'   : 'CONTINUEUP',
-    'continueDown'   : 'CONTINUEDOWN',
-    'continueRight'   : 'CONTINUERIGHT',
-    'continueLeft'   : 'CONTINUELEFT',
-    'pos'   : 'POS',
-    'posX'   : 'POSX',
-    'posY'   : 'POSY',
-    'useColor'   : 'USECOLOR',
-    'down'   : 'DOWN',
-    'up'   : 'UP',
-    'beginning'   : 'BEGINNING',
-    'speed'   : 'SPEED',
-    'run'   : 'RUN',
-    'repeat'   : 'REPEAT',
-    'ifElse'   : 'IFELSE',
-    'until'   : 'UNTIL',
-    'equal'   : 'EQUAL',
-    'and'   : 'AND',
-    'or'   : 'OR',
-    'greater'   : 'GREATER',
-    'smaller'   : 'SMALLER',
-    'substr'   : 'SUBSTR',
-    'random'   : 'RANDOM',
-    'mult'   : 'MULT',
-    'div'   : 'DIV',
-    'sum'   : 'SUM',
-    'printLine'   : 'PRINTLINE',
-    'delay'  : 'DELAY'
+    'True'	 : 'BOOLEAN_T',
+    'False'	 : 'BOOLEAN_F',
+    'Boolean': 'BOOLEAN_TXT',
+    'Integer': 'INTEGER_TXT',
+    'Return' : 'RETURN',
+    'Put'   : 'PUT',
+    'Add'   : 'ADD',
+    'ContinueUp'   : 'CONTINUEUP',
+    'ContinueDown'   : 'CONTINUEDOWN',
+    'ContinueRight'   : 'CONTINUERIGHT',
+    'ContinueLeft'   : 'CONTINUELEFT',
+    'Pos'   : 'POS',
+    'PosX'   : 'POSX',
+    'PosY'   : 'POSY',
+    'UseColor'   : 'USECOLOR',
+    'Down'   : 'DOWN',
+    'Up'   : 'UP',
+    'Speed'   : 'SPEED',
+    'Run'   : 'RUN',
+    'Repeat'   : 'REPEAT',
+    'IfElse'   : 'IFELSE',
+    'Until'   : 'UNTIL',
+    'Equal'   : 'EQUAL',
+    'And'   : 'AND',
+    'Or'   : 'OR',
+    'Greater'   : 'GREATER',
+    'Smaller'   : 'SMALLER',
+    'Substr'   : 'SUBSTR',
+    'Random'   : 'RANDOM',
+    'Mult'   : 'MULT',
+    'Div'   : 'DIV',
+    'Sum'   : 'SUM',
+    'PrintLine'   : 'PRINTLINE',
+    'Substr' : 'SUBSTR'
 }  
 
 # Lista de tokens 
@@ -66,14 +65,14 @@ tokens = [
     'BRACKET1', # [
     'BRACKET2', # ]
     'COMA', # ,
-    'PUNTO_COMA', # ;
+    'PUNTOCOMA', # ;
     'IGUAL_IGUAL', # ==
     'DIFERENTE', # !=
     'NEGACION', # !
-    'MENOR_IGUAL', # <=
-    'MAYOR_IGUAL', # >=
-    'MAYOR_QUE', # >
-    'MENOR_QUE', # <
+    'MENORIGUAL', # <=
+    'MAYORIGUAL', # >=
+    'MAYOR', # >
+    'MENOR', # <
     'NUMERO'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
@@ -92,7 +91,7 @@ t_CIERRA_P = r'\)'
 t_BRACKET1 = r'\['
 t_BRACKET2 = r'\]'
 t_COMA = r'\,'
-t_PUNTO_COMA = r'\;'
+t_PUNTOCOMA = r'\;'
 t_DIFERENTE = r'\!='
 t_NEGACION = r'\!'
 t_MENOR_IGUAL = r'\<='
@@ -156,9 +155,9 @@ def t_ID(t):
         t.value = t.value.upper()
         t.type = t.value
     
-    if t.value == 'true':
+    if t.value == 'True':
         t.value = True
-    elif t.value == 'false':
+    elif t.value == 'False':
         t.value = False
     # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
     return t

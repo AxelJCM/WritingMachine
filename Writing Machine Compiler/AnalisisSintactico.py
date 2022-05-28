@@ -3,6 +3,8 @@ import os
 import codecs
 import re
 from AnalisisLexico import tokens
+from AnalisisLexico import GenerarTok
+#from Semantic import runSemanticAnalizer
 from sys import stdin
 from pip._vendor.distlib.compat import raw_input
 import random
@@ -15,7 +17,7 @@ precedence = (
     ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
     ('right', 'COMA'),
     ('left', 'SUMA', 'RESTA'),
-    ('left', 'MENOR_IGUAL', 'MAYOR_IGUAL', 'MAYOR_QUE', 'MENOR_QUE'),
+    ('left', 'MENORIGUAL', 'MAYORIGUAL', 'MAYOR', 'MENOR'),
     ('left', 'DIVISION', 'DIV_ENTERA', 'MULTI'),
     ('left', 'EXPONENTE'),
     ('left', 'CIERRA_P'),
@@ -183,12 +185,12 @@ def p_condicion(p):
     condicion : Equal expresion
               | Greater expresion
               | Smaller expresion
-              | Igual expresion
+              | Equal expresion
               | Diferente expresion
               | Mayor expresion
-              | Menor expresion
-              | Mayorigual expresion
-              | Menorigual expresion 
+              | Smaller expresion
+              | Greaterthen expresion
+              | Smallerthen expresion 
     '''
     
 
@@ -226,11 +228,11 @@ def p_expresion_alge1(p):
 def p_expresion_alge2(p):
 
     '''
-    expresion_alge2 : PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER SUMA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
-                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER RESTA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
-                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER MULTIPLICA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
-                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER DIVIDE PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
-                   | PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER POTENCIA PARENTESIS_IZQ expresion_alge1 PARENTESIS_DER
+    expresion_alge2 : ABRE_P expresion_alge1 CIERRA_P SUMA ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P RESTA ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P MULTIPLICA ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P DIVIDE ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P POTENCIA ABRE_P expresion_alge1 CIERRA_P
                    
     '''
 
@@ -243,9 +245,9 @@ def p_expresion_alge2(p):
 
 def p_Sum(p):
     '''
-    Sum : SUM PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
-        | SUM PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
-        | SUM PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
+    Sum : SUM ABRE_P NUMERO COMA NUMERO CIERRA_P
+        | SUM ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+        | SUM ABRE_P NUMERO COMA ID CIERRA_P
     '''
 
     p[0] = p[3] + int(p[5])
@@ -254,11 +256,11 @@ def p_Sum(p):
 
 def p_Substr(p):
     '''
-    Substr : SUBSTR PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
-           | SUBSTR PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
-           | SUBSTR PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
-           | SUBSTR PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
-           | SUBSTR PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    Substr : SUBSTR ABRE_P NUMERO COMA NUMERO CIERRA_P
+           | SUBSTR ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+           | SUBSTR ABRE_P NUMERO COMA ID CIERRA_P
+           | SUBSTR ABRE_P ID COMA NUMERO CIERRA_P
+           | SUBSTR ABRE_P ID COMA ID CIERRA_P
     '''
 
     p[0] = p[3] - p[5]
@@ -266,11 +268,11 @@ def p_Substr(p):
 
 def p_Mult(p):
     '''
-    Mult : MULT PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
-         | MULT PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
-         | MULT PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
-         | MULT PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
-         | MULT PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    Mult : MULT ABRE_P NUMERO COMA NUMERO CIERRA_P
+         | MULT ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+         | MULT ABRE_P NUMERO COMA ID CIERRA_P
+         | MULT ABRE_P ID COMA NUMERO CIERRA_P
+         | MULT ABRE_P ID COMA ID CIERRA_P
     '''
 
     p[0] = p[3] * p[5]
@@ -278,11 +280,11 @@ def p_Mult(p):
 
 def p_Div(p):
     '''
-    Div : DIV PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
-        | DIV PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
-        | DIV PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
-        | DIV PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
-        | DIV PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    Div : DIV ABRE_P NUMERO COMA NUMERO CIERRA_P
+        | DIV ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+        | DIV ABRE_P NUMERO COMA ID CIERRA_P
+        | DIV ABRE_P ID COMA NUMERO CIERRA_P
+        | DIV ABRE_P ID COMA ID CIERRA_P
     '''
 
     p[0] = p[3] / p[5]
@@ -290,11 +292,11 @@ def p_Div(p):
 
 def p_Power(p):
     '''
-    Power  : POWER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER
-           | POWER PARENTESIS_IZQ expresion_alge1 COMA expresion_alge1 PARENTESIS_DER
-           | POWER PARENTESIS_IZQ NUMERO COMA ID PARENTESIS_DER
-           | POWER PARENTESIS_IZQ ID COMA NUMERO PARENTESIS_DER
-           | POWER PARENTESIS_IZQ ID COMA ID PARENTESIS_DER
+    Power  : POWER ABRE_P NUMERO COMA NUMERO CIERRA_P
+           | POWER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+           | POWER ABRE_P NUMERO COMA ID CIERRA_P
+           | POWER ABRE_P ID COMA NUMERO CIERRA_P
+           | POWER ABRE_P ID COMA ID CIERRA_P
     '''
 
     p[0] = p[3] ** p[5]
@@ -304,7 +306,7 @@ def p_Power(p):
 
 def p_Equal(p):
     '''
-    Equal : EQUAL PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
     '''
 
     if p[3] == p[5]:
@@ -316,7 +318,7 @@ def p_Equal(p):
 
 def p_Greater(p):
     '''
-    Greater : GREATER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    Greater : GREATER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
     '''
     
     if p[3] > p[5]:
@@ -329,7 +331,7 @@ def p_Greater(p):
 
 def p_Smaller(p):
     '''
-    Smaller : SMALLER PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    Smaller : SMALLER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
     '''
     
     if p[3] < p[5]:
@@ -342,7 +344,7 @@ def p_Smaller(p):
 
 
 def p_And(p):
-    ''' And : AND PARENTESIS_IZQ expresion COMA expresion PARENTESIS_DER PUNTOCOMA '''
+    ''' And : AND ABRE_P expresion COMA expresion CIERRA_P PUNTOCOMA '''
     
     if p[3] == True and p[5] == True:
         p[0] = True
@@ -353,19 +355,19 @@ def p_And(p):
 
 
 def p_Or(p):
-    ''' Or : OR PARENTESIS_IZQ expresion COMA expresion PARENTESIS_DER PUNTOCOMA '''
+    ''' Or : OR ABRE_P expresion COMA expresion CIERRA_P PUNTOCOMA '''
 
     p[0] = p[2] or p[5]
 
 
 
 
-def p_Igual(p):
+def p_Equal(p):
     '''
-    Igual : NUMERO SIMILAR NUMERO
-          | ID SIMILAR ID
-          | NUMERO SIMILAR ID
-          | ID SIMILAR NUMERO
+    Equal : NUMERO IGUAL NUMERO
+          | ID IGUAL ID
+          | NUMERO IGUAL ID
+          | ID IGUAL NUMERO
     '''
     if p[1] == p[3]:
         p[0] = True
@@ -389,9 +391,9 @@ def p_Diferente(p):
     print(p[0])
 
 
-def p_Mayor(p):
+def p_Greater(p):
     '''
-    Mayor : NUMERO MAYOR NUMERO
+    Greater : NUMERO MAYOR NUMERO
           | ID MAYOR ID
           | NUMERO MAYOR ID
           | ID MAYOR NUMERO
@@ -404,9 +406,9 @@ def p_Mayor(p):
 
     print(p[0])
 
-def p_Menor(p):
+def p_Smaller(p):
     '''
-    Menor : NUMERO MENOR NUMERO
+    Smaller : NUMERO MENOR NUMERO
           | ID MENOR ID
           | NUMERO MENOR ID
           | ID MENOR NUMERO
@@ -419,9 +421,9 @@ def p_Menor(p):
 
     print(p[0])
 
-def p_Mayorigual (p):
+def p_Greaterthen (p):
     '''
-    Mayorigual  : NUMERO MAYORIGUAL NUMERO
+    Greaterthen  : NUMERO MAYORIGUAL NUMERO
           | ID MAYORIGUAL ID
           | NUMERO MAYORIGUAL ID
           | ID MAYORIGUAL NUMERO
@@ -434,9 +436,9 @@ def p_Mayorigual (p):
 
     print(p[0])
 
-def p_Menorigual (p):
+def p_Smallerthen (p):
     '''
-    Menorigual  : NUMERO MENORIGUAL NUMERO
+    Smallerthen  : NUMERO MENORIGUAL NUMERO
           | ID MENORIGUAL ID
           | NUMERO MENORIGUAL ID
           | ID MENORIGUAL NUMERO
@@ -453,7 +455,7 @@ def p_Menorigual (p):
 def p_If(p):
 
     '''
-    If : IF  condicion  PARENTESISC_IZQ funcion PARENTESISC_DER ENDIF
+    If : IF  condicion  BRACKET1 funcion BRACKET2 ENDIF
     '''
 
     print(p[3])
@@ -464,7 +466,7 @@ def p_If(p):
 def p_IfElse(p):
 
     '''
-    IfElse : IFELSE condicion PARENTESISC_IZQ funcion PARENTESISC_DER PARENTESISC_IZQ funcion PARENTESISC_DER
+    IfElse : IFELSE condicion BRACKET1 funcion BRACKET2 BRACKET1 funcion BRACKET2
     '''
 
     if p[2]:
@@ -474,7 +476,7 @@ def p_IfElse(p):
 
 def p_While(p):
 
-    ''' While : WHILE PARENTESISC_IZQ condicion PARENTESISC_DER PARENTESISC_IZQ funcion PARENTESISC_DER '''
+    ''' While : WHILE BRACKET1 condicion BRACKET2 BRACKET1 funcion BRACKET2 '''
 
 
     print(p[3])
@@ -491,12 +493,12 @@ def p_Repeat(p):
 
 def p_until(p):
 
-    ''' Until : UNTIL PARENTESISC_IZQ funcion PARENTESISC_DER PARENTESISC_IZQ condicion PARENTESISC_DER    '''
+    ''' Until : UNTIL BRACKET1 funcion BRACKET2 BRACKET1 condicion BRACKET2    '''
 
 def p_add(p):
 
-    '''Add : ADD PARENTESISC_IZQ NUMERO empty PARENTESISC_DER
-           | ADD PARENTESISC_IZQ NUMERO  NUMERO PARENTESISC_DER
+    '''Add : ADD BRACKET1 NUMERO empty BRACKET2
+           | ADD BRACKET1 NUMERO  NUMERO BRACKET2
     '''
 
     p[0]= p[3]+ p[4]
@@ -505,7 +507,7 @@ def p_add(p):
 def p_procedimiento(p):
     
     '''
-        procedimiento : PARA ID PARENTESISC_IZQ condicion   PARENTESISC_DER  funcion   FIN
+        procedimiento : PARA ID BRACKET1 condicion   BRACKET2  funcion   FIN
                      | empty empty empty empty empty empty empty empty empty empty empty
     '''
     if p[11] != '$':
@@ -541,7 +543,7 @@ def p_begin(p):
 
 def p_random(p):
     '''
-    Random : RANDOM PARENTESIS_IZQ NUMERO PARENTESIS_DER PUNTOCOMA'''
+    Random : RANDOM ABRE_P NUMERO CIERRA_P PUNTOCOMA'''
     
     p[0] = random.randrange(p[3])
     print(p[0])
@@ -635,7 +637,7 @@ def p_Speed(p):
 
 def p_Pos(p):
     '''
-    Pos : POS PARENTESIS_IZQ NUMERO COMA NUMERO PARENTESIS_DER PUNTOCOMA
+    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
     '''
 
     p[0] = (p[3],p[5])
@@ -697,7 +699,7 @@ def p_UseColor(p):
 def p_Run(p):
 
     '''
-    Run : RUN PARENTESISC_IZQ funcion PARENTESISC_DER
+    Run : RUN BRACKET1 funcion BRACKET2
     '''
 
     p[0] = p[3]
@@ -705,7 +707,7 @@ def p_Run(p):
 
 def p_Print(p):
 
-    ''' Print : PRINT PARENTESIS_IZQ expresion PARENTESIS_DER PUNTOCOMA'''
+    ''' Print : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
     p[0] = p[3]
     print(nombres[1].value)
  
