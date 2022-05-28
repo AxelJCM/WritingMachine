@@ -10,51 +10,49 @@ reservadas = {
     'if'	 : 'IF',
     'else'	 : 'ELSE',
     'in'	 : 'IN',
-    'OPERA'	 : 'OPERA',
-    'true'	 : 'BOOLEAN',
-    'false'	 : 'BOOLEAN',
+    'opera'	 : 'OPERA',
+    'true'	 : 'BOOLEAN_T',
+    'false'	 : 'BOOLEAN_F',
     'boolean': 'BOOLEAN_TXT',
     'integer': 'INTEGER_TXT',
     'return' : 'RETURN',
-    'Move'   : 'MOVE',
-    'Def'   : 'DEF',
-    'Put'   : 'PUT',
-    'Add'   : 'ADD',
-    'ContinueUp'   : 'CONTINUEUP',
-    'ContinueDown'   : 'CONTINUEDOWN',
-    'ContinueRight'   : 'CONTINUERIGHT',
-    'ContinueLeft'   : 'CONTINUELEFT',
-    'Pos'   : 'POS',
-    'PosX'   : 'POSX',
-    'PosY'   : 'POSY',
-    'UseColor'   : 'USECOLOR',
-    'Down'   : 'DOWN',
-    'Up'   : 'UP',
-    'Beginning'   : 'BEGINNING',
-    'Speed'   : 'SPEED',
-    'Run'   : 'RUN',
-    'Repeat'   : 'REPEAT',
-    'IfElse'   : 'IFELSE',
-    'Until'   : 'UNTIL',
-    'While'   : 'WHILE',
-    'Equal'   : 'EQUAL',
-    'And'   : 'AND',
-    'Or'   : 'OR',
-    'Greater'   : 'GREATER',
-    'Smaller'   : 'SMALLER',
-    'Substr'   : 'SUBSTR',
-    'Random'   : 'RANDOM',
-    'Mult'   : 'MULT',
-    'Div'   : 'DIV',
-    'Sum'   : 'SUM',
+    'move'   : 'MOVE',
+    'def'   : 'DEF',
+    'put'   : 'PUT',
+    'add'   : 'ADD',
+    'continueUp'   : 'CONTINUEUP',
+    'continueDown'   : 'CONTINUEDOWN',
+    'continueRight'   : 'CONTINUERIGHT',
+    'continueLeft'   : 'CONTINUELEFT',
+    'pos'   : 'POS',
+    'posX'   : 'POSX',
+    'posY'   : 'POSY',
+    'useColor'   : 'USECOLOR',
+    'down'   : 'DOWN',
+    'up'   : 'UP',
+    'beginning'   : 'BEGINNING',
+    'speed'   : 'SPEED',
+    'run'   : 'RUN',
+    'repeat'   : 'REPEAT',
+    'ifElse'   : 'IFELSE',
+    'until'   : 'UNTIL',
+    'equal'   : 'EQUAL',
+    'and'   : 'AND',
+    'or'   : 'OR',
+    'greater'   : 'GREATER',
+    'smaller'   : 'SMALLER',
+    'substr'   : 'SUBSTR',
+    'random'   : 'RANDOM',
+    'mult'   : 'MULT',
+    'div'   : 'DIV',
+    'sum'   : 'SUM',
     'printLine'   : 'PRINTLINE',
-    'Delay'  : 'DELAY'
+    'delay'  : 'DELAY'
 }  
 
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
 tokens = [
-    'VAR',
     'ID', # para el identificador de las variables
     'EXPONENTE', # **   
     'SUMA', # +     
@@ -79,7 +77,7 @@ tokens = [
     'dDOT_E', #
     'dDOT', #
     'NUMERO'
-] + list(set(reservadas.values()))# first turn into a set to remove duplicate BOOLEAN values
+] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
@@ -151,18 +149,17 @@ def t_NUMERO(t):
         t.value = 0
     return t
 
-def t_VAR(t):
-    r'[a-z][a-zA-Z0-9_@]{3,10}'
-    return t
-
 #funcion para los identificadores 
 def t_ID(t): 
-    r'[A-Za-z][a-zA-Z]*'
- # Se busca en las palabras resevadas
+    r'[a-z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
+    t.type = reservadas.get(t.value,'ID')    # Se busca en las palabras resevadas
+    if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10)) and (t.value[0] == t.value[0].upper())):
+        return t_error(t)
     # Si el valor de la variable es booleana
     if t.value.upper() in reservadas: 
         t.value = t.value.upper()
         t.type = t.value
+    
     if t.value == 'true':
         t.value = True
     elif t.value == 'false':
@@ -190,5 +187,5 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-cad = "(hola = true, yes = 2, IF)"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
+cad = "dEf( hol = true, yes = 2, if) \n def (numbr, 6) \n pARA"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
 GenerarTok(cad)
