@@ -8,16 +8,13 @@ reservadas = {
     'Def'    : 'DEF',
     'Fin'    : 'FIN',
     'Para'   : 'PARA',
-    'while'	 : 'WHILE',
-    'for'	 : 'FOR',
+    'While'	 : 'WHILE',
     'If'	 : 'IF',
     'EndIf'  : 'ENDIF',
-    'else'	 : 'ELSE',
     'True'	 : 'BOOLEAN_T',
     'False'	 : 'BOOLEAN_F',
     'Boolean': 'BOOLEAN_TXT',
     'Integer': 'INTEGER_TXT',
-    'Return' : 'RETURN',
     'Put'   : 'PUT',
     'Add'   : 'ADD',
     'ContinueUp'   : 'CONTINUEUP',
@@ -53,7 +50,7 @@ reservadas = {
 """Define los tokens validos para el lexer"""
 tokens = [
     'ID', # para el identificador de las variables
-    'EXPONENTE', # **   
+    'POTENCIA', # **   
     'SUMA', # +     
     'RESTA', # -
     'DIVISION', # /
@@ -73,7 +70,8 @@ tokens = [
     'MAYORIGUAL', # >=
     'MAYOR', # >
     'MENOR', # <
-    'NUMERO'
+    'NUMERO',
+    'EXPONENTE'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
@@ -94,10 +92,10 @@ t_COMA = r'\,'
 t_PUNTOCOMA = r'\;'
 t_DIFERENTE = r'\!='
 t_NEGACION = r'\!'
-t_MENOR_IGUAL = r'\<='
-t_MENOR_QUE = r'\<'
-t_MAYOR_IGUAL = r'\>='
-t_MAYOR_QUE = r'\>'
+t_MENORIGUAL = r'\<='
+t_MENOR = r'\<'
+t_MAYORIGUAL = r'\>='
+t_MAYOR = r'\>'
 t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 
@@ -123,6 +121,30 @@ t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabula
 # pin9.write(angle)
 # pin10.write(angle)
 ########################################################################################################
+
+def t_START(t):
+    r'\//.*'
+    t.value = "START"
+    t.type = t.value
+    return t
+
+def t_PARA(t):
+    r'Para'
+    t.value = "PARA"
+    t.type = t.value
+    return t
+
+def t_FIN(t):
+    r'Fin'
+    t.value = "FIN"
+    t.type = t.value
+    return t
+
+def t_ENDIF(t):
+    r'EndIf'
+    t.value = "ENDIF"
+    t.type = t.value
+    return t
 
 # se identifican los comentarios
 def t_COMMENTARIO(t): 
@@ -182,5 +204,5 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-cad = "dEf( hol = true, yes = 2, if) \n def (numbr, 6) \n pARA"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
-GenerarTok(cad)
+#cad = "dEf( hol = true, yes = 2, if) \n def (numbr, 6) \n pARA"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
+#GenerarTok(cad)

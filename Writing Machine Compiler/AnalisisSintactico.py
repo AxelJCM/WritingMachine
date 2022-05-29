@@ -4,20 +4,20 @@ import codecs
 import re
 from AnalisisLexico import tokens
 from AnalisisLexico import GenerarTok
-#from Semantic import runSemanticAnalizer
+from AnalisisSemantico import runSemanticAnalizer
 from sys import stdin
 from pip._vendor.distlib.compat import raw_input
 import random
 
 precedence = (
-    ('right', 'PUNTO_COMA'),
+    ('right', 'PUNTOCOMA'),
     ('left', 'DIFERENTE'),
     ('left', 'BRACKET2'),
     ('right', 'BRACKET1'),
     ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
     ('right', 'COMA'),
     ('left', 'SUMA', 'RESTA'),
-    ('left', 'MENORIGUAL', 'MAYORIGUAL', 'MAYOR', 'MENOR'),
+    ('left', 'SMALLERTHEN', 'GREATERTHEN', 'GREATER', 'SMALLER'),
     ('left', 'DIVISION', 'DIV_ENTERA', 'MULTI'),
     ('left', 'EXPONENTE'),
     ('left', 'CIERRA_P'),
@@ -37,22 +37,13 @@ data = []
 
 def p_Start(p):
     '''
-    Start : comment
+    Start : code
     '''
-    # runSemanticAnalizer(p[1])
-
-def p_comment(p):
-    '''
-    comment : code
-    '''
-    if p[0] == '\//.*':
-        p[0] = p[1]
-    else:
-        p_error(p) # se genera un error
+    #runSemanticAnalizer(p[1])
         
 def p_Code(p):
     '''
-    code : PARA ID BRACKET1 ID BRACKET2 cuerpo 
+    code : PARA ID BRACKET1 ID BRACKET2 cuerpo
     '''
     p[0] =  p[6]
     
@@ -371,8 +362,8 @@ def p_Equal(p):
     '''
     if p[1] == p[3]:
         p[0] = True
-
-        print(p[0])
+    else:
+        p[0] = False
 
 
 def p_Diferente(p):
@@ -730,7 +721,6 @@ def sintacticAnalizer(cadena):
     parser = yacc.yacc()
     parser.parse(cadena)
 
-
 #def writeToJSONFile(path, fileName, data):
  #   filePathNameWExt = './' + path + '/' + fileName + '.json'
    # with open(filePathNameWExt, 'w') as fp:
@@ -738,8 +728,6 @@ def sintacticAnalizer(cadena):
 
 #path = './'
 #fileName = 'datosJSON'
-
-
 
 #################################### tester ############################################
 
