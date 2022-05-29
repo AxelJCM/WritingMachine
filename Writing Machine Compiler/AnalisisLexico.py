@@ -49,6 +49,7 @@ reservadas = {
 # Lista de tokens 
 """Define los tokens validos para el lexer"""
 tokens = [
+    'VAR',
     'ID', # para el identificador de las variables
     'POTENCIA', # **   
     'SUMA', # +     
@@ -96,7 +97,7 @@ t_MENORIGUAL = r'\<='
 t_MENOR = r'\<'
 t_MAYORIGUAL = r'\>='
 t_MAYOR = r'\>'
-t_ignore = r' ' # verificar que funciona para espacios, saltos de linea y tabulaciones
+t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 
 
@@ -166,21 +167,23 @@ def t_NUMERO(t):
         t.value = 0
     return t
 
+def t_VAR(t):
+    r'[a-z][a-zA-Z0-9@_]*'
+    t.type = reservadas.get(t.value,'VAR')    # Se busca en las palabras resevadas
+    if((t.type == 'VAR') and ((len(t.value) < 3) or (len(t.value) > 10) or (t.value[0].isupper()))):
+        return t_error(t)
+    return t
+
 #funcion para los identificadores 
 def t_ID(t): 
-    r'[a-z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
+    r'[a-zA-Z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
     t.type = reservadas.get(t.value,'ID')    # Se busca en las palabras resevadas
-    if(t.type == 'ID' and ((len(t.value) < 3) or (len(t.value) > 10)) and (t.value[0] == t.value[0].upper())):
+    if((t.type == 'ID') and ((len(t.value) < 3) or (len(t.value) > 10) or (t.value[0].isupper()))):
         return t_error(t)
-    # Si el valor de la variable es booleana
     if t.value.upper() in reservadas: 
         t.value = t.value.upper()
         t.type = t.value
-    
-    if t.value == 'True':
-        t.value = True
-    elif t.value == 'False':
-        t.value = False
+      
     # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
     return t
 
@@ -204,5 +207,6 @@ def GenerarTok(cadena):
         print(tok)
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
-#cad = "dEf( hol = true, yes = 2, if) \n def (numbr, 6) \n pARA"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
+#cad = "Def a6578 \t sdfd \n , 3;"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
 #GenerarTok(cad)
+  

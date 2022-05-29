@@ -43,7 +43,7 @@ def p_Start(p):
         
 def p_Code(p):
     '''
-    code : PARA ID BRACKET1 ID BRACKET2 cuerpo
+    code : PARA VAR BRACKET1 VAR BRACKET2 cuerpo
     '''
     p[0] =  p[6]
     
@@ -73,7 +73,7 @@ def p_Variable(p):
 
 def p_Variable1(p):
     '''
-    variable1 : DEF ID PUNTOCOMA
+    variable1 : DEF VAR PUNTOCOMA
     '''
     p[0] = (p[1], p[2])
     print(p[1], p[2])
@@ -81,7 +81,7 @@ def p_Variable1(p):
 
 def p_Variable2(p):
     '''
-    variable2 : DEF ID IGUAL NUMERO PUNTOCOMA
+    variable2 : DEF VAR IGUAL NUMERO PUNTOCOMA
               
     '''
     nombres[p[2]] = p[4]
@@ -92,7 +92,7 @@ def p_Variable2(p):
 
 def p_Variable3(p):
     '''
-    variable3 : PUT ID IGUAL NUMERO PUNTOCOMA
+    variable3 : PUT VAR IGUAL NUMERO PUNTOCOMA
               
     '''
     nombres[p[2]] = p[4]
@@ -102,8 +102,8 @@ def p_Variable3(p):
 
 def p_Variable4(p):
     '''
-    variable4 : PUT ID IGUAL expresion_alge1 PUNTOCOMA
-              | PUT ID IGUAL expresion_alge2 PUNTOCOMA
+    variable4 : PUT VAR IGUAL expresion_alge1 PUNTOCOMA
+              | PUT VAR IGUAL expresion_alge2 PUNTOCOMA
               
     '''
     nombres[p[2]] = p[4]
@@ -118,7 +118,7 @@ def p_expresion(p):
     '''
     expresion : NUMERO expresion
               | funcion expresion
-              | ID expresion
+              | VAR expresion
               | condicion expresion
               | expresion_alge1 expresion
               | expresion_alge2 expresion
@@ -126,7 +126,6 @@ def p_expresion(p):
               | Substr expresion
               | Mult expresion
               | Div expresion
-              | Power expresion
               | empty empty
                         
     '''
@@ -140,7 +139,7 @@ def p_expresion(p):
 def p_funcion(p):
     '''
     funcion : Random
-            | Begin
+            | Begining
             | ContinueUp
             | ContinueDown
             | ContinueRight
@@ -158,10 +157,11 @@ def p_funcion(p):
             | Repeat
             | Until
             | While
-            | Print
+            | PrintLine
             | And
             | Or
             | Add
+            | Put
          
        
     '''
@@ -483,12 +483,13 @@ def p_until(p):
 def p_add(p):
 
     '''
-    Add : ADD BRACKET1 NUMERO empty BRACKET2
-           | ADD BRACKET1 NUMERO NUMERO BRACKET2
+    Add : ADD ABRE_P VAR empty empty CIERRA_P
+        | ADD ABRE_P VAR COMA NUMERO CIERRA_P
+        | ADD ABRE_P VAR COMA VAR CIERRA_P
     
     '''
 
-    p[0]= p[3]+ p[4]
+    p[0]= p[3]+ p[5]
     
 
 def p_procedimiento(p):
@@ -518,12 +519,12 @@ def p_parametro(p):
     else:
         p[0] = p[1]
 
-def p_begin(p):
+def p_begining(p):
     '''
-    Begin : BEGIN PUNTOCOMA
+    Begining : BEGINING PUNTOCOMA
     '''
     p[0] = p[1]
-    print("Begin")
+    print("Begining")
     #data.append("Begin:")
     #data.append(str(0))
     #writeToJSONFile(path,fileName,data)
