@@ -11,7 +11,7 @@ import random
 
 precedence = (
     ('right', 'PUNTOCOMA'),
-    ('left', 'DIFERENTE'),
+    #('left', 'DIFERENTE'),
     ('left', 'BRACKET2'),
     ('right', 'BRACKET1'),
     ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
@@ -52,8 +52,8 @@ def p_Code(p):
 def p_cuerpo(p):
     '''
     cuerpo : variable
-           | expresion        
-    '''
+           | expresion
+           '''
     p[0] = p[1]
 
 
@@ -163,10 +163,7 @@ def p_funcion(p):
             | Or
             | Add
          
-            
-            
-            
-            
+       
     '''
     p[0] = p[1]
 
@@ -175,26 +172,18 @@ def p_condicion(p):
     '''
     condicion : Equal expresion
               | Greater expresion
-              | Smaller expresion
-              | Equal expresion
-              | Diferente expresion
               | Mayor expresion
               | Smaller expresion
               | Greaterthen expresion
               | Smallerthen expresion 
     '''
     
-
-
 def expresion_alge(p):
     '''
     expresion_alge : expresion_alge1
                    | expresion_alge2
                    
-                   | 
     '''
-    
-
     
 
 def p_expresion_alge1(p):
@@ -204,7 +193,7 @@ def p_expresion_alge1(p):
                    | NUMERO RESTA NUMERO 
                    | NUMERO MULTIPLICA NUMERO 
                    | NUMERO DIVIDE NUMERO
-                   | NUMERO POTENCIA NUMERO
+                   | NUMERO EXPONENTE NUMERO
                    
     '''
 
@@ -212,7 +201,7 @@ def p_expresion_alge1(p):
     elif p[2] == '-' : p[0] = p[1]-p[3]
     elif p[2] == '*' : p[0] = p[1]*p[3]
     elif p[2] == '/' : p[0] = p[1]/p[3]
-    elif p[2] == '^' : p[0] = p[1]**p[3]
+    elif p[2] == '**' : p[0] = p[1]**p[3]
 
     print(p[0])
 
@@ -281,17 +270,17 @@ def p_Div(p):
     p[0] = p[3] / p[5]
     print(p[0])
 
-def p_Power(p):
-    '''
-    Power  : POWER ABRE_P NUMERO COMA NUMERO CIERRA_P
-           | POWER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-           | POWER ABRE_P NUMERO COMA ID CIERRA_P
-           | POWER ABRE_P ID COMA NUMERO CIERRA_P
-           | POWER ABRE_P ID COMA ID CIERRA_P
-    '''
+#def p_Power(p):
+   # '''
+   # Power  : POWER ABRE_P NUMERO COMA NUMERO CIERRA_P
+   #        | POWER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+   #        | POWER ABRE_P NUMERO COMA ID CIERRA_P
+   #        | POWER ABRE_P ID COMA NUMERO CIERRA_P
+   #        | POWER ABRE_P ID COMA ID CIERRA_P
+ #   '''
 
-    p[0] = p[3] ** p[5]
-    print(p[0])
+   # p[0] = p[3] ** p[5]
+   # print(p[0])
 
 
 
@@ -366,20 +355,20 @@ def p_Equal(p):
         p[0] = False
 
 
-def p_Diferente(p):
-    '''
-    Diferente : NUMERO DIFERENTE NUMERO
-          | ID DIFERENTE ID
-          | NUMERO DIFERENTE ID
-          | ID DIFERENTE NUMERO
-    '''
+#def p_Diferente(p):
+#    '''
+ #   Diferente : NUMERO DIFERENTE NUMERO
+#          | ID DIFERENTE ID
+#          | NUMERO DIFERENTE ID
+ #         | ID DIFERENTE NUMERO
+#    '''
 
-    if p[1] != p[3]:
-        p[0] = True
-    else:
-        p[0] = False
-
-    print(p[0])
+#    if p[1] != p[3]:
+ #       p[0] = True
+ #   else:
+ #       p[0] = False
+#
+ #   print(p[0])
 
 
 def p_Greater(p):
@@ -414,7 +403,7 @@ def p_Smaller(p):
 
 def p_Greaterthen (p):
     '''
-    Greaterthen  : NUMERO MAYORIGUAL NUMERO
+    Greaterthen : NUMERO MAYORIGUAL NUMERO
           | ID MAYORIGUAL ID
           | NUMERO MAYORIGUAL ID
           | ID MAYORIGUAL NUMERO
@@ -429,7 +418,7 @@ def p_Greaterthen (p):
 
 def p_Smallerthen (p):
     '''
-    Smallerthen  : NUMERO MENORIGUAL NUMERO
+    Smallerthen : NUMERO MENORIGUAL NUMERO
           | ID MENORIGUAL ID
           | NUMERO MENORIGUAL ID
           | ID MENORIGUAL NUMERO
@@ -446,7 +435,7 @@ def p_Smallerthen (p):
 def p_If(p):
 
     '''
-    If : IF  condicion  BRACKET1 funcion BRACKET2 ENDIF
+    If : IF condicion BRACKET1 funcion BRACKET2 ENDIF
     '''
 
     print(p[3])
@@ -467,9 +456,10 @@ def p_IfElse(p):
 
 def p_While(p):
 
-    ''' While : WHILE BRACKET1 condicion BRACKET2 BRACKET1 funcion BRACKET2 '''
-
-
+    ''' 
+    While : WHILE BRACKET1 condicion BRACKET2 BRACKET1 funcion BRACKET2 
+    
+    '''
     print(p[3])
 
     while(p[3]):
@@ -477,19 +467,25 @@ def p_While(p):
 
 def p_Repeat(p):
 
-    ''' Repeat : REPEAT NUMERO funcion
+    ''' 
+    Repeat : REPEAT NUMERO funcion
+    
     '''
 
     p[0] = p[3]*p[2]
 
 def p_until(p):
 
-    ''' Until : UNTIL BRACKET1 funcion BRACKET2 BRACKET1 condicion BRACKET2    '''
+    ''' 
+    Until : UNTIL BRACKET1 funcion BRACKET2 BRACKET1 condicion BRACKET2
+    '''
 
 def p_add(p):
 
-    '''Add : ADD BRACKET1 NUMERO empty BRACKET2
-           | ADD BRACKET1 NUMERO  NUMERO BRACKET2
+    '''
+    Add : ADD BRACKET1 NUMERO empty BRACKET2
+           | ADD BRACKET1 NUMERO NUMERO BRACKET2
+    
     '''
 
     p[0]= p[3]+ p[4]
@@ -498,8 +494,8 @@ def p_add(p):
 def p_procedimiento(p):
     
     '''
-        procedimiento : PARA ID BRACKET1 condicion   BRACKET2  funcion   FIN
-                     | empty empty empty empty empty empty empty empty empty empty empty
+    procedimiento : PARA ID BRACKET1 condicion BRACKET2 funcion FIN
+                  | empty empty empty empty empty empty empty empty empty empty empty
     '''
     if p[11] != '$':
         p[0] = (p[1], p[2], p[4], p[6], p[8], p[9], p[10])
@@ -646,7 +642,7 @@ def p_Pos(p):
 def p_PosX(p):
     
     '''
-    PosX : POSX  NUMERO  PUNTOCOMA
+    PosX : POSX NUMERO PUNTOCOMA
     '''
 
     p[0] = p[2]
@@ -660,7 +656,7 @@ def p_PosX(p):
 def p_PosY(p):
     
     '''
-    PosY : POSY  NUMERO  PUNTOCOMA
+    PosY : POSY NUMERO PUNTOCOMA
     '''
 
     p[0] = p[2]
@@ -673,7 +669,7 @@ def p_PosY(p):
 def p_UseColor(p):
     
     '''
-    UseColor : USECOLOR  NUMERO  PUNTOCOMA
+    UseColor : USECOLOR NUMERO PUNTOCOMA
     '''
 
     if p[2] in range(1,4):
@@ -721,10 +717,12 @@ def sintacticAnalizer(cadena):
     parser = yacc.yacc()
     parser.parse(cadena)
 
+cad = "//Hola soy sebas\nDef axel = 12;"
+sintacticAnalizer(cad)
 #def writeToJSONFile(path, fileName, data):
  #   filePathNameWExt = './' + path + '/' + fileName + '.json'
    # with open(filePathNameWExt, 'w') as fp:
-   #     json.dump(data,fp)
+   #     json.dump(data,fp)ContinueRight
 
 #path = './'
 #fileName = 'datosJSON'
