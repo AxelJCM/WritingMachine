@@ -52,12 +52,7 @@ tokens = [
     'VAR',
     'ID', # para el identificador de las variables
     'POTENCIA', # **   
-    'SUMA', # +     
-    'RESTA', # -
-    'DIVISION', # /
     'DIV_ENTERA', # //
-    'MULTI', # *
-    'IGUAL', # =
     'ABRE_P', # (
     'CIERRA_P', # )
     'BRACKET1', # [
@@ -69,8 +64,6 @@ tokens = [
     'NEGACION', # !
     'MENORIGUAL', # <=
     'MAYORIGUAL', # >=
-    'MAYOR', # >
-    'MENOR', # <
     'NUMERO',
     'EXPONENTE'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
@@ -78,13 +71,8 @@ tokens = [
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
 t_EXPONENTE = r'\*\*' # verificar que este cambio funciona. # antes: \*\*
-t_SUMA = r'\+'
-t_RESTA = r'\-'
 t_DIV_ENTERA = r'\/\*'
-t_DIVISION = r'\/'
-t_MULTI = r'\*'
 t_IGUAL_IGUAL = r'\=='
-t_IGUAL = r'\='
 t_ABRE_P = r'\('
 t_CIERRA_P = r'\)'
 t_BRACKET1 = r'\['
@@ -94,9 +82,7 @@ t_PUNTOCOMA = r'\;'
 t_DIFERENTE = r'\!='
 t_NEGACION = r'\!'
 t_MENORIGUAL = r'\<='
-t_MENOR = r'\<'
 t_MAYORIGUAL = r'\>='
-t_MAYOR = r'\>'
 t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 

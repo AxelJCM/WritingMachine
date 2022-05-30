@@ -17,8 +17,8 @@ precedence = (
     ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
     ('right', 'COMA'),
     ('left', 'SUMA', 'RESTA'),
-    ('left', 'SMALLERTHEN', 'GREATERTHEN', 'GREATER', 'SMALLER'),
-    ('left', 'DIVISION', 'DIV_ENTERA', 'MULTI'),
+    ('left', 'MENOR', 'MAYOR', 'MAYORIGUAL', 'MENORIGUAL'),
+    ('left', 'DIV', 'DIV_ENTERA', 'MULTI'),
     ('left', 'EXPONENTE'),
     ('left', 'CIERRA_P'),
     ('right', 'ABRE_P'), 
@@ -172,10 +172,9 @@ def p_condicion(p):
     '''
     condicion : Equal expresion
               | Greater expresion
-              | Mayor expresion
               | Smaller expresion
-              | Greaterthen expresion
-              | Smallerthen expresion 
+              | GreaterEq expresion
+              | SmallerEq expresion 
     '''
     
 def expresion_alge(p):
@@ -191,8 +190,8 @@ def p_expresion_alge1(p):
     '''
     expresion_alge1 : NUMERO SUMA NUMERO 
                    | NUMERO RESTA NUMERO 
-                   | NUMERO MULTIPLICA NUMERO 
-                   | NUMERO DIVIDE NUMERO
+                   | NUMERO MULTI NUMERO 
+                   | NUMERO DIV NUMERO
                    | NUMERO EXPONENTE NUMERO
                    
     '''
@@ -210,8 +209,8 @@ def p_expresion_alge2(p):
     '''
     expresion_alge2 : ABRE_P expresion_alge1 CIERRA_P SUMA ABRE_P expresion_alge1 CIERRA_P
                    | ABRE_P expresion_alge1 CIERRA_P RESTA ABRE_P expresion_alge1 CIERRA_P
-                   | ABRE_P expresion_alge1 CIERRA_P MULTIPLICA ABRE_P expresion_alge1 CIERRA_P
-                   | ABRE_P expresion_alge1 CIERRA_P DIVIDE ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P MULTI ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P DIV ABRE_P expresion_alge1 CIERRA_P
                    | ABRE_P expresion_alge1 CIERRA_P POTENCIA ABRE_P expresion_alge1 CIERRA_P
                    
     '''
@@ -227,7 +226,7 @@ def p_Sum(p):
     '''
     Sum : SUM ABRE_P NUMERO COMA NUMERO CIERRA_P
         | SUM ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-        | SUM ABRE_P NUMERO COMA ID CIERRA_P
+        | SUM ABRE_P NUMERO COMA VAR CIERRA_P
     '''
 
     p[0] = p[3] + int(p[5])
@@ -238,9 +237,9 @@ def p_Substr(p):
     '''
     Substr : SUBSTR ABRE_P NUMERO COMA NUMERO CIERRA_P
            | SUBSTR ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-           | SUBSTR ABRE_P NUMERO COMA ID CIERRA_P
-           | SUBSTR ABRE_P ID COMA NUMERO CIERRA_P
-           | SUBSTR ABRE_P ID COMA ID CIERRA_P
+           | SUBSTR ABRE_P NUMERO COMA VAR CIERRA_P
+           | SUBSTR ABRE_P VAR COMA NUMERO CIERRA_P
+           | SUBSTR ABRE_P VAR COMA VAR CIERRA_P
     '''
 
     p[0] = p[3] - p[5]
@@ -248,11 +247,11 @@ def p_Substr(p):
 
 def p_Mult(p):
     '''
-    Mult : MULT ABRE_P NUMERO COMA NUMERO CIERRA_P
-         | MULT ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-         | MULT ABRE_P NUMERO COMA ID CIERRA_P
-         | MULT ABRE_P ID COMA NUMERO CIERRA_P
-         | MULT ABRE_P ID COMA ID CIERRA_P
+    Mult : MULTI ABRE_P NUMERO COMA NUMERO CIERRA_P
+         | MULTI ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+         | MULTI ABRE_P NUMERO COMA VAR CIERRA_P
+         | MULTI ABRE_P VAR COMA NUMERO CIERRA_P
+         | MULTI ABRE_P VAR COMA VAR CIERRA_P
     '''
 
     p[0] = p[3] * p[5]
@@ -262,21 +261,22 @@ def p_Div(p):
     '''
     Div : DIV ABRE_P NUMERO COMA NUMERO CIERRA_P
         | DIV ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-        | DIV ABRE_P NUMERO COMA ID CIERRA_P
-        | DIV ABRE_P ID COMA NUMERO CIERRA_P
-        | DIV ABRE_P ID COMA ID CIERRA_P
+        | DIV ABRE_P NUMERO COMA VAR CIERRA_P
+        | DIV ABRE_P VAR COMA NUMERO CIERRA_P
+        | DIV ABRE_P VAR COMA VAR CIERRA_P
     '''
 
     p[0] = p[3] / p[5]
     print(p[0])
 
+###### CAMBIAR NOMBRES DE PALABRAS RESERTVADAS SI SE VA A USAR
 #def p_Power(p):
    # '''
    # Power  : POWER ABRE_P NUMERO COMA NUMERO CIERRA_P
    #        | POWER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-   #        | POWER ABRE_P NUMERO COMA ID CIERRA_P
-   #        | POWER ABRE_P ID COMA NUMERO CIERRA_P
-   #        | POWER ABRE_P ID COMA ID CIERRA_P
+   #        | POWER ABRE_P NUMERO COMA VAR CIERRA_P
+   #        | POWER ABRE_P VAR COMA NUMERO CIERRA_P
+   #        | POWER ABRE_P VAR COMA VAR CIERRA_P
  #   '''
 
    # p[0] = p[3] ** p[5]
@@ -287,6 +287,14 @@ def p_Div(p):
 def p_Equal(p):
     '''
     Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P NUMERO COMA ID CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P ID COMA NUMERO CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P expresion_alge1 COMA ID CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P ID COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P expresion_alge2 COMA ID CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P ID COMA expresion_alge2 CIERRA_P PUNTOCOMA
+            | EQUAL ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
     '''
 
     if p[3] == p[5]:
@@ -299,6 +307,15 @@ def p_Equal(p):
 def p_Greater(p):
     '''
     Greater : GREATER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P NUMERO COMA ID CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P ID COMA NUMERO CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P expresion_alge1 COMA ID CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P ID COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P expresion_alge2 COMA ID CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P ID COMA expresion_alge2 CIERRA_P PUNTOCOMA
+            | GREATER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
+            
     '''
     
     if p[3] > p[5]:
@@ -312,6 +329,14 @@ def p_Greater(p):
 def p_Smaller(p):
     '''
     Smaller : SMALLER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P NUMERO COMA ID CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P ID COMA NUMERO CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P expresion_alge1 COMA ID CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P ID COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P expresion_alge2 COMA ID CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P ID COMA expresion_alge2 CIERRA_P PUNTOCOMA
+            | SMALLER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
     '''
     
     if p[3] < p[5]:
@@ -341,26 +366,12 @@ def p_Or(p):
 
 
 
-
-def p_Equal(p):
-    '''
-    Equal : NUMERO IGUAL NUMERO
-          | ID IGUAL ID
-          | NUMERO IGUAL ID
-          | ID IGUAL NUMERO
-    '''
-    if p[1] == p[3]:
-        p[0] = True
-    else:
-        p[0] = False
-
-
 #def p_Diferente(p):
 #    '''
  #   Diferente : NUMERO DIFERENTE NUMERO
-#          | ID DIFERENTE ID
-#          | NUMERO DIFERENTE ID
- #         | ID DIFERENTE NUMERO
+#          | VAR DIFERENTE VAR
+#          | NUMERO DIFERENTE VAR
+ #         | VAR DIFERENTE NUMERO
 #    '''
 
 #    if p[1] != p[3]:
@@ -371,42 +382,12 @@ def p_Equal(p):
  #   print(p[0])
 
 
-def p_Greater(p):
+def p_GreaterEq (p):
     '''
-    Greater : NUMERO MAYOR NUMERO
-          | ID MAYOR ID
-          | NUMERO MAYOR ID
-          | ID MAYOR NUMERO
-    '''
-
-    if p[1] > p[3]:
-        p[0] = True
-    else:
-        p[0] = False
-
-    print(p[0])
-
-def p_Smaller(p):
-    '''
-    Smaller : NUMERO MENOR NUMERO
-          | ID MENOR ID
-          | NUMERO MENOR ID
-          | ID MENOR NUMERO
-    '''
-
-    if p[1] < p[3]:
-        p[0] = True
-    else:
-        p[0] = False
-
-    print(p[0])
-
-def p_Greaterthen (p):
-    '''
-    Greaterthen : NUMERO MAYORIGUAL NUMERO
-          | ID MAYORIGUAL ID
-          | NUMERO MAYORIGUAL ID
-          | ID MAYORIGUAL NUMERO
+    GreaterEq : NUMERO MAYORIGUAL NUMERO
+            | VAR MAYORIGUAL VAR
+            | NUMERO MAYORIGUAL VAR
+            | VAR MAYORIGUAL NUMERO
     '''
 
     if p[1] >= p[3]:
@@ -416,12 +397,12 @@ def p_Greaterthen (p):
 
     print(p[0])
 
-def p_Smallerthen (p):
+def p_SmallerEq (p):
     '''
-    Smallerthen : NUMERO MENORIGUAL NUMERO
-          | ID MENORIGUAL ID
-          | NUMERO MENORIGUAL ID
-          | ID MENORIGUAL NUMERO
+    SmallerEq : NUMERO MENORIGUAL NUMERO
+            | VAR MENORIGUAL VAR
+            | NUMERO MENORIGUAL VAR
+            | VAR MENORIGUAL NUMERO
     '''
 
     if p[1] <= p[3]:
@@ -435,7 +416,7 @@ def p_Smallerthen (p):
 def p_If(p):
 
     '''
-    If : IF condicion BRACKET1 funcion BRACKET2 ENDIF
+    If : IF ABRE_P condicion CIERRA_P BRACKET1 funcion BRACKET2 ENDIF
     '''
 
     print(p[3])
@@ -446,13 +427,13 @@ def p_If(p):
 def p_IfElse(p):
 
     '''
-    IfElse : IFELSE condicion BRACKET1 funcion BRACKET2 BRACKET1 funcion BRACKET2
+    IfElse : IFELSE ABRE_P condicion CIERRA_P BRACKET1 funcion BRACKET2 BRACKET1 funcion BRACKET2
     '''
 
-    if p[2]:
-        p[0] = p[4]
+    if p[3]:
+        p[0] = p[6]
     else:
-        p[0] = p[7]
+        p[0] = p[9]
 
 def p_While(p):
 
@@ -465,20 +446,29 @@ def p_While(p):
     while(p[3]):
         p[0] = p[6]
 
-def p_Repeat(p):
+def p_Repeat(p): ################################################ REVISAR QUE FUNCIONE BIEN ##############################################
 
     ''' 
-    Repeat : REPEAT NUMERO funcion
+    Repeat : REPEAT NUMERO BRACKET1 funcion BRACKET2
     
     '''
 
-    p[0] = p[3]*p[2]
+    #p[0] = p[4]*p[2]
+    for i in range(p[2]):
+         p[0] = p[4]
 
-def p_until(p):
+def p_until(p): ################ revisar funcionamiento
 
     ''' 
     Until : UNTIL BRACKET1 funcion BRACKET2 BRACKET1 condicion BRACKET2
     '''
+    p[0] = p[3]
+    while True:
+        p[0] = p[3]
+        if(p[6]):
+            break
+        
+    
 
 def p_add(p):
 
@@ -488,14 +478,15 @@ def p_add(p):
         | ADD ABRE_P VAR COMA VAR CIERRA_P
     
     '''
-
-    p[0]= p[3]+ p[5]
+    if p[4] == '$':
+        p[0]= p[3]+1
+    else:
+        p[0]= p[3]+ p[5]
     
-
 def p_procedimiento(p):
     
     '''
-    procedimiento : PARA ID BRACKET1 condicion BRACKET2 funcion FIN
+    procedimiento : PARA VAR BRACKET1 condicion BRACKET2 funcion FIN
                   | empty empty empty empty empty empty empty empty empty empty empty
     '''
     if p[11] != '$':
@@ -506,10 +497,10 @@ def p_procedimiento(p):
         p[0] = p[1]
 
 
-def p_parametro(p):
+def p_parametro(p): 
     '''
-    parametro : ID COMA parametro
-              | ID empty empty
+    parametro : VAR COMA parametro
+              | VAR empty empty
               | NUMERO COMA parametro
               | NUMERO empty empty
               | empty empty empty
@@ -590,8 +581,8 @@ def p_Up(p):
     '''
     Up : UP PUNTOCOMA
     '''
-    data.append("Up:")
-    data.append(str(0))
+    #data.append("Up:")
+    #data.append(str(0))
     p[0] = p[1]
     print(p[0])
     #data['Lapiz'] = 'Up'
@@ -616,7 +607,7 @@ def p_Speed(p):
     '''
 
     p[0] = p[2]
-    print("Velocidad = " + str(p[2]))
+    print("VelocVARad = " + str(p[2]))
     #data['Speed'] = str(p[2])
     #data.append("Speed:")
     #data.append(str(p[2]))
@@ -671,10 +662,14 @@ def p_UseColor(p):
     
     '''
     UseColor : USECOLOR NUMERO PUNTOCOMA
+            | USECOLOR empty PUNTOCOMA
     '''
-
-    if p[2] in range(1,4):
+    
+    if p[2] in range(1,2):
+        p[0] = p[2]
         print("UseColor "+ str(p[2]))
+    elif p[2] == '$':
+        p[0] = 1
     else:
         print("Error")
 
@@ -693,9 +688,9 @@ def p_Run(p):
     p[0] = p[3]
     print ("Running " + str(p[3]))
 
-def p_Print(p):
+def p_PrintLine(p):
 
-    ''' Print : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
+    ''' PrintLine : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
     p[0] = p[3]
     print(nombres[1].value)
  
