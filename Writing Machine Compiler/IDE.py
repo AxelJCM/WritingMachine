@@ -1,15 +1,15 @@
 from tkinter import *
+from tkinter import messagebox
 import sys
 from tkinter import filedialog as fd
-from tkinter import messagebox as mb
-from AnalisisLexico import GenerarTok
-from AnalisisSintactico import sintacticAnalizer
+from AnalisisLexico import *
+from AnalisisSintactico import *
 #import serial
 import time
 
 
 class Gui:
-
+    
     def __init__(self):
         self.MainWindow = Tk()
 
@@ -35,8 +35,8 @@ class Gui:
         # Buttons
         Button(self.MainWindow, text="ABRIR", background = "white", foreground = "black" ,command=self.OpenButtonClick).place(x=5, y=1)
         Button(self.MainWindow, text="GUARDAR", background = "white", foreground = "black" ,command=self.SaveButtonClick).place(x=47.5, y=1)
-        Button(self.MainWindow, text="COMPILAR", background = "yellow", foreground = "black" , command=self.compileButtonClick).place(x=550, y=1)
-        Button(self.MainWindow, text="CORRER", background = "yellow", foreground = "black" , command=self.runButtonClick).place(x=620, y=1)
+        Button(self.MainWindow, text="COMPILAR", background = "yellow", foreground = "black" , command=lambda: self.buttonClick(False)).place(x=550, y=1)
+        Button(self.MainWindow, text="CORRER", background = "yellow", foreground = "black" , command=lambda: self.buttonClick(True)).place(x=620, y=1)
         Button(self.MainWindow, text="SALIR", background = "red", foreground = "black" ,command=lambda: self.MainWindow.destroy()).place(x=945, y=1)
 
         # Inserta las dos areas de texto
@@ -44,9 +44,9 @@ class Gui:
         self.CodeTextArea = Text(self.MainWindow, font = 14, bg='#227474', fg="white")
         self.CodeTextArea.place(x=40, y=30, width=960, height=500)
 
-
         self.OutputTextArea = Text(self.MainWindow, font = 14 ,bg='#227474', fg="white")
         self.OutputTextArea.place(x=40, y=535, width=960, height=260)
+        self.OutputTextArea.config(state=DISABLED)
 
         # Crea el area de numeracion de linea del codigo
 
@@ -84,49 +84,49 @@ class Gui:
             archi1 = open(nombrearch, "w", encoding="utf-8")
             archi1.write(self.CodeTextArea.get("1.0", END))
             archi1.close()
-            mb.showinfo("Información", "Los datos fueron guardados en la siguiente ruta: " + nombrearch + ".")
+
+            messagebox.showinfo("Informacion", "Los datos fueron guardados en la siguiente ruta: " + nombrearch + ".")
 
 
-    def compileButtonClick(self):
-        cadena = self.CodeTextArea.get("1.0", END)
+    def buttonClick(self, compare):
+        cadena = self.CodeTextArea.get("1.0", 'end-1c')
+        self.OutputTextArea.config(state=NORMAL)
         self.OutputTextArea.delete("1.0",END)
-        #ser = serial.Serial( '/dev/ttyACM0', 9600)
-        #ser.write(b'data')
-    
-        if cadena != "":
-            lista = GenerarTok(cadena)
-            #print(cadena)
+        
+        if cadena != "" and cadena.strip() != "":
+            lexicalAnalizer(cadena)
             sintacticAnalizer(cadena)
-            for i in lista:
-                self.OutputTextArea.insert(INSERT,errores)
-                self.OutputTextArea.insert(INSERT,'\n')
-   
+
+            for i in errores:
+                self.OutputTextArea.insert(END,errores)
+                self.OutputTextArea.insert(END,'\n')
+                
+            for j in error:
+                self.OutputTextArea.insert(END,error)
+                self.OutputTextArea.insert(END,'\n')
+            
+            self.OutputTextArea.config(state=DISABLED)
+        
         else:
-            mb.showwarning("Error","Debes escribir código!!")
+            
+            messagebox.showwarning("Error","Debes escribir codigo!!")
+        
+        errores.clear()
+        error.clear()
 
-    def runButtonClick(self):
-        cadena = self.CodeTextArea.get("1.0", END)
-        self.OutputTextArea.delete("1.0",END)
-
-
-        if cadena != "":
-            lista = GenerarTok(cadena)
-            #print(cadena)
-            sintacticAnalizer(cadena)
-            for i in lista:
-                self.OutputTextArea.insert(INSERT,errores)
-                self.OutputTextArea.insert(INSERT,'\n')
-   
+        if compare:
+            print("run button")
         else:
-            mb.showwarning("Error","Debes escribir código!!")
+            print("compile button")
 
 
     def setCodeTextArea(self, output):
         self.CodeTextArea.delete('1.0', END)
         self.CodeTextArea.insert(INSERT, output)
 
-    def setOutputText(self, output):
-        self.OutputTextArea.insert(INSERT, errores)
+    #def setOutputText(self, output):
+        #self.OutputTextArea.insert(INSERT, errores)
+        #self.OutputTextArea.insert(INSERT,error)
 
     #################### Funciones numero de linea del codigo ####################################
 

@@ -1,4 +1,7 @@
+
 import ply.lex as lex
+
+error = []
 
 # diccionario de palabras reservadas
 reservadas = {
@@ -11,10 +14,10 @@ reservadas = {
     'While'	 : 'WHILE',
     'If'	 : 'IF',
     'EndIf'  : 'ENDIF',
-    'True'	 : 'BOOLEAN_T',
-    'False'	 : 'BOOLEAN_F',
-    'Boolean': 'BOOLEAN_TXT',
-    'Integer': 'INTEGER_TXT',
+    #'True'	 : 'BOOLEAN_T',
+    #'False'	 : 'BOOLEAN_F',
+    #'Boolean' : 'BOOLEAN_TXT',
+    'Integer' : 'INTEGER_TXT',
     'Put'   : 'PUT',
     'Add'   : 'ADD',
     'ContinueUp'   : 'CONTINUEUP',
@@ -43,7 +46,8 @@ reservadas = {
     'Div'   : 'DIV',
     'Sum'   : 'SUM',
     'PrintLine'   : 'PRINTLINE',
-    'Substr' : 'SUBSTR'
+    'Substr' : 'SUBSTR',
+    'Main' : 'MAIN'
 }  
 
 # Lista de tokens 
@@ -52,26 +56,36 @@ tokens = [
     'VAR',
     'ID', # para el identificador de las variables
     'POTENCIA', # **   
-    'DIV_ENTERA', # //
+    #'DIV_ENTERA', # //
     'ABRE_P', # (
     'CIERRA_P', # )
     'BRACKET1', # [
     'BRACKET2', # ]
     'COMA', # ,
     'PUNTOCOMA', # ;
+    'IGUAL', # =
+    'DIVISION', # /
+    'SUMA', # +
+    'RESTA', # -
+    'MULTI', # *
     'IGUAL_IGUAL', # ==
-    'DIFERENTE', # !=
     'NEGACION', # !
     'MENORIGUAL', # <=
     'MAYORIGUAL', # >=
-    'NUMERO',
-    'EXPONENTE'
+    'NUMERO', # 0...9
+    'EXPONENTE',
+    'COMMENT'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
 t_EXPONENTE = r'\*\*' # verificar que este cambio funciona. # antes: \*\*
-t_DIV_ENTERA = r'\/\*'
+#t_DIV_ENTERA = r'\/\*'
+t_IGUAL = r'\='
+t_DIVISION = r'\/'
+t_MULTI = r'\*'
+t_SUMA = r'\+'
+t_RESTA = r'\-'
 t_IGUAL_IGUAL = r'\=='
 t_ABRE_P = r'\('
 t_CIERRA_P = r'\)'
@@ -79,7 +93,6 @@ t_BRACKET1 = r'\['
 t_BRACKET2 = r'\]'
 t_COMA = r'\,'
 t_PUNTOCOMA = r'\;'
-t_DIFERENTE = r'\!='
 t_NEGACION = r'\!'
 t_MENORIGUAL = r'\<='
 t_MAYORIGUAL = r'\>='
@@ -109,10 +122,10 @@ t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabu
 # pin10.write(angle)
 ########################################################################################################
 
-def t_START(t):
+# se identifican los comentarios
+def t_COMMENT(t):
     r'\//.*'
-    t.value = "START"
-    t.type = t.value
+    t.value = str(t.value) + str(t.lexer.lineno)
     return t
 
 def t_PARA(t):
@@ -133,10 +146,7 @@ def t_ENDIF(t):
     t.type = t.value
     return t
 
-# se identifican los comentarios
-def t_COMMENTARIO(t): 
-    r'\//.*'
-    pass
+
 
 # se identifica una nueva linea
 def t_newline(t): 
@@ -155,17 +165,16 @@ def t_NUMERO(t):
 
 def t_VAR(t):
     r'[a-z][a-zA-Z0-9@_]*'
-    t.type = reservadas.get(t.value,'VAR')    # Se busca en las palabras resevadas
-    if((t.type == 'VAR') and ((len(t.value) < 3) or (len(t.value) > 10) or (t.value[0].isupper()))):
+    if 10 < len(t.value) < 3 or t.value[0].isupper():
         return t_error(t)
     return t
 
 #funcion para los identificadores 
 def t_ID(t): 
-    r'[a-zA-Z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
-    t.type = reservadas.get(t.value,'ID')    # Se busca en las palabras resevadas
-    if((t.type == 'ID') and ((len(t.value) < 3) or (len(t.value) > 10) or (t.value[0].isupper()))):
+    r'[A-Z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
+    if len(t.value) > 10:
         return t_error(t)
+    t.type = reservadas.get(t.value,'ID')    # Se busca en las palabras resevadas
     if t.value.upper() in reservadas: 
         t.value = t.value.upper()
         t.type = t.value
@@ -174,16 +183,22 @@ def t_ID(t):
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
-    #global GUI ## hacer variable global para llamar esta funcion desde el ide
+    if t is not None:
+        error.append("Se ha encontrado un error lexico en la frase '{}' de la linea {}".format(t.value, t.lexer.lineno))
+    else:
+        pass
+
+    print("error:")
+    print(error)
     #GUI.println("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno)) # esto es lo que se tiene que imprimir en el ide en caso de error
     # verificar que se recorre todo el codigo encontrando todos los errores lexicos que existan
-    print("Se ha encontrado un error léxico en la frase '{}' de la línea {}".format(t.value, t.lexer.lineno))
+    #print(error)
 
 lexer = lex.lex() # Se crea un objeto de tipo analizador lexico para realizar el analisis
 
 
 # se generan todos los tokens del codigo fuente y se imprimen
-def GenerarTok(cadena):
+def lexicalAnalizer(cadena):
     lexer.lineno = 0
     lexer.input(cadena)
     while True:
@@ -194,5 +209,5 @@ def GenerarTok(cadena):
 
 # Prueba para verificar que se identifican todos los tokens e identificadores        
 #cad = "Def a6578 \t sdfd \n , 3;"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
-#GenerarTok(cad)
+#LexicalAnalizer(cad)
   

@@ -2,8 +2,7 @@ import ply.yacc as yacc
 import os
 import codecs
 import re
-from AnalisisLexico import tokens
-from AnalisisLexico import GenerarTok
+from AnalisisLexico import *
 from AnalisisSemantico import runSemanticAnalizer
 from sys import stdin
 from pip._vendor.distlib.compat import raw_input
@@ -17,8 +16,9 @@ precedence = (
     ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
     ('right', 'COMA'),
     ('left', 'SUMA', 'RESTA'),
-    ('left', 'MENOR', 'MAYOR', 'MAYORIGUAL', 'MENORIGUAL'),
-    ('left', 'DIV', 'DIV_ENTERA', 'MULTI'),
+    ('left', 'SMALLER', 'GREATER', 'MAYORIGUAL', 'MENORIGUAL'),
+    ('left', 'DIVISION', #'DIV_ENTERA'
+      'MULTI'),
     ('left', 'EXPONENTE'),
     ('left', 'CIERRA_P'),
     ('right', 'ABRE_P'), 
@@ -37,38 +37,84 @@ data = []
 
 def p_Start(p):
     '''
-    Start : code
+    Start : COMMENT cuerpo
     '''
     #runSemanticAnalizer(p[1])
-        
-def p_Code(p):
-    '''
-    code : PARA VAR BRACKET1 VAR BRACKET2 cuerpo
-    '''
-    p[0] =  p[6]
+    #if p[1] == '\//.*':
+     #   p[0] = p[2]
+    #else:
+     #   p_error(p)
+    if p[1] == '$':
+        p_error
+    else:
+        p[0] = p[2]
     
-
 
 def p_cuerpo(p):
     '''
     cuerpo : variable
-           | expresion
+           | procedimiento
+           | main
            '''
     p[0] = p[1]
+    
+def p_cuerpo2(p):
+    '''
+    cuerpo2 : variable
+            | procedimiento2
+    '''
+    p[0] = p[1]
 
+  
+def p_procedimiento(p): # no puede haber otro procedimiento dentro de un procedimiento, funcion?
+    
+    '''
+    procedimiento : PARA ID BRACKET1 condicion BRACKET2 cuerpo FIN
+                  | PARA ID BRACKET1 variable BRACKET2 cuerpo FIN
+                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo FIN
+    '''
+    if p[6] != '$':
+        p[0] = (p[2], p[4], p[6])
+    elif p[6] == '$':
+        p[0] = (p[2], p[4])
+    else:
+        p[0] = p[2]
 
+def p_procedimiento2(p):############ cuerpo?? creo que es lo mismo que "procedimiento" 
+                        #Puede haber una "expresion" entre los brackets!, funcion?
+    '''
+    procedimiento2 : PARA ID BRACKET1 condicion BRACKET2 cuerpo cuerpo2 FIN
+                  | PARA ID BRACKET1 variable BRACKET2 cuerpo cuerpo2 FIN
+                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo cuerpo2 FIN
+    '''
+    if p[7] != '$':
+        p[0] = (p[1], p[2], p[4], p[6], p[7])
+    else:
+        p[0] = (p[1], p[2], p[4], p[6])
+    
+        
+        
+def p_main(p):
+    '''
+    main : MAIN BRACKET1 variable BRACKET2 cuerpo cuerpo2 FIN
+         | MAIN BRACKET1 expresion BRACKET2 cuerpo cuerpo2 FIN
+         | MAIN BRACKET1 empty BRACKET2 cuerpo cuerpo2 FIN
+    '''
+    if p[6] != '$':
+        p[0] = (p[1], p[3], p[5], p[6])
+    else:
+        p[0] = (p[1], p[3], p[5])
+    
 def p_Variable(p):
     '''
-    variable : variable1 cuerpo
-            | variable2 cuerpo
-            | variable3 cuerpo
-            | variable4 cuerpo
-            | empty empty
+    variable : variable1 cuerpo cuerpo2
+            | variable2 cuerpo cuerpo2
+            | empty empty empty
     '''
     if (p[2] != '$'):
-        p[0] = (p[1], p[2])
+        p[0] = (p[1], p[2], p[3])
     else:
-        p[0] = p[1]
+        p[0] = (p[1],p[3])
 
 
 def p_Variable1(p):
@@ -90,34 +136,11 @@ def p_Variable2(p):
     print(nombres)
 
 
-def p_Variable3(p):
-    '''
-    variable3 : PUT VAR IGUAL NUMERO PUNTOCOMA
-              
-    '''
-    nombres[p[2]] = p[4]
-    p[0] = (p[1], p[2], p[3], p[4])
-    print(p[2], p[3], p[4])
-    print(nombres)
-
-def p_Variable4(p):
-    '''
-    variable4 : PUT VAR IGUAL expresion_alge1 PUNTOCOMA
-              | PUT VAR IGUAL expresion_alge2 PUNTOCOMA
-              
-    '''
-    nombres[p[2]] = p[4]
-    p[0] = (p[1], p[2], p[3], p[4])
-    print(p[2], p[3], p[4])
-    print(nombres)
-    
-
-
-
 def p_expresion(p):
     '''
     expresion : NUMERO expresion
               | funcion expresion
+              | ID expresion
               | VAR expresion
               | condicion expresion
               | expresion_alge1 expresion
@@ -139,7 +162,7 @@ def p_expresion(p):
 def p_funcion(p):
     '''
     funcion : Random
-            | Begining
+            | Beginning
             | ContinueUp
             | ContinueDown
             | ContinueRight
@@ -167,7 +190,16 @@ def p_funcion(p):
     '''
     p[0] = p[1]
 
-
+def p_Put(p): # se puede mejorar con "expresion" Tambien puede sumarse una 
+    # variable numerica o uno de tipo "funcion"
+    '''
+    Put : PUT VAR COMA NUMERO PUNTOCOMA
+        | PUT VAR COMA expresion_alge1 PUNTOCOMA
+        | PUT VAR COMA expresion_alge2 PUNTOCOMA 
+    '''
+    nombres[p[2]] = p[4]
+    p[0] = (p[1], p[2], p[3], p[4])
+    
 def p_condicion(p):
     '''
     condicion : Equal expresion
@@ -191,7 +223,7 @@ def p_expresion_alge1(p):
     expresion_alge1 : NUMERO SUMA NUMERO 
                    | NUMERO RESTA NUMERO 
                    | NUMERO MULTI NUMERO 
-                   | NUMERO DIV NUMERO
+                   | NUMERO DIVISION NUMERO
                    | NUMERO EXPONENTE NUMERO
                    
     '''
@@ -209,7 +241,7 @@ def p_expresion_alge2(p):
     '''
     expresion_alge2 : ABRE_P expresion_alge1 CIERRA_P SUMA ABRE_P expresion_alge1 CIERRA_P
                    | ABRE_P expresion_alge1 CIERRA_P RESTA ABRE_P expresion_alge1 CIERRA_P
-                   | ABRE_P expresion_alge1 CIERRA_P MULTI ABRE_P expresion_alge1 CIERRA_P
+                   | ABRE_P expresion_alge1 CIERRA_P MULT ABRE_P expresion_alge1 CIERRA_P
                    | ABRE_P expresion_alge1 CIERRA_P DIV ABRE_P expresion_alge1 CIERRA_P
                    | ABRE_P expresion_alge1 CIERRA_P POTENCIA ABRE_P expresion_alge1 CIERRA_P
                    
@@ -247,11 +279,11 @@ def p_Substr(p):
 
 def p_Mult(p):
     '''
-    Mult : MULTI ABRE_P NUMERO COMA NUMERO CIERRA_P
-         | MULTI ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-         | MULTI ABRE_P NUMERO COMA VAR CIERRA_P
-         | MULTI ABRE_P VAR COMA NUMERO CIERRA_P
-         | MULTI ABRE_P VAR COMA VAR CIERRA_P
+    Mult : MULT ABRE_P NUMERO COMA NUMERO CIERRA_P
+         | MULT ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+         | MULT ABRE_P NUMERO COMA VAR CIERRA_P
+         | MULT ABRE_P VAR COMA NUMERO CIERRA_P
+         | MULT ABRE_P VAR COMA VAR CIERRA_P
     '''
 
     p[0] = p[3] * p[5]
@@ -348,7 +380,7 @@ def p_Smaller(p):
 
 
 
-def p_And(p):
+def p_And(p): # expresion tambien puede ser exp_agl1y2
     ''' And : AND ABRE_P expresion COMA expresion CIERRA_P PUNTOCOMA '''
     
     if p[3] == True and p[5] == True:
@@ -359,7 +391,7 @@ def p_And(p):
 
 
 
-def p_Or(p):
+def p_Or(p): # igual que el AND
     ''' Or : OR ABRE_P expresion COMA expresion CIERRA_P PUNTOCOMA '''
 
     p[0] = p[2] or p[5]
@@ -413,7 +445,8 @@ def p_SmallerEq (p):
     print(p[0])
 
 
-def p_If(p):
+def p_If(p): # en lugar de condicion tambien puede tener exp_alg1 y 2
+    # funcion debe ir separado por ; (lo mismo que Run)
 
     '''
     If : IF ABRE_P condicion CIERRA_P BRACKET1 funcion BRACKET2 ENDIF
@@ -424,8 +457,8 @@ def p_If(p):
     if(p[3]):
         p[0] = p[6]
 
-def p_IfElse(p):
-
+def p_IfElse(p): # para la condicion: puede tener exp_alg1y2, puede estar o no separados por;
+    # lo de funcion y los ultimos brackets: lo mismo que Run.
     '''
     IfElse : IFELSE ABRE_P condicion CIERRA_P BRACKET1 funcion BRACKET2 BRACKET1 funcion BRACKET2
     '''
@@ -436,7 +469,8 @@ def p_IfElse(p):
         p[0] = p[9]
 
 def p_While(p):
-
+    # condicion puede ser tambien exp_alg1y2
+    # funciones separadas por ;
     ''' 
     While : WHILE BRACKET1 condicion BRACKET2 BRACKET1 funcion BRACKET2 
     
@@ -446,8 +480,8 @@ def p_While(p):
     while(p[3]):
         p[0] = p[6]
 
-def p_Repeat(p): ################################################ REVISAR QUE FUNCIONE BIEN ##############################################
-
+def p_Repeat(p): ################## REVISAR QUE FUNCIONE BIEN ##############################################
+    #### Lo de funcion igual que Run
     ''' 
     Repeat : REPEAT NUMERO BRACKET1 funcion BRACKET2
     
@@ -458,7 +492,7 @@ def p_Repeat(p): ################################################ REVISAR QUE FU
          p[0] = p[4]
 
 def p_until(p): ################ revisar funcionamiento
-
+    ### funcion y condicion como IfElse
     ''' 
     Until : UNTIL BRACKET1 funcion BRACKET2 BRACKET1 condicion BRACKET2
     '''
@@ -470,12 +504,12 @@ def p_until(p): ################ revisar funcionamiento
         
     
 
-def p_add(p):
+def p_add(p): # tambien sumar con exp_alg1y2
 
     '''
-    Add : ADD ABRE_P VAR empty empty CIERRA_P
-        | ADD ABRE_P VAR COMA NUMERO CIERRA_P
-        | ADD ABRE_P VAR COMA VAR CIERRA_P
+    Add : ADD ABRE_P VAR empty empty CIERRA_P PUNTOCOMA
+        | ADD ABRE_P VAR COMA NUMERO CIERRA_P PUNTOCOMA
+        | ADD ABRE_P VAR COMA VAR CIERRA_P PUNTOCOMA
     
     '''
     if p[4] == '$':
@@ -483,19 +517,6 @@ def p_add(p):
     else:
         p[0]= p[3]+ p[5]
     
-def p_procedimiento(p):
-    
-    '''
-    procedimiento : PARA VAR BRACKET1 condicion BRACKET2 funcion FIN
-                  | empty empty empty empty empty empty empty empty empty empty empty
-    '''
-    if p[11] != '$':
-        p[0] = (p[1], p[2], p[4], p[6], p[8], p[9], p[10])
-    elif p[11] == '$' and p[1] != '$':
-        p[0] = (p[1], p[2], p[4], p[6], p[8], p[9])
-    else:
-        p[0] = p[1]
-
 
 def p_parametro(p): 
     '''
@@ -510,12 +531,12 @@ def p_parametro(p):
     else:
         p[0] = p[1]
 
-def p_begining(p):
+def p_beginning(p):
     '''
-    Begining : BEGINING PUNTOCOMA
+    Beginning : BEGINNING PUNTOCOMA
     '''
     p[0] = p[1]
-    print("Begining")
+    print("Beginning")
     #data.append("Begin:")
     #data.append(str(0))
     #writeToJSONFile(path,fileName,data)
@@ -528,7 +549,7 @@ def p_random(p):
     print(p[0])
 
 
-def p_ContinueUp(p):
+def p_ContinueUp(p): # recibe numero, operacion aritmetica, variables
     '''
     ContinueUp : CONTINUEUP NUMERO PUNTOCOMA
     '''
@@ -540,7 +561,7 @@ def p_ContinueUp(p):
     #data.append(str(p[2]))
     #writeToJSONFile(path,fileName,data)
 
-def p_ContinueDown(p):
+def p_ContinueDown(p): # recibe numero, operacion aritmetica, variables
     '''
     ContinueDown : CONTINUEDOWN NUMERO PUNTOCOMA
     '''
@@ -552,7 +573,7 @@ def p_ContinueDown(p):
     #data.append(str(p[2]))
     #writeToJSONFile(path,fileName,data)
 
-def p_ContinueRight(p):
+def p_ContinueRight(p): # recibe numero, operacion aritmetica, variables
     '''
     ContinueRight : CONTINUERIGHT NUMERO PUNTOCOMA
     '''
@@ -564,7 +585,7 @@ def p_ContinueRight(p):
     #data.append(str(p[2]))
     #writeToJSONFile(path,fileName,data)
 
-def p_ContinueLeft(p):
+def p_ContinueLeft(p): # recibe numero, operacion aritmetica, variables
     '''
     ContinueLeft : CONTINUELEFT NUMERO PUNTOCOMA
     '''
@@ -607,14 +628,14 @@ def p_Speed(p):
     '''
 
     p[0] = p[2]
-    print("VelocVARad = " + str(p[2]))
+    print("Velocidad = " + str(p[2]))
     #data['Speed'] = str(p[2])
     #data.append("Speed:")
     #data.append(str(p[2]))
 
     #writeToJSONFile(path,fileName,data)
 
-def p_Pos(p):
+def p_Pos(p): # recibe numero, operacion aritmetica, variables
     '''
     Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
     '''
@@ -631,7 +652,7 @@ def p_Pos(p):
 
     #writeToJSONFile(path,fileName,data)
 
-def p_PosX(p):
+def p_PosX(p): # recibe numero, operacion aritmetica, variables
     
     '''
     PosX : POSX NUMERO PUNTOCOMA
@@ -645,7 +666,7 @@ def p_PosX(p):
     #writeToJSONFile(path,fileName,data)
  
 
-def p_PosY(p):
+def p_PosY(p): # recibe numero, operacion aritmetica, variables
     
     '''
     PosY : POSY NUMERO PUNTOCOMA
@@ -658,7 +679,7 @@ def p_PosY(p):
     #data.append(str(p[2]))
     #writeToJSONFile(path,fileName,data)
 
-def p_UseColor(p):
+def p_UseColor(p): # talvez tambien usar variables 
     
     '''
     UseColor : USECOLOR NUMERO PUNTOCOMA
@@ -672,6 +693,7 @@ def p_UseColor(p):
         p[0] = 1
     else:
         print("Error")
+        # llamar a la funcion de error por index out of bounds
 
     #data['Color'] = str(p[2])
     #data.append("Color:")
@@ -679,8 +701,9 @@ def p_UseColor(p):
     #writeToJSONFile(path,fileName,data)
 
 
-def p_Run(p):
-
+def p_Run(p): # corresponde al cuerpo de las instrucciones. Usar ; al final
+        # funcion debe tener funciones separadas por ;
+        # para esto se puede hacer mas | RUN ...
     '''
     Run : RUN BRACKET1 funcion BRACKET2
     '''
@@ -688,7 +711,9 @@ def p_Run(p):
     p[0] = p[3]
     print ("Running " + str(p[3]))
 
-def p_PrintLine(p):
+def p_PrintLine(p): # hacer lo del string para que se reconozca
+    # Hacer lista para cada uno de estos prints y asi poder llevarlos al ide como los errores
+    # lo de expresion puede ser solo una cadena, solo una variable, solo un numero, o una combinacion de todas separados por coma
 
     ''' PrintLine : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
     p[0] = p[3]
@@ -703,18 +728,25 @@ def p_empty(p):
 
 
 def p_error(p):
-    errores.append("Error de sintáxis en linea "+str(p.lineno))
+    if p is not None:
+        errores.append("Error de sintaxis ({}) en linea {}".format(str(p.value), str(p.lineno-4)))
+    else:
+        pass
+        
     #errores.pop[len(errores)]
-    print("error de sintaxis " + str(p))
-    print("error en la linea " + str(p.lineno))
+    print("errores:")
+    print(errores)
+    #print("error de sintaxis " + str(p))
+    #print("error en la linea " + str(p.lineno-4))
 
+parser = yacc.yacc()
 
 def sintacticAnalizer(cadena):
     parser = yacc.yacc()
     parser.parse(cadena)
 
-cad = "//Hola soy sebas\nDef axel = 12;"
-sintacticAnalizer(cad)
+#cad = "//Hola soy sebas \n para Axel [xddd] Fin"
+#sintacticAnalizer(cad)
 #def writeToJSONFile(path, fileName, data):
  #   filePathNameWExt = './' + path + '/' + fileName + '.json'
    # with open(filePathNameWExt, 'w') as fp:
