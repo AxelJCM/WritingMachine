@@ -6,6 +6,8 @@ from turtle import width
 from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
 from tkinter.filedialog import *
+from AnalisisLexico import lexicalAnalizer, lex_getErrores
+from AnalisisSintactico import sintac_getErrores, sintacticAnalizer
 
 from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
 from numerosLinea import ScrollText
@@ -18,6 +20,11 @@ guardado = False
 codigo = ""
 txt = ""
 valor = ""
+
+#Listas de Errores
+errores_lexico = []
+errores_sintactico = []
+errores_semantico = []
 
 def mensajeInfo():
     global valor
@@ -81,11 +88,46 @@ def borrarTexto():
     areaConsola.delete(1.0, END)
     areaPrint.delete(1.0, END) 
 
+#funciones de compilacion
+def reiniciarAreas():
+    areaConsola.delete(1.0, END)
+    areaPrint.delete(1.0, END)
+
+def agregarErrores(lista_errores):
+    for i in lista_errores:
+        areaConsola.insert(1.0, i)
+
+def getTexto(area):
+    return area.get(1.0, END)
+
+
+def compilar():
+    global errores_sintactico, errores_lexico, errores_semantico
+
+    reiniciarAreas()
+
+    if getTexto(scroll) != "\n":
+
+        texto = getTexto(scroll)
+
+        print("---Lexico---")
+        lexicalAnalizer(texto) #analisis lexico
+        errores_lexico = lex_getErrores()
+        agregarErrores(errores_lexico)
+
+        print("---Sintactico---")
+        sintacticAnalizer(texto)
+        errores_sintactico = sintac_getErrores()
+        agregarErrores(errores_sintactico)
+
+    else:
+        agregarErrores(["Debe Ingresar Codigo..."])
+    
 
 # Creacion de la ventana del ide
 ide = Tk()
 ide.title('Writing Machine IDE')
-ide.iconbitmap('./Imagenes/icono.ico')
+ide.iconbitmap('./Writing Machine IDE/Imagenes/icono.ico')
 ide.geometry("1000x700")
 ide.resizable(False, False)
 ide.configure(background='black')
@@ -101,7 +143,7 @@ menu1.add_cascade(label='Archivo', menu=fileMenu)
 
 # Creacion de menu de opciones "Ejecutar" para el analisis y ejecucion del codigo contenido en el areaTexto
 runMenu = Menu(menu1, tearoff=0)
-runMenu.add_command(label='Compilar', command = Compilar)
+runMenu.add_command(label='Compilar', command = compilar)
 runMenu.add_command(label='Compilar y Ejecutar', command = Ejecutar)
 menu1.add_cascade(label='Compilar', menu=runMenu)
 ide.config(menu=menu1)
