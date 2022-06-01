@@ -31,7 +31,9 @@ precedence = (
 
 # Define las listas necesarias
 
-nombres = []
+nombres = {}
+
+arduino = {}
 
 prints = []
 
@@ -135,7 +137,9 @@ def p_Variable2(p):
     '''
     variable2 : DEF VAR IGUAL NUMERO PUNTOCOMA
     '''
-    nombres[p[2]] = p[4]
+    print(p[2])
+    print(p[4])
+    nombres[p[2]] = [p[4]]
     p[0] = (p[1], p[2], p[3], p[4])
     print(p[2], p[3], p[4])
     print(nombres)
@@ -788,3 +792,5 @@ def buscarFichero(directorio):
     return files[int(numArchivo) - 1]
 
 
+def sintac_getErrores():
+    return errores

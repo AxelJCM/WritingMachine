@@ -224,4 +224,5 @@ def lexicalAnalizer(cadena):
 # Prueba para verificar que se identifican todos los tokens e identificadores        
 #cad = "Def a6578 \t sdfd \n , 3;"    # las palabras reservadas se reconocen todas con su primera letra en minúscula 
 #LexicalAnalizer(cad)
-  
+def lex_getErrores():
+    return error  

@@ -9,7 +9,7 @@ from tkinter.filedialog import *
 from AnalisisLexico import lexicalAnalizer, lex_getErrores
 from AnalisisSintactico import sintac_getErrores, sintacticAnalizer
 
-from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
+#from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
 from numerosLinea import ScrollText
 
 #Variables
@@ -121,8 +121,8 @@ def compilar():
 
         print("---Sintactico---")
         sintacticAnalizer(texto)
-        errores_sintactico = sintac_getErrores()
-        agregarErrores(errores_sintactico)
+        #errores_sintactico = sintac_getErrores()
+        #agregarErrores(errores_sintactico)
 
     else:
         agregarErrores(["Debe Ingresar Codigo..."])
@@ -148,7 +148,7 @@ menu1.add_cascade(label='Archivo', menu=fileMenu)
 # Creacion de menu de opciones "Ejecutar" para el analisis y ejecucion del codigo contenido en el areaTexto
 runMenu = Menu(menu1, tearoff=0)
 runMenu.add_command(label='Compilar', command = compilar)
-runMenu.add_command(label='Compilar y Ejecutar', command = Ejecutar)
+runMenu.add_command(label='Compilar y Ejecutar', command = correr)
 menu1.add_cascade(label='Compilar', menu=runMenu)
 ide.config(menu=menu1)
 
