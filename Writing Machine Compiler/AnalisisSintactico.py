@@ -61,12 +61,16 @@ def p_cuerpo(p):
            | main
            | COMMENT cuerpo
             '''
-    if p[1] == '\//.*':
-        p[0] = (p[1],p[2])
-    elif contproc == 1:
+    global contproc
+    print(contproc)
+    if contproc == 0:
+        if p[1] == '\//.*':
+            p[0] = (p[1],p[2])
+        else:    
+            p[0] = p[1]
+    else:
+        print("error")
         p_error
-    else:    
-        p[0] = p[1]
     
 
 def p_cuerpo2(p):
@@ -90,21 +94,20 @@ def p_procedimiento(p): # no puede haber otro procedimiento dentro de un procedi
                   | PARA ID BRACKET1 parametro BRACKET2 expresion FIN
     '''
     global contproc
+    
     if p[6] != '$':
         p[0] = (p[2], p[4], p[6])
-        contproc == 1
-    elif p[6] == '$':
+        contproc = 1
+    else:   
         p[0] = (p[2], p[4])
-        contproc == 1
-    else:
-        p[0] = p[2]
-        contproc == 1
+        contproc = 1
                 
 def p_main(p):
     '''
     main : MAIN BRACKET1 BRACKET2 cuerpo FIN
     '''
-    if contmain == 0: 
+    global contmain
+    if contmain == 0:
         contmain = 1
         if p[4] != '$':
             p[0] = p[4]
@@ -736,9 +739,14 @@ def p_PrintLine(p): # hacer lo del string para que se reconozca
     # lo de expresion puede ser solo una cadena, solo una variable, solo un numero, o una combinacion de todas separados por coma
 
     ''' PrintLine : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
-    p[0] = p[3]
-    prints.append(p[3])
-    print(prints)
+    print(p[3])
+    if p[3] == ',':
+        print("si hay coma")
+        p[0] = p[3]
+    else:
+        p[0] = p[3]
+        prints.append(p[3])
+        print(prints)
  
 
 def p_empty(p):
@@ -747,10 +755,14 @@ def p_empty(p):
     '''
     p[0] = '$'
 
-
-def p_error(p):
+def p_error_para(p):
     if p is not None:
-        errores.append("Error de sintaxis ({}) en linea {}".format(str(p.value), str(p.lineno-4)))
+        errores.append("Error, no se puede tener una funcion dentro de otra")
+def p_error(p):
+    print("se encuentra error")
+    if p is not None:
+        errores.append("Error de sintaxis ({}) en linea {}".format(str(p.value), str(p.lineno)))
+        print(errores)
     else:
         pass
     

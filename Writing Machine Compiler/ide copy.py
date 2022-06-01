@@ -6,8 +6,8 @@ from turtle import width
 from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
 from tkinter.filedialog import *
-from AnalisisLexico import lexicalAnalizer, lex_getErrores
-from AnalisisSintactico import sintac_getErrores, sintacticAnalizer
+from AnalisisLexico import *
+from AnalisisSintactico import *
 
 #from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
 from numerosLinea import ScrollText
@@ -24,7 +24,6 @@ valor = ""
 #Listas de Errores
 errores_lexico = []
 errores_sintactico = []
-errores_semantico = []
 
 def mensajeInfo():
     global valor
@@ -75,8 +74,6 @@ def guardarArchivo():
 # Se borran los textos escritos en cada una de las areas de texto del ide    
 def borrarTexto():
     global txt, codigo
-    print (txt + "hola1")
-    print (codigo + "hola2")
     textoModificado()
     if (txt != codigo):
         mensajeInfo()
@@ -106,32 +103,47 @@ def getTexto(area):
 
 
 def compilar():
-    global errores_sintactico, errores_lexico, errores_semantico
+    global errores_sintactico, errores_lexico, prints
+    ###############################
 
-    reiniciarAreas()
-
-    if getTexto(scroll) != "\n":
-
-        texto = getTexto(scroll)
-
-        print("---Lexico---")
-        lexicalAnalizer(texto) #analisis lexico
-        errores_lexico = lex_getErrores()
-        agregarErrores(errores_lexico)
-
-        print("---Sintactico---")
-        sintacticAnalizer(texto)
-        #errores_sintactico = sintac_getErrores()
-        #agregarErrores(errores_sintactico)
-
-    else:
-        agregarErrores(["Debe Ingresar Codigo..."])
+    texto = getTexto(scroll)
+    areaConsola.config(state=NORMAL)
+    areaConsola.delete("1.0",END)
     
+    areaPrint.config(state=NORMAL)
+    areaPrint.delete("1.0",END)
+    
+    if texto.strip() != "":
+        lexicalAnalizer(texto)
+        sintacticAnalizer(texto)
+
+        for i in errores:
+            areaConsola.insert(END,errores)
+            areaConsola.insert(END,'\n')
+            
+        for j in error:
+            areaConsola.insert(END,error)
+            areaConsola.insert(END,'\n')
+        if errores == [] and error == []:
+            for k in prints:
+                areaPrint.insert(END,prints)
+                areaPrint.insert(END,'\n')
+        
+        areaConsola.config(state=DISABLED)
+        areaPrint.config(state=DISABLED)
+    
+    else:
+        messagebox.showwarning("Error","Debes escribir codigo!!")
+    
+    errores.clear()
+    error.clear()
+    prints.clear()
+
 
 # Creacion de la ventana del ide
 ide = Tk()
 ide.title('Writing Machine IDE')
-ide.iconbitmap('./Writing Machine IDE/Imagenes/icono.ico')
+#ide.iconbitmap('./Imagenes/icono.ico')
 ide.geometry("1000x700")
 ide.resizable(False, False)
 ide.configure(background='black')
