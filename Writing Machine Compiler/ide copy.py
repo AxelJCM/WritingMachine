@@ -6,8 +6,11 @@ from turtle import width
 from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
 from tkinter.filedialog import *
-from AnalisisLexico import *
-from AnalisisSintactico import *
+
+from AnalisisLexico import lexicalAnalizer, lex_getErrores
+from AnalisisSintactico import sintac_getErrores, sintacticAnalizer
+from prueba import python_arduino as pa
+
 
 #from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
 from numerosLinea import ScrollText
@@ -87,7 +90,8 @@ def borrarTexto():
 
 #funciones de compilacion
 def correr():
-    pass
+    pa.col("black")
+    pa.color("")
 
 
 def reiniciarAreas():
