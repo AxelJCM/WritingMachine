@@ -93,7 +93,7 @@ class Gui:
         self.OutputTextArea.config(state=NORMAL)
         self.OutputTextArea.delete("1.0",END)
         
-        if cadena != "" and cadena.strip() != "":
+        if cadena.strip() != "":
             lexicalAnalizer(cadena)
             sintacticAnalizer(cadena)
 
@@ -104,6 +104,10 @@ class Gui:
             for j in error:
                 self.OutputTextArea.insert(END,error)
                 self.OutputTextArea.insert(END,'\n')
+            if errores == [] and error == []:
+                for k in prints:
+                    self.OutputTextArea.insert(END,prints)
+                    self.OutputTextArea.insert(END,'\n')
             
             self.OutputTextArea.config(state=DISABLED)
         

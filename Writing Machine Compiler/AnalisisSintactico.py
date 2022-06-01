@@ -8,6 +8,10 @@ from sys import stdin
 from pip._vendor.distlib.compat import raw_input
 import random
 
+contproc = 0
+
+contmain = 0
+
 precedence = (
     ('right', 'PUNTOCOMA'),
     #('left', 'DIFERENTE'),
@@ -27,7 +31,9 @@ precedence = (
 
 # Define las listas necesarias
 
-nombres = {}
+nombres = []
+
+prints = []
 
 errores = []
 
@@ -39,11 +45,6 @@ def p_Start(p):
     '''
     Start : COMMENT cuerpo
     '''
-    #runSemanticAnalizer(p[1])
-    #if p[1] == '\//.*':
-     #   p[0] = p[2]
-    #else:
-     #   p_error(p)
     if p[1] == '$':
         p_error
     else:
@@ -51,59 +52,64 @@ def p_Start(p):
     
 
 def p_cuerpo(p):
+    
     '''
     cuerpo : variable
            | procedimiento
            | main
-           '''
-    p[0] = p[1]
+           | COMMENT cuerpo
+            '''
+    if p[1] == '\//.*':
+        p[0] = (p[1],p[2])
+    elif contproc == 1:
+        p_error
+    else:    
+        p[0] = p[1]
     
+
 def p_cuerpo2(p):
     '''
     cuerpo2 : variable
-            | procedimiento2
-    '''
-    p[0] = p[1]
-
-  
+           | procedimiento
+           | main
+           | COMMENT cuerpo
+            '''
+    if p[1] == '\//.*':
+        p[0] = (p[1],p[2])
+    else:    
+        p[0] = p[1]
+        
 def p_procedimiento(p): # no puede haber otro procedimiento dentro de un procedimiento, funcion?
     
     '''
     procedimiento : PARA ID BRACKET1 condicion BRACKET2 cuerpo FIN
                   | PARA ID BRACKET1 variable BRACKET2 cuerpo FIN
                   | PARA ID BRACKET1 parametro BRACKET2 cuerpo FIN
+                  | PARA ID BRACKET1 parametro BRACKET2 expresion FIN
     '''
+    global contproc
     if p[6] != '$':
         p[0] = (p[2], p[4], p[6])
+        contproc == 1
     elif p[6] == '$':
         p[0] = (p[2], p[4])
+        contproc == 1
     else:
         p[0] = p[2]
-
-def p_procedimiento2(p):############ cuerpo?? creo que es lo mismo que "procedimiento" 
-                        #Puede haber una "expresion" entre los brackets!, funcion?
-    '''
-    procedimiento2 : PARA ID BRACKET1 condicion BRACKET2 cuerpo cuerpo2 FIN
-                  | PARA ID BRACKET1 variable BRACKET2 cuerpo cuerpo2 FIN
-                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo cuerpo2 FIN
-    '''
-    if p[7] != '$':
-        p[0] = (p[1], p[2], p[4], p[6], p[7])
-    else:
-        p[0] = (p[1], p[2], p[4], p[6])
-    
-        
-        
+        contproc == 1
+                
 def p_main(p):
     '''
-    main : MAIN BRACKET1 variable BRACKET2 cuerpo cuerpo2 FIN
-         | MAIN BRACKET1 expresion BRACKET2 cuerpo cuerpo2 FIN
-         | MAIN BRACKET1 empty BRACKET2 cuerpo cuerpo2 FIN
+    main : MAIN BRACKET1 BRACKET2 cuerpo FIN
     '''
-    if p[6] != '$':
-        p[0] = (p[1], p[3], p[5], p[6])
+    if contmain == 0: 
+        contmain = 1
+        if p[4] != '$':
+            p[0] = p[4]
+        else:
+            p[0] = (p[1], p[3], p[5])
     else:
-        p[0] = (p[1], p[3], p[5])
+        p_error
     
 def p_Variable(p):
     '''
@@ -128,7 +134,6 @@ def p_Variable1(p):
 def p_Variable2(p):
     '''
     variable2 : DEF VAR IGUAL NUMERO PUNTOCOMA
-              
     '''
     nombres[p[2]] = p[4]
     p[0] = (p[1], p[2], p[3], p[4])
@@ -136,9 +141,11 @@ def p_Variable2(p):
     print(nombres)
 
 
+
 def p_expresion(p):
     '''
     expresion : NUMERO expresion
+              | COMA expresion
               | funcion expresion
               | ID expresion
               | VAR expresion
@@ -149,6 +156,7 @@ def p_expresion(p):
               | Substr expresion
               | Mult expresion
               | Div expresion
+              | STRING expresion
               | empty empty
                         
     '''
@@ -189,6 +197,14 @@ def p_funcion(p):
        
     '''
     p[0] = p[1]
+
+def p_Str(p):
+    '''
+    String : COMILLAS STRING COMILLAS
+    '''
+    p[0] = p[2]
+    
+
 
 def p_Put(p): # se puede mejorar con "expresion" Tambien puede sumarse una 
     # variable numerica o uno de tipo "funcion"
@@ -717,7 +733,8 @@ def p_PrintLine(p): # hacer lo del string para que se reconozca
 
     ''' PrintLine : PRINTLINE ABRE_P expresion CIERRA_P PUNTOCOMA'''
     p[0] = p[3]
-    print(nombres[1].value)
+    prints.append(p[3])
+    print(prints)
  
 
 def p_empty(p):
@@ -732,20 +749,15 @@ def p_error(p):
         errores.append("Error de sintaxis ({}) en linea {}".format(str(p.value), str(p.lineno-4)))
     else:
         pass
-        
-    #errores.pop[len(errores)]
-    print("errores:")
-    print(errores)
-    #print("error de sintaxis " + str(p))
-    #print("error en la linea " + str(p.lineno-4))
-
+    
+    
 parser = yacc.yacc()
 
 def sintacticAnalizer(cadena):
     parser = yacc.yacc()
     parser.parse(cadena)
 
-#cad = "//Hola soy sebas \n para Axel [xddd] Fin"
+#cad = "// dadaw \n Para Axel[mario]\n Para Chris[dawdaw]\n Fin\n Fin"
 #sintacticAnalizer(cad)
 #def writeToJSONFile(path, fileName, data):
  #   filePathNameWExt = './' + path + '/' + fileName + '.json'

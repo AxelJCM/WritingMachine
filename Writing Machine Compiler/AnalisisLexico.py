@@ -1,4 +1,5 @@
 
+import re
 import ply.lex as lex
 
 error = []
@@ -47,7 +48,9 @@ reservadas = {
     'Sum'   : 'SUM',
     'PrintLine'   : 'PRINTLINE',
     'Substr' : 'SUBSTR',
-    'Main' : 'MAIN'
+    'Main' : 'MAIN',
+    'True' : 'TRUE',
+    'False' : 'FALSE' 
 }  
 
 # Lista de tokens 
@@ -74,7 +77,10 @@ tokens = [
     'MAYORIGUAL', # >=
     'NUMERO', # 0...9
     'EXPONENTE',
-    'COMMENT'
+    'COMMENT',
+    'BOOLE', 
+    'STRING', 
+    'COMILLAS'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
@@ -96,6 +102,7 @@ t_PUNTOCOMA = r'\;'
 t_NEGACION = r'\!'
 t_MENORIGUAL = r'\<='
 t_MAYORIGUAL = r'\>='
+t_COMILLAS = r'\"'
 t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 
@@ -121,6 +128,11 @@ t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabu
 # pin9.write(angle)
 # pin10.write(angle)
 ########################################################################################################
+
+def t_STRING(t):
+    r'["][A-Za-z ,._]+["]'
+    t.value = str(t.value)
+    return t
 
 # se identifican los comentarios
 def t_COMMENT(t):
@@ -163,6 +175,8 @@ def t_NUMERO(t):
         t.value = 0
     return t
 
+
+        
 def t_VAR(t):
     r'[a-z][a-zA-Z0-9@_]*'
     if 10 < len(t.value) < 3 or t.value[0].isupper():
