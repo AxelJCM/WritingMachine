@@ -220,21 +220,84 @@ if __name__ == '__main__':
         color("")
         #move_y("Y-BACK", 200)
         #move_x("X-RIGHT", 700)
-        
+    
+    def arte():
+        color("black")
+        izq(300)#cuadrado 1
+        back(300)
+        der(300)
+        front(300)
+
+        color("red")
+        front(100)#rectangulo 2
+        der(300)
+        back(100)
+        izq(300)
+
+        color("black") #rombo 3
+        diagonal("NE", 500)
+        diagonal("NO", 500)
+        diagonal("SO", 500)
+        diagonal("SE", 500)
+
+        color("") #rombo rectangular 4
+        front(100)
+        color("red")
+        diagonal("NE", 800)
+        diagonal("SE", 500)
+        diagonal("SO", 800)
+        diagonal("NO", 500)
+
+        color("") #rombo rectagular 5
+        back(100)
+        back(150)
+        diagonal("NO", 300)
+        diagonal("SO", 150)
+        diagonal("SE", 300)
+        diagonal("NE", 150)
+
+        #LETRAS TEC
+        color("")
+        back(250)
+        der(300)
+        color("black")
+
+        izq(150) #letra T
+        color("")
+        der(75)
+        color("black")
+        back(100)
+        color("")
+        izq(75)
+        izq(150)
+
+        color("black") #letra E
+        izq(150)
+        color("")
+        front(33)
+        der(75)
+        color("black")
+        der(75)
+        color("")
+        back(33)
+        color("black")
+        front(100)
+        izq(150)
+        color("")
+        izq(150)
+
+        color("black") #letra C
+        izq(150)
+        color("")
+        der(150)
+        color("black")
+        back(100)
+        izq(150)
+        color("")
 
     inicio()
     time.sleep(10)
-    color("red")
-
-    move_x("X-RIGHT", 200)
-    diagonal("NE", 200)
-    move_y("Y-BACK", 200)
-    diagonal("SO", 200)
-    move_x("X-LEFT", 200)
-    diagonal("NO", 200)
-    move_y("Y-FRONT", 200)
-    diagonal("SE", 200)
-    color("")
+    arte()
     reiniciar()
 
 
