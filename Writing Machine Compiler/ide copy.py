@@ -8,8 +8,7 @@ from idlelib.percolator import Percolator
 from tkinter.filedialog import *
 
 from AnalisisLexico import lexicalAnalizer, lex_getErrores
-from AnalisisSintactico import sintac_getErrores, sintacticAnalizer
-from prueba import python_arduino as pa
+from AnalisisSintactico import sintac_getErrores, sintacticAnalizer, sintac_getPrints
 
 
 #from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
@@ -24,9 +23,10 @@ codigo = ""
 txt = ""
 valor = ""
 
-#Listas de Errores
+#Listas de Errores y Prints
 errores_lexico = []
 errores_sintactico = []
+lista_prints = []
 
 def mensajeInfo():
     global valor
@@ -93,55 +93,59 @@ def correr():
     pa.col("black")
     pa.color("")
 
+def prints(lista):
+    for i in lista:
+        areaPrint.insert(1.0, i)
+
 
 def reiniciarAreas():
     areaConsola.delete(1.0, END)
     areaPrint.delete(1.0, END)
 
 def agregarErrores(lista_errores):
+    areaConsola.config(state=NORMAL)
     for i in lista_errores:
         areaConsola.insert(1.0, i)
+    areaConsola.config(state=DISABLED)
 
 def getTexto(area):
     return area.get(1.0, END)
 
+def reiniciarAreas():
+    areaConsola.delete(1.0, END)
+    areaPrint.delete(1.0, END)
 
 def compilar():
-    global errores_sintactico, errores_lexico, prints
-    ###############################
+    global errores_sintactico, errores_lexico, errores_semantico
 
-    texto = getTexto(scroll)
+    reiniciarAreas()
     areaConsola.config(state=NORMAL)
-    areaConsola.delete("1.0",END)
-    
     areaPrint.config(state=NORMAL)
-    areaPrint.delete("1.0",END)
-    
-    if texto.strip() != "":
-        lexicalAnalizer(texto)
-        sintacticAnalizer(texto)
 
-        for i in errores:
-            areaConsola.insert(END,errores)
-            areaConsola.insert(END,'\n')
-            
-        for j in error:
-            areaConsola.insert(END,error)
-            areaConsola.insert(END,'\n')
-        if errores == [] and error == []:
-            for k in prints:
-                areaPrint.insert(END,prints)
-                areaPrint.insert(END,'\n')
+    if getTexto(scroll) != "\n":
+        texto = getTexto(scroll)
         
-        areaConsola.config(state=DISABLED)
-        areaPrint.config(state=DISABLED)
-    
+
+        print("---Lexico---")
+        lexicalAnalizer(texto) #analisis lexico
+        errores_lexico = lex_getErrores()
+        agregarErrores(errores_lexico)
+
+        print("---Sintactico---")#analisis sintactico
+        sintacticAnalizer(texto)
+        errores_sintactico = sintac_getErrores()
+        agregarErrores(errores_sintactico)
+
+        #se procede a imprimir los prints
+        lista_prints = sintac_getPrints()
+        prints(lista_prints)
+
+        
     else:
-        messagebox.showwarning("Error","Debes escribir codigo!!")
+        agregarErrores(["Debe Ingresar Codigo..."])
     
-    errores.clear()
-    error.clear()
-    prints.clear()
+    areaConsola.config(state=DISABLED)
+    areaPrint.config(state=DISABLED)
 
 
 # Creacion de la ventana del ide
@@ -186,11 +190,13 @@ areaTexto.pack()
 baseConsola = Canvas(ide, width=490, height=143)
 baseConsola.place(x=0, y=550)
 areaConsola = Text(baseConsola, height=9, width=60)
+areaConsola.config(state=DISABLED)
 areaConsola.config(bg='#362f2e', fg='#1dd604')
 areaConsola.pack()
 # Area donde se muestran los mensajes impresos por parte del codigo
 basePrint = Canvas(ide, width=490, height=143)
 basePrint.place(x=510, y=550)
+basePrint.config(state=DISABLED)
 areaPrint = Text(basePrint, height=9, width=60)
 areaPrint.config(bg='#362f2e', fg='#d2ded1')
 areaPrint.pack()

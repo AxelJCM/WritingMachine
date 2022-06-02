@@ -806,3 +806,6 @@ def buscarFichero(directorio):
 
 def sintac_getErrores():
     return errores
+
+def sintac_getPrints():
+    return prints
