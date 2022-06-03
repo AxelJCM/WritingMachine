@@ -2,6 +2,7 @@
 import pyfirmata
 import time
 from movimientos import *
+from pygame import mixer
 
 listaMovimientos = []
 diagonalMov = True
@@ -178,6 +179,21 @@ if __name__ == '__main__':
         move_y("Y-FRONT", 500)
         move_x("X-RIGHT", 800)
 
+    def izq(num):
+        move_x("X-LEFT", num)
+
+    def der(num):
+        move_x("X-RIGHT", num)
+
+    def front(num):
+        move_y("Y-FRONT", num)
+
+    def back(num):
+        move_y("Y-BACK", num)
+
+    def col(clr):
+        color(clr)
+
 
     #move_x("X-LEFT", 200)
 
@@ -307,19 +323,3 @@ if __name__ == '__main__':
     #time.sleep(2)
     #color("")
     #time.sleep(2)
-
-
-def izq(num):
-    move_x("X-LEFT", num)
-
-def der(num):
-    move_x("X-RIGHT", num)
-
-def front(num):
-    move_y("Y-FRONT", num)
-
-def back(num):
-    move_y("Y-BACK", num)
-
-def col(clr):
-    color(clr)
