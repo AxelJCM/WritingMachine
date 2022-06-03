@@ -858,3 +858,11 @@ def sintac_getErrores():
 
 def sintac_getPrints():
     return prints
+
+# Funcion para limpiar los valores de la lista de errores
+def limpiarErrores():
+    errores.clear()
+def limpiarNombres():
+    nombres.clear()
+def limpiarPrints():
+    prints.clear()

@@ -7,8 +7,8 @@ from idlelib.colorizer import ColorDelegator
 from idlelib.percolator import Percolator
 from tkinter.filedialog import *
 
-from AnalisisLexico import lexicalAnalizer, lex_getErrores
-from AnalisisSintactico import sintac_getErrores, sintacticAnalizer, sintac_getPrints
+from AnalisisLexico import *
+from AnalisisSintactico import *
 
 
 #from archivos import escribirArchivo, leerArchivo, Compilar, Ejecutar
@@ -90,8 +90,9 @@ def borrarTexto():
 
 #funciones de compilacion
 def correr():
-    pa.col("black")
-    pa.color("")
+    #pa.col("black")
+    #pa.color("")
+    pass
 
 def prints(lista):
     for i in lista:
@@ -120,7 +121,9 @@ def compilar():
 
     reiniciarAreas()
     areaConsola.config(state=NORMAL)
+    areaConsola.delete("1.0",END)
     areaPrint.config(state=NORMAL)
+    areaPrint.delete("1.0",END)
 
     if getTexto(scroll) != "\n":
         texto = getTexto(scroll)
@@ -146,6 +149,11 @@ def compilar():
     
     areaConsola.config(state=DISABLED)
     areaPrint.config(state=DISABLED)
+    
+    limpiarErrores
+    limpiarError
+    limpiarNombres
+    limpiarPrints
 
 
 # Creacion de la ventana del ide

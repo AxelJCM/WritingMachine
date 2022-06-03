@@ -226,3 +226,7 @@ def lexicalAnalizer(cadena):
 #LexicalAnalizer(cad)
 def lex_getErrores():
     return error  
+
+# Funcion para limpiar los valores de la lista de errores
+def limpiarError():
+    error.clear()
