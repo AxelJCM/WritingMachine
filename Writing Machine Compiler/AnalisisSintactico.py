@@ -9,7 +9,7 @@ from pip._vendor.distlib.compat import raw_input
 import random
 
 contproc = 0
-
+global contmain
 contmain = 0
 
 precedence = (
@@ -54,7 +54,6 @@ def p_Start(p):
     
 
 def p_cuerpo(p):
-    
     '''
     cuerpo : variable
            | procedimiento
@@ -62,70 +61,114 @@ def p_cuerpo(p):
            | COMMENT cuerpo
             '''
     global contproc
-    print(contproc)
-    if contproc == 0:
-        if p[1] == '\//.*':
-            p[0] = (p[1],p[2])
-        else:    
-            p[0] = p[1]
-    else:
-        print("error")
-        p_error
-    
-
-def p_cuerpo2(p):
-    '''
-    cuerpo2 : variable
-           | procedimiento
-           | main
-           | COMMENT cuerpo
-            '''
+    global contmain
     if p[1] == '\//.*':
         p[0] = (p[1],p[2])
-    else:    
+    else:
         p[0] = p[1]
         
+def p_cuerpo2(p):
+    '''
+    cuerpo2 : variablexd
+            | COMMENT cuerpo2
+            | expresion
+            | llamadoproc
+            | empty
+            '''
+    global contproc
+
+    if p[1] == '\//.*':
+        p[0] = (p[1],p[2])
+    else:
+        p[0] = p[1]
+
+def p_cuerpo3(p):
+    '''
+    cuerpo3 : variablexdd
+            | COMMENT cuerpo3
+            | expresion
+            | funcion
+            | empty
+            '''
+    global contproc
+    global contmain
+    contmain = 0
+    if p[1] == '\//.*':
+        p[0] = (p[1],p[2])
+    else:
+        p[0] = p[1]
+    
 def p_procedimiento(p): # no puede haber otro procedimiento dentro de un procedimiento, funcion?
     
     '''
-    procedimiento : PARA ID BRACKET1 condicion BRACKET2 cuerpo FIN
-                  | PARA ID BRACKET1 variable BRACKET2 cuerpo FIN
-                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo FIN
-                  | PARA ID BRACKET1 parametro BRACKET2 expresion FIN
+    procedimiento : PARA ID BRACKET1 condicion BRACKET2 cuerpo2 FIN cuerpo
+                  | PARA ID BRACKET1 variable BRACKET2 cuerpo2 FIN cuerpo
+                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo2 FIN cuerpo
     '''
-    global contproc
     
-    if p[6] != '$':
-        p[0] = (p[2], p[4], p[6])
-        contproc = 1
+    global contproc
+    if p[8] != '$':
+        p[0] = (p[2], p[4], p[6],p[8])
+        print(p[7] + "1")
     else:   
-        p[0] = (p[2], p[4])
-        contproc = 1
+        p[0] = (p[2], p[4],p[6])
+        print(p[7] + "2")
+        
+def p_llamadoproc(p):
+    '''
+    llamadoproc : PARA ID BRACKET1 parametro BRACKET2 PUNTOCOMA
+    '''
                 
 def p_main(p):
     '''
-    main : MAIN BRACKET1 BRACKET2 cuerpo FIN
+    main : MAIN BRACKET1 BRACKET2 cuerpo3 FIN cuerpo
     '''
     global contmain
+    global contproc
+    print("dawdwa")
+    print(contmain)
     if contmain == 0:
         contmain = 1
-        if p[4] != '$':
-            p[0] = p[4]
+        if p[6] != '$':
+            p[0] = (p[4],p[6])
         else:
-            p[0] = (p[1], p[3], p[5])
+            p[0] = (p[4])
     else:
-        p_error
-    
+        contmain = 0
+        errores.append("errorazo")
+
 def p_Variable(p):
     '''
-    variable : variable1 cuerpo cuerpo2
-            | variable2 cuerpo cuerpo2
-            | empty empty empty
+    variable : variable1 cuerpo
+            | variable2 cuerpo
+            | empty empty
     '''
     if (p[2] != '$'):
-        p[0] = (p[1], p[2], p[3])
+        p[0] = (p[1])
     else:
-        p[0] = (p[1],p[3])
+        p[0] = (p[1],p[2])
+    
+def p_Variablexd(p):
+    '''
+    variablexd : variable1 cuerpo2
+            | variable2 cuerpo2
+            | empty empty
+    '''
+    if (p[2] != '$'):
+        p[0] = (p[1])
+    else:
+        p[0] = (p[1],p[2])
+        
+def p_Variablexdd(p):
+    '''
+    variablexdd : variable1 cuerpo3
+            | variable2 cuerpo3
+            | empty empty
+    '''
+    if (p[2] != '$'):
+        p[0] = (p[1])
+    else:
+        p[0] = (p[1],p[2])
 
 
 def p_Variable1(p):
@@ -152,11 +195,9 @@ def p_Variable2(p):
 def p_expresion(p):
     '''
     expresion : NUMERO expresion
-              | COMA expresion
               | funcion expresion
               | ID expresion
               | VAR expresion
-              | condicion expresion
               | expresion_alge1 expresion
               | expresion_alge2 expresion
               | Sum expresion
@@ -164,6 +205,11 @@ def p_expresion(p):
               | Mult expresion
               | Div expresion
               | STRING expresion
+              | NUMERO empty
+              | COMA empty
+              | ID empty
+              | VAR empty
+              | STRING empty
               | empty empty
                         
     '''
@@ -171,7 +217,7 @@ def p_expresion(p):
     if (p[2] != '$'):
         p[0] = (p[1], p[2])
     else:
-        p[0] = p[1]
+        errores.append("Error de sintaxis, no se puede escribir un ID, coma, string, numero o variable solo")
         
 
 def p_funcion(p):
@@ -225,12 +271,13 @@ def p_Put(p): # se puede mejorar con "expresion" Tambien puede sumarse una
     
 def p_condicion(p):
     '''
-    condicion : Equal expresion
-              | Greater expresion
-              | Smaller expresion
-              | GreaterEq expresion
-              | SmallerEq expresion 
+    condicion : Equal
+              | Greater
+              | Smaller
+              | GreaterEq
+              | SmallerEq
     '''
+    p[0] = p[1]    
     
 def expresion_alge(p):
     '''
@@ -282,9 +329,11 @@ def p_Sum(p):
     Sum : SUM ABRE_P NUMERO COMA NUMERO CIERRA_P
         | SUM ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
         | SUM ABRE_P NUMERO COMA VAR CIERRA_P
+        | SUM ABRE_P VAR COMA NUMERO CIERRA_P
+        | SUM ABRE_P VAR COMA VAR CIERRA_P
     '''
 
-    p[0] = p[3] + int(p[5])
+    p[0] = int(p[3]) + int(p[5])
     print(p[0])
 
 
@@ -297,7 +346,7 @@ def p_Substr(p):
            | SUBSTR ABRE_P VAR COMA VAR CIERRA_P
     '''
 
-    p[0] = p[3] - p[5]
+    p[0] = int(p[3]) - int(p[5])
     print(p[0])
 
 def p_Mult(p):
@@ -309,7 +358,7 @@ def p_Mult(p):
          | MULT ABRE_P VAR COMA VAR CIERRA_P
     '''
 
-    p[0] = p[3] * p[5]
+    p[0] = int(p[3]) * int(p[5])
     print(p[0])
 
 def p_Div(p):
@@ -321,7 +370,7 @@ def p_Div(p):
         | DIV ABRE_P VAR COMA VAR CIERRA_P
     '''
 
-    p[0] = p[3] / p[5]
+    p[0] = int(p[3]) / int(p[5])
     print(p[0])
 
 ###### CAMBIAR NOMBRES DE PALABRAS RESERTVADAS SI SE VA A USAR
@@ -579,9 +628,8 @@ def p_ContinueUp(p): # recibe numero, operacion aritmetica, variables
 
     p[0] = p[2]
     print("ContinueUp " + str(p[2]))
-    #data['ContinueUp'] = str(p[2])
-    #data.append("ContinueUp:")
-    #data.append(str(p[2]))
+    data['ContinueUp'] = str(p[2])
+    data.append("ContinueUp:"+ str(p[2]))
     #writeToJSONFile(path,fileName,data)
 
 def p_ContinueDown(p): # recibe numero, operacion aritmetica, variables
@@ -679,6 +727,7 @@ def p_PosX(p): # recibe numero, operacion aritmetica, variables
     
     '''
     PosX : POSX NUMERO PUNTOCOMA
+         | POSX expresion PUNTOCOMA
     '''
 
     p[0] = p[2]
@@ -728,7 +777,7 @@ def p_Run(p): # corresponde al cuerpo de las instrucciones. Usar ; al final
         # funcion debe tener funciones separadas por ;
         # para esto se puede hacer mas | RUN ...
     '''
-    Run : RUN BRACKET1 funcion BRACKET2
+    Run : RUN BRACKET1 funcion BRACKET2 
     '''
 
     p[0] = p[3]
@@ -755,16 +804,16 @@ def p_empty(p):
     '''
     p[0] = '$'
 
-def p_error_para(p):
-    if p is not None:
-        errores.append("Error, no se puede tener una funcion dentro de otra")
+
 def p_error(p):
     print("se encuentra error")
     if p is not None:
         errores.append("Error de sintaxis ({}) en linea {}".format(str(p.value), str(p.lineno)))
         print(errores)
     else:
-        pass
+        print(str(p.value))
+        errores.append("Error de sintaxis")
+        
     
     
 parser = yacc.yacc()

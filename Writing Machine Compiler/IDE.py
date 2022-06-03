@@ -8,8 +8,11 @@ from AnalisisSintactico import *
 import time
 
 
+
 class Gui:
     
+    global contmain
+    contmain = 0
     def __init__(self):
         self.MainWindow = Tk()
 
@@ -92,7 +95,6 @@ class Gui:
         cadena = self.CodeTextArea.get("1.0", 'end-1c')
         self.OutputTextArea.config(state=NORMAL)
         self.OutputTextArea.delete("1.0",END)
-        
         if cadena.strip() != "":
             lexicalAnalizer(cadena)
             sintacticAnalizer(cadena)
@@ -117,7 +119,9 @@ class Gui:
         
         errores.clear()
         error.clear()
-
+        nombres.clear()
+        prints.clear()
+        
         if compare:
             print("run button")
         else:
