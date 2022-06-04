@@ -1,8 +1,9 @@
-from logica_arduino import python_arduino as pa
+from python_arduino import *
+
 import time
 
 tiempoPausa = 0.5
-color = "black"
+color_impr = "black"
 
 def runSemanticAnalizer(parse):
     try:
@@ -21,55 +22,58 @@ def inicio(body):
     print(2)
 
 def procedimientos(body): #[['continuedown', 200], ['begin', None]]
-    global color, tiempoPausa
-    print(body)
+    global color_impr, tiempoPausa
+    print("----Iniciando impresion---- ")
 
-    pa.inicio()
+    inicio_im()
 
     for i in body:
         if i[0] == "ContinueDown":
-            pa.back(i[1])
+            back(i[1])
 
         elif i[0] == "ContinueUp":
-            pa.front(i[1])
+            print("Iniciando el ContinueUp")
+            front(i[1])
 
         elif i[0] == "ContinueRight":
-            pa.der(i[1])
+            der(i[1])
 
         elif i[0] == "ContinueLeft":
-            pa.izq(i[1])
+            izq(i[1])
 
         elif i[0] == "Pos":
-            pa.begin()
-            pa.Pos(i[1][0], i[1][1])
+            begin()
+            print("Despues del 00, se mueve")
+            Pos(i[1][0], i[1][1])
+            print(i[1][0], i[1][1])
 
         elif i[0] == "PosX":
-            pa.begin_espe(x=i[1])
-            pa.PosX(i[1])
+            begin_espe(x=i[1])
+            PosX(i[1])
 
         elif i[0] == "PosY":
-            pa.begin_espe(y=i[1])
-            pa.PosY(i[1])
+            begin_espe(y=i[1])
+            PosY(i[1])
 
         elif i[0] == "UseColor":
             if i[1] == 1:
-                color = "black"
+                color_impr = "black"
 
             else:
-                color = "red"
+                color_impr = "red"
 
         elif i[0] == "Down":
-            pa.color(color)
+            color(color_impr)
 
         elif i[0] ==  "Up":
-            pa.color("")
+            color("")
 
         elif i[0] == "Beginning":
-            pa.begin()
+            begin()
 
         elif i[0] == "Speed": #tiempo en milisegundos
             tiempoPausa = i[1] / (1000)
 
         time.sleep(tiempoPausa)
 
-    pa.reiniciar()
+    reiniciar()

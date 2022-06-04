@@ -183,6 +183,8 @@ def compilar():
 def correr():
     compilar()
     if lex_getErrores() == [] and sintac_getErrores() == []:
+        print("Procedimientos es: ")
+        print(sintac_getArduino())
         procedimientos(sintac_getArduino())
 
 # Creacion de la ventana del ide

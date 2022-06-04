@@ -635,7 +635,7 @@ def p_ContinueUp(p): # recibe numero, operacion aritmetica, variables
                | CONTINUEUP Var PUNTOCOMA 
     '''
     p[0] = p[2]
-    arduino.append(['ContineUp',p[2]])
+    arduino.append(['ContinueUp',p[2]])
     
 
 # Se escribe en el liezo las unidades hacia abajo que se le indiquen 
@@ -648,7 +648,7 @@ def p_ContinueDown(p): # recibe numero, operacion aritmetica, variables
     '''
 
     p[0] = p[2]
-    arduino.append(['ContineDown',p[2]])
+    arduino.append(['ContinueDown',p[2]])
 
 
 # Se escribe en el liezo las unidades hacia la derecha que se le indiquen 
@@ -661,7 +661,7 @@ def p_ContinueRight(p):
     '''
 
     p[0] = p[2]
-    arduino.append(['ContineRight',p[2]])
+    arduino.append(['ContinueRight',p[2]])
 
 # Se escribe en el liezo las unidades hacia la izquierda que se le indiquen 
 def p_ContinueLeft(p):
@@ -673,7 +673,7 @@ def p_ContinueLeft(p):
     '''
 
     p[0] = p[2]
-    arduino.append(['ContineLeft',p[2]])
+    arduino.append(['ContinueLeft',p[2]])
 
 # Levanta el lapicero utilizado para que no toque el lienzo
 def p_Up(p):
