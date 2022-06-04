@@ -73,8 +73,6 @@ tokens = [
     'MULTI', # *
     'IGUAL_IGUAL', # ==
     'NEGACION', # !
-    'MENORIGUAL', # <=
-    'MAYORIGUAL', # >=
     'NUMERO', # 0...9
     'EXPONENTE',
     'COMMENT',
@@ -85,7 +83,7 @@ tokens = [
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
-t_EXPONENTE = r'\*\*' # verificar que este cambio funciona. # antes: \*\*
+t_EXPONENTE = r'\^' # verificar que este cambio funciona. # antes: \*\*
 #t_DIV_ENTERA = r'\/\*'
 t_IGUAL = r'\='
 t_DIVISION = r'\/'
@@ -100,8 +98,6 @@ t_BRACKET2 = r'\]'
 t_COMA = r'\,'
 t_PUNTOCOMA = r'\;'
 t_NEGACION = r'\!'
-t_MENORIGUAL = r'\<='
-t_MAYORIGUAL = r'\>='
 t_COMILLAS = r'\"'
 t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabulaciones
 

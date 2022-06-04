@@ -1,8 +1,6 @@
 
 import pyfirmata
-import time
-from movimientos import *
-from pygame import mixer
+from logica_arduino import movimientos
 
 listaMovimientos = []
 diagonalMov = True
@@ -31,6 +29,7 @@ def sumarCoordenada(tipo, cant):
 
 if __name__ == '__main__':
     board = pyfirmata.Arduino('COM3')
+    #board = ""
     print("Communication Successfully started")
 
     servo = board.get_pin('d:11:s')
@@ -41,12 +40,10 @@ if __name__ == '__main__':
         if pos == "X-LEFT": #maximo 1500
             board.digital[5].write(1)
             board.digital[6].write(1)
-            time.sleep(1)
 
         elif pos == "X-RIGHT":
             board.digital[5].write(0)
             board.digital[6].write(0)
-            time.sleep(1)
 
         for i in range(dis):
             board.digital[2].write(1)
@@ -59,12 +56,10 @@ if __name__ == '__main__':
         if pos == "Y-FRONT": #maximo 1000
             board.digital[5].write(1)
             board.digital[6].write(0)
-            time.sleep(1)
 
         elif pos == "Y-BACK":
             board.digital[5].write(0)
             board.digital[6].write(1)
-            time.sleep(1)
 
         for i in range(dis):
             board.digital[2].write(1)
@@ -79,11 +74,9 @@ if __name__ == '__main__':
         if tipo == "NO" or tipo == "SE":
             if tipo == "NO":
                 board.digital[5].write(1)
-                time.sleep(1)
 
             else:
                 board.digital[5].write(0)
-                time.sleep(1)
 
             for i in range(dis):
                 board.digital[2].write(1)
@@ -92,11 +85,9 @@ if __name__ == '__main__':
         else:
             if tipo == "SO":
                 board.digital[6].write(1)
-                time.sleep(1)
 
             else:
                 board.digital[6].write(0)
-                time.sleep(1)
 
             for i in range(dis):
                 board.digital[3].write(1)
@@ -116,15 +107,12 @@ if __name__ == '__main__':
         if col == "red":
             print("entrando")
             servo.write(0)
-            time.sleep(1)
 
         elif col == "black":
             servo.write(180)
-            time.sleep(1)
 
         else:
             servo.write(90)
-            time.sleep(1)
 
     def inicio():
         global analizandoCoordenadas
@@ -198,7 +186,50 @@ if __name__ == '__main__':
         elif cordenada_y < 0:
             move_y("Y-FRONT", abs(cordenada_y))
 
-        analizarDiagonales = []
+    def begin_espe(x = None, y = None):
+        analizar_Diagonales()
+
+        if x != None:
+            if cordenada_x < 0:
+                move_x("X-RIGHT", abs(x))
+
+            elif cordenada_x > 0:
+                move_x("X-LEFT", abs(x))
+
+        else:
+            if cordenada_y > 0:
+                move_y("Y-BACK", abs(y))
+
+            elif cordenada_y < 0:
+                move_y("Y-FRONT", abs(y))
+        
+    def Pos(x, y):
+        if x > 0:
+            move_x("X-RIGHT", abs(x))
+        
+        else:
+            move_x("X-LEFT", abs(x))
+
+
+        if y > 0:
+            move_y("Y-FRONT", abs(y))
+
+        else:
+            move_y("Y-BACK", abs(y))
+
+    def PosX(x):
+        if x > 0:
+            move_x("X-RIGHT", abs(x))
+        
+        else:
+            move_x("X-LEFT", abs(x))
+
+    def PosY(y):
+        if y > 0:
+            move_y("Y-FRONT", abs(y))
+
+        else:
+            move_y("Y-BACK", abs(y))
 
     def izq(num):
         move_x("X-LEFT", num)
@@ -333,7 +364,6 @@ if __name__ == '__main__':
         color("")
 
     inicio()
-    time.sleep(10)
     arte()
     reiniciar()
 
