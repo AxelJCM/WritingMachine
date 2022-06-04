@@ -117,9 +117,13 @@ def reiniciarAreas():
     areaPrint.delete(1.0, END)
 
 def compilar():
-    global errores_sintactico, errores_lexico, errores_semantico
+    global errores_sintactico, errores_lexico
 
     reiniciarAreas()
+    limpiarErrores()
+    limpiarError()
+    limpiarNombres()
+    limpiarPrints()
     areaConsola.config(state=NORMAL)
     areaConsola.delete("1.0",END)
     areaPrint.config(state=NORMAL)
@@ -150,10 +154,10 @@ def compilar():
     areaConsola.config(state=DISABLED)
     areaPrint.config(state=DISABLED)
     
-    limpiarErrores
-    limpiarError
-    limpiarNombres
-    limpiarPrints
+    limpiarErrores()
+    limpiarError()
+    limpiarNombres()
+    limpiarPrints()
 
 
 # Creacion de la ventana del ide
