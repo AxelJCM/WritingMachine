@@ -132,7 +132,7 @@ if __name__ == '__main__':
         move_x("X-LEFT", 800)
         analizandoCoordenadas = True
 
-    def analizarDiagonales():
+    def analizar_Diagonales():
         global listaMovimientos, diagonalMov
         listaMovimientos.reverse()
         diagonalMov = False
@@ -159,7 +159,7 @@ if __name__ == '__main__':
         global analizandoCoordenadas, cordenada_x, cordenada_y
         print("----Reiniciando----")
         
-        analizarDiagonales()
+        analizar_Diagonales()
 
 
         if cordenada_x < 0:
@@ -178,6 +178,27 @@ if __name__ == '__main__':
 
         move_y("Y-FRONT", 500)
         move_x("X-RIGHT", 800)
+    
+    def begin():
+        global analizandoCoordenadas, cordenada_x, cordenada_y, analizarDiagonales
+        print("----Reiniciando----")
+        
+        analizar_Diagonales()
+
+
+        if cordenada_x < 0:
+            move_x("X-RIGHT", abs(cordenada_x))
+
+        elif cordenada_x > 0:
+            move_x("X-LEFT", abs(cordenada_x))
+
+        if cordenada_y > 0:
+            move_y("Y-BACK", abs(cordenada_y))
+
+        elif cordenada_y < 0:
+            move_y("Y-FRONT", abs(cordenada_y))
+
+        analizarDiagonales = []
 
     def izq(num):
         move_x("X-LEFT", num)
