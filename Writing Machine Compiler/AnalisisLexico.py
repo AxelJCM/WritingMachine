@@ -58,8 +58,6 @@ reservadas = {
 tokens = [
     'VAR',
     'ID', # para el identificador de las variables
-    'POTENCIA', # **   
-    #'DIV_ENTERA', # //
     'ABRE_P', # (
     'CIERRA_P', # )
     'BRACKET1', # [
@@ -74,7 +72,6 @@ tokens = [
     'IGUAL_IGUAL', # ==
     'NEGACION', # !
     'NUMERO', # 0...9
-    'EXPONENTE',
     'COMMENT',
     'BOOLE', 
     'STRING', 
@@ -83,8 +80,6 @@ tokens = [
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
-t_EXPONENTE = r'\^' # verificar que este cambio funciona. # antes: \*\*
-#t_DIV_ENTERA = r'\/\*'
 t_IGUAL = r'\='
 t_DIVISION = r'\/'
 t_MULTI = r'\*'
