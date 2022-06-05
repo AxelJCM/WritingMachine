@@ -899,10 +899,13 @@ def p_exp(p):
         | Var COMA exp
         | NUMERO empty empty
         | RESTA NUMERO empty empty
+        | RESTA NUMERO COMA empty
         | STRING empty empty
         | Var empty empty
     '''
-    if p[2] != '$':
+    if p[2] == '-':
+        p[0] = (-p[2], p[4])
+    elif p[2] != '$':
         p[0] = (p[1], p[3])
     else:
         p[0] = p[1]
