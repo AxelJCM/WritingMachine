@@ -18,7 +18,7 @@ reservadas = {
     'Put'   : 'PUT',
     'Add'   : 'ADD',
     'ContinueUp'   : 'CONTINUEUP',
-    'ContinueDown'   : 'CONTINUEDOWN',
+    'ContinueDown' : 'CONTINUEDOWN',
     'ContinueRight'   : 'CONTINUERIGHT',
     'ContinueLeft'   : 'CONTINUELEFT',
     'Pos'   : 'POS',
@@ -157,8 +157,6 @@ def t_NUMERO(t):
         t.value = 0
     return t
 
-
-        
 def t_VAR(t):
     r'[a-z][a-zA-Z0-9@_]*'
     if 10 < len(t.value) < 3 or t.value[0].isupper():
@@ -167,15 +165,11 @@ def t_VAR(t):
 
 #funcion para los identificadores 
 def t_ID(t): 
-    r'[A-Z][a-zA-Z0-9@_]{0,10}' #r'[A-Za-z][a-zA-Z@_]*'
-    if len(t.value) > 10:
-        return t_error(t)
+    r'[A-Z][a-zA-Z0-9@_]*' #r'[A-Za-z][a-zA-Z@_]*'
     t.type = reservadas.get(t.value,'ID')    # Se busca en las palabras resevadas
     if t.value.upper() in reservadas: 
         t.value = t.value.upper()
         t.type = t.value
-      
-    # Se verifica que el numero de caracterees en el nombre de las variables esté entre 3 y 10
     return t
 
 def t_error(t): # Si se detecta un error durante la compilacion, se imprime dicho error en la consola del ide
