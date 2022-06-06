@@ -60,17 +60,20 @@ def abrirArchivo():
         if (valor == "yes"):
             guardarArchivo()
     
-    path = askopenfilename(filetypes=[('Python Files', '*.py')])
+    path = askopenfilename(filetypes=[('Writing Machine Files', '*.writ')])
     with open(path, 'r') as file:
         code = file.readlines()
         scroll.delete('1.0', END)
-        scroll.insert('1.0', code)
+        codigoLeido = ''
+        for i in range(len(code)):
+            codigoLeido += code[i]
+        scroll.insert(END, codigoLeido)
         codigo = scroll.get(1.0, END)
         txt = scroll.get(1.0, END)
 
 # Se guarda el texto que contenga el areaTexto dentro de un archivo .w     
 def guardarArchivo():
-    path = asksaveasfilename(filetypes=[('Python Files', '*.py')])
+    path = asksaveasfilename(filetypes=[('Writing Machine Files', '*.writ')])
     with open(path, 'w') as file:
         code = scroll.get('1.0', END)
         file.write(code)
@@ -102,22 +105,32 @@ def quitarCom(string):
 def limpiar_print(string):
     nuevo = ""
     for i in string:
-        if isinstance(i, tuple):
-            nuevo += str(i[0])
-            nuevo += str(i[1])
-
-        elif i != "{" or i != "}":
+        if i != "{" or i != "}":
             nuevo += i
     return nuevo
 
-def prints(lista):
-    for i in lista:
-        i = limpiar_print(i)
-        if '"' in i:
-            quitarCom(i)
-
+def aplanar(lista):
+    ret = []
+    for elem in lista:
+        if isinstance(elem, list):
+            ret.extend(aplanar(elem))
         else:
-            areaPrint.insert(1.0, i)
+            ret.append(elem)
+    return ret
+            
+def prints(lista):
+    x = aplanar(lista)
+    x.reverse()
+    for i in x:
+        if isinstance(i,bool):
+            if i == True:
+                areaPrint.insert(1.0, "True")
+            else:
+                areaPrint.insert(1.0, "False")
+        elif isinstance(i,int):
+            areaPrint.insert(1.0, str(i)+' ')
+        else:
+            quitarCom(i)
 
 
 def reiniciarAreas():

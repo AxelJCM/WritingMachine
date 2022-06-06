@@ -70,7 +70,6 @@ def p_cuerpo2(p):
     cuerpo2 : variablexd
             | COMMENT cuerpo2
             | expresion
-            
             | empty
             | Put2
             | Put
@@ -104,7 +103,6 @@ def p_cuerpo3(p):
 
         
 def p_procedimiento(p): # no puede haber dos o mas procedimientos con el mismo nombre
-    
     '''
     procedimiento : PARA ID BRACKET1 empty BRACKET2 cuerpo2 FIN cuerpo
                   | PARA ID BRACKET1 parametro BRACKET2 cuerpo2 FIN cuerpo
@@ -178,8 +176,20 @@ def p_Variable2(p): ##### Modificado para resta
     '''
     variable2 : DEF VAR IGUAL NUMERO PUNTOCOMA
               | DEF VAR IGUAL RESTA NUMERO PUNTOCOMA
+              | DEF VAR IGUAL TRUE PUNTOCOMA
+              | DEF VAR IGUAL FALSE PUNTOCOMA
     '''
-    if p[4] == '-':
+    if p[4] == 'True':
+        p[4] = True
+        nombres[p[2]] = p[4]
+        p[0] = (p[1],p[2],p[3], p[4])
+        
+    elif p[4] == 'False':
+        p[4] = False
+        nombres[p[2]] = p[4]
+        p[0] = (p[1],p[2],p[3],p[4])
+        
+    elif p[4] == '-':
         nombres[p[2]] = -p[5]
         p[0] = (p[1], p[2], p[3], -p[5])
         print(p[2], p[3], -p[5])
@@ -189,8 +199,6 @@ def p_Variable2(p): ##### Modificado para resta
         p[0] = (p[1], p[2], p[3], p[4])
         print(p[2], p[3], p[4])
         print(nombres)
-
-
 
 def p_expresion(p):
     '''
@@ -760,7 +768,7 @@ def p_parametro(p):
               | empty empty empty
     '''
     if p[3] != '$' and p[2] != '$':
-        p[0] = (p[1], p[3])
+        p[0] = [p[1], p[3]]
     else:
         p[0] = p[1]
 
@@ -861,16 +869,16 @@ def p_Diag(p):
     Diag : POS ABRE_P STRING COMA NUMERO CIERRA_P PUNTOCOMA
     '''
     if str(p[3]) == 'NO':
-        p[0] = (p[3],p[5])
+        p[0] = [p[3],p[5]]
         arduino.append(['Pos',[p[3],p[5]]])
     elif str(p[3]) == 'NE':
-        p[0] = (p[3],p[5])
+        p[0] = [p[3],p[5]]
         arduino.append(['Pos',[p[3],p[5]]])
     elif str(p[3]) == 'SE':
-        p[0] = (p[3],p[5])
+        p[0] = [p[3],p[5]]
         arduino.append(['Pos',[p[3],p[5]]])
     elif str(p[3]) == 'SO':
-        p[0] = (p[3],p[5])
+        p[0] = [p[3],p[5]]
         arduino.append(['Pos',[p[3],p[5]]])
     else:
         errores.append("Direccion Diagonal no existe, porfavor insertar un NO,SO,SE,NE")
@@ -878,7 +886,7 @@ def p_Diag(p):
 # Posiciona el lapicero en la posicion X,Y que recibe la funcion
 def p_Pos(p):
     '''
-    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
+    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
         | POS ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
         | POS ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
         | POS ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
@@ -896,16 +904,16 @@ def p_Pos(p):
         | POS ABRE_P RESTA NUMERO COMA Var CIERRA_P
     '''
     if p[3] == '-':
-        p[0] = (-p[4],p[6])
+        p[0] = [-p[4],p[6]]
         arduino.append(['Pos',[-p[4],p[6]]])
     elif p[3] == '-' and p[6] == '-':
-        p[0] = (-p[4],-p[7])
+        p[0] = [-p[4],-p[7]]
         arduino.append(['Pos',[-p[4],-p[7]]])
     elif p[5] == '-':
-        p[0] = (p[3],-p[5])
+        p[0] = [p[3],-p[5]]
         arduino.append(['Pos',[p[3],-p[5]]])
     else:
-        p[0] = (p[3],p[5])
+        p[0] = [p[3],p[5]]
         arduino.append(['Pos',[p[3],p[5]]])
     
 
@@ -980,9 +988,9 @@ def p_exp(p):
         | Var empty empty
     '''
     if p[2] == '-':
-        p[0] = (-p[2], p[4])
+        p[0] = [-p[2], p[4]]
     elif p[2] != '$':
-        p[0] = (p[1], p[3])
+        p[0] = [p[1], p[3]]
     else:
         p[0] = p[1]
 
@@ -991,6 +999,7 @@ def p_PrintLine(p):
     ''' PrintLine : PRINTLINE ABRE_P exp CIERRA_P PUNTOCOMA'''
     p[0] = p[3]
     prints.append(p[3])
+    print(prints)
  
 # se define como se ve la produccion epsilon dentro de la gramatica
 def p_empty(p):
