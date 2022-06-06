@@ -247,10 +247,10 @@ def begin_espe(x = None, y = None):
             time.sleep(0.2)
 
     if x != None:   
-        cordenada_x = x
+        cordenada_x = 0
 
     if y != None:
-        cordenada_y = y
+        cordenada_y = 0
 
     analizandoCoordenadas = True
     
@@ -269,13 +269,16 @@ def Pos(x, y):
         move_y("Y-BACK", abs(y))
 
 def PosX(x):
+    global cordenada_x
     if x > 0:
         move_x("X-RIGHT", abs(x))
     
     else:
         move_x("X-LEFT", abs(x))
 
+
 def PosY(y):
+    global cordenada_y
     if y > 0:
         move_y("Y-FRONT", abs(y))
 
