@@ -335,17 +335,25 @@ def expresion_alge(p):
 def p_expresion_alge1(p):
 
     '''
-    expresion_alge1 : NUMERO SUMA NUMERO 
-                   | NUMERO RESTA NUMERO 
-                   | NUMERO MULTI NUMERO 
+    expresion_alge1 : NUMERO SUMA NUMERO
+                   | NUMERO RESTA NUMERO
+                   | NUMERO MULTI NUMERO
                    | NUMERO DIVISION NUMERO
+                   | RESTA NUMERO SUMA NUMERO 
+                   | RESTA NUMERO RESTA NUMERO 
+                   | RESTA NUMERO MULTI NUMERO 
+                   | RESTA NUMERO DIVISION NUMERO
     '''
 
     if p[2] == '+' : p[0] = p[1]+p[3]
     elif p[2] == '-' : p[0] = p[1]-p[3]
     elif p[2] == '*' : p[0] = p[1]*p[3]
     elif p[2] == '/' : p[0] = p[1]/p[3]
-    elif p[2] == '^' : p[0] = p[1]**p[3]
+    
+    elif p[3] == '+' : p[0] = -p[1]+(-p[3])
+    elif p[3] == '-' : p[0] = -p[1]-(-p[3])
+    elif p[3] == '*' : p[0] = -p[1]*(-p[3])
+    elif p[3] == '/' : p[0] = -p[1]/(-p[3])
 
     print(p[0])
 
@@ -382,6 +390,7 @@ def p_Sum(p): ##### Modificado para resta
         | SUM ABRE_P expresion_alge1 COMA NUMERO CIERRA_P
         | SUM ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
         | SUM ABRE_P Var COMA expresion_alge1 CIERRA_P
+        | SUM ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P
     '''
     if p[3] == '-':
         print('numero1 negativo')
@@ -389,6 +398,9 @@ def p_Sum(p): ##### Modificado para resta
     elif p[5] == '-':
         print('numero2 negativo')
         p[0] = int(p[4]) + int(-p[6])
+    elif (p[3] == '-') and (p[6] == '-'):
+        print('numero3 negativo')
+        p[0] = int(-p[4]) + int(-p[7])
     else:
         p[0] = int(p[3]) + int(p[5])
 
@@ -410,6 +422,7 @@ def p_Substr(p): ####### modificado para resta
            | SUBSTR ABRE_P expresion_alge1 COMA NUMERO CIERRA_P
            | SUBSTR ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
            | SUBSTR ABRE_P Var COMA expresion_alge1 CIERRA_P
+           | SUBSTR ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P
     '''
 
     if p[3] == '-':
@@ -418,26 +431,30 @@ def p_Substr(p): ####### modificado para resta
     elif p[5] == '-':
         print('numero2 negativo')
         p[0] = int(p[4]) - int(-p[6])
+    elif (p[3] == '-') and (p[6] == '-'):
+        print('numero3 negativo')
+        p[0] = int(-p[4]) + int(-p[7])
     else:
         p[0] = int(p[3]) - int(p[5])
 
 def p_Mult(p): #### Modifcado para resta
     '''
-    Mult : MULTI ABRE_P NUMERO COMA NUMERO CIERRA_P
-        | MULTI ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P
-        | MULTI ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P
-        | MULTI ABRE_P NUMERO COMA expresion_alge1 CIERRA_P
-        | MULTI ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P
-        | MULTI ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
-        | MULTI ABRE_P NUMERO COMA Var CIERRA_P
-        | MULTI ABRE_P RESTA NUMERO COMA Var CIERRA_P
-        | MULTI ABRE_P Var COMA NUMERO CIERRA_P
-        | MULTI ABRE_P Var COMA  RESTA NUMERO CIERRA_P
-        | MULTI ABRE_P Var COMA Var CIERRA_P
-        | MULTI ABRE_P expresion_alge1 COMA Var CIERRA_P
-        | MULTI ABRE_P expresion_alge1 COMA NUMERO CIERRA_P
-        | MULTI ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
-        | MULTI ABRE_P Var COMA expresion_alge1 CIERRA_P
+    Mult : MULT ABRE_P NUMERO COMA NUMERO CIERRA_P
+        | MULT ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P
+        | MULT ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P
+        | MULT ABRE_P NUMERO COMA expresion_alge1 CIERRA_P
+        | MULT ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P
+        | MULT ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P
+        | MULT ABRE_P NUMERO COMA Var CIERRA_P
+        | MULT ABRE_P RESTA NUMERO COMA Var CIERRA_P
+        | MULT ABRE_P Var COMA NUMERO CIERRA_P
+        | MULT ABRE_P Var COMA  RESTA NUMERO CIERRA_P
+        | MULT ABRE_P Var COMA Var CIERRA_P
+        | MULT ABRE_P expresion_alge1 COMA Var CIERRA_P
+        | MULT ABRE_P expresion_alge1 COMA NUMERO CIERRA_P
+        | MULT ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
+        | MULT ABRE_P Var COMA expresion_alge1 CIERRA_P
+        | MULT ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P
     '''
 
     if p[3] == '-':
@@ -446,6 +463,9 @@ def p_Mult(p): #### Modifcado para resta
     elif p[5] == '-':
         print('numero2 negativo')
         p[0] = int(p[4]) * int(-p[6])
+    elif (p[3] == '-') and (p[6] == '-'):
+        print('numero3 negativo')
+        p[0] = int(-p[4]) + int(-p[7])
     else:
         p[0] = int(p[3]) * int(p[5])
 
@@ -466,6 +486,7 @@ def p_Div(p):
         | DIV ABRE_P expresion_alge1 COMA NUMERO CIERRA_P
         | DIV ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
         | DIV ABRE_P Var COMA expresion_alge1 CIERRA_P
+        | DIV ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P
     '''
     if p[5] == 0:
         errores.append('Error. No está definida la division por cero.')
@@ -477,6 +498,9 @@ def p_Div(p):
     elif p[5] == '-':
         print('numero2 negativo')
         p[0] = int(p[4]) / int(-p[6])
+    elif (p[3] == '-') and (p[6] == '-'):
+        print('numero3 negativo')
+        p[0] = int(-p[4]) + int(-p[7])
     else:
         p[0] = int(p[3]) / int(p[5])
 
@@ -494,30 +518,31 @@ def p_var(p):
     
 def p_Equal(p): ##### Modificado para resta
     '''
-    Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P Var COMA Var CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P NUMERO COMA Var CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P RESTA NUMERO COMA Var CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge2 COMA Var CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge1 COMA Var CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P Var COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P Var COMA expresion_alge2 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge1 COMA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge2 COMA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
-          | EQUAL ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
+    Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P 
+          | EQUAL ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
+          | EQUAL ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P 
+          | EQUAL ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
+          | EQUAL ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P 
+          | EQUAL ABRE_P Var COMA Var CIERRA_P 
+          | EQUAL ABRE_P NUMERO COMA Var CIERRA_P 
+          | EQUAL ABRE_P RESTA NUMERO COMA Var CIERRA_P 
+          | EQUAL ABRE_P expresion_alge2 COMA Var CIERRA_P 
+          | EQUAL ABRE_P expresion_alge1 COMA Var CIERRA_P 
+          | EQUAL ABRE_P Var COMA NUMERO CIERRA_P 
+          | EQUAL ABRE_P Var COMA RESTA NUMERO CIERRA_P 
+          | EQUAL ABRE_P Var COMA expresion_alge1 CIERRA_P 
+          | EQUAL ABRE_P Var COMA expresion_alge2 CIERRA_P 
+          | EQUAL ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P 
+          | EQUAL ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P 
+          | EQUAL ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
+          | EQUAL ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P 
+          | EQUAL ABRE_P expresion_alge2 COMA NUMERO CIERRA_P 
+          | EQUAL ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P 
+          | EQUAL ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
+          | EQUAL ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P 
+          | EQUAL ABRE_P NUMERO COMA expresion_alge2 CIERRA_P 
+          | EQUAL ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P 
+          | EQUAL ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
     '''
     if p[3] == '-':
         if -p[4] == p[6]:
@@ -526,6 +551,11 @@ def p_Equal(p): ##### Modificado para resta
             p[0] = False
     elif p[5] == '-':
         if p[3] == -p[6]:
+            p[0] = True
+        else:
+            p[0] = False
+    elif (p[3] == '-') and (p[6] == '-'):
+        if -p[4] == -p[7]:
             p[0] = True
         else:
             p[0] = False
@@ -538,30 +568,32 @@ def p_Equal(p): ##### Modificado para resta
 
 def p_Greater(p): ###### Modificado para resta
     '''
-    Greater : GREATER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P Var COMA Var CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P NUMERO COMA Var CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P RESTA NUMERO COMA Var CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge2 COMA Var CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge1 COMA Var CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P Var COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P Var COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge1 COMA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge2 COMA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | GREATER ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
+    Greater : GREATER ABRE_P NUMERO COMA NUMERO CIERRA_P 
+            | GREATER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
+            | GREATER ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P 
+            | GREATER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
+            | GREATER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P 
+            | GREATER ABRE_P Var COMA Var CIERRA_P 
+            | GREATER ABRE_P NUMERO COMA Var CIERRA_P 
+            | GREATER ABRE_P RESTA NUMERO COMA Var CIERRA_P 
+            | GREATER ABRE_P expresion_alge2 COMA Var CIERRA_P 
+            | GREATER ABRE_P expresion_alge1 COMA Var CIERRA_P 
+            | GREATER ABRE_P Var COMA NUMERO CIERRA_P 
+            | GREATER ABRE_P Var COMA RESTA NUMERO CIERRA_P 
+            | GREATER ABRE_P Var COMA expresion_alge1 CIERRA_P 
+            | GREATER ABRE_P Var COMA expresion_alge2 CIERRA_P 
+            | GREATER ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P 
+            | GREATER ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P 
+            | GREATER ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
+            | GREATER ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P 
+            | GREATER ABRE_P expresion_alge2 COMA NUMERO CIERRA_P 
+            | GREATER ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P 
+            | GREATER ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
+            | GREATER ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P 
+            | GREATER ABRE_P NUMERO COMA expresion_alge2 CIERRA_P 
+            | GREATER ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P 
+            | GREATER ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
+            
             
     '''
     if p[3] == '-':
@@ -574,6 +606,11 @@ def p_Greater(p): ###### Modificado para resta
             p[0] = True
         else:
             p[0] = False
+    elif (p[3] == '-') and (p[6] == '-'):
+        if -p[4] > -p[7]:
+            p[0] = True
+        else:
+            p[0] = False
     else:
         if p[3] > p[5]:
             p[0] = True
@@ -583,30 +620,31 @@ def p_Greater(p): ###### Modificado para resta
 
 def p_Smaller(p): ##### Modifado para resta
     '''
-    Smaller : SMALLER ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P Var COMA Var CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P NUMERO COMA Var CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P RESTA NUMERO COMA Var CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge2 COMA Var CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge1 COMA Var CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P Var COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P Var COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge1 COMA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge2 COMA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
-            | SMALLER ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P PUNTOCOMA
+    Smaller : SMALLER ABRE_P NUMERO COMA NUMERO CIERRA_P 
+            | SMALLER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
+            | SMALLER ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P 
+            | SMALLER ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
+            | SMALLER ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P 
+            | SMALLER ABRE_P Var COMA Var CIERRA_P 
+            | SMALLER ABRE_P NUMERO COMA Var CIERRA_P 
+            | SMALLER ABRE_P RESTA NUMERO COMA Var CIERRA_P 
+            | SMALLER ABRE_P expresion_alge2 COMA Var CIERRA_P 
+            | SMALLER ABRE_P expresion_alge1 COMA Var CIERRA_P 
+            | SMALLER ABRE_P Var COMA NUMERO CIERRA_P 
+            | SMALLER ABRE_P Var COMA RESTA NUMERO CIERRA_P 
+            | SMALLER ABRE_P Var COMA expresion_alge1 CIERRA_P 
+            | SMALLER ABRE_P Var COMA expresion_alge2 CIERRA_P 
+            | SMALLER ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P 
+            | SMALLER ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P 
+            | SMALLER ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
+            | SMALLER ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P 
+            | SMALLER ABRE_P expresion_alge2 COMA NUMERO CIERRA_P 
+            | SMALLER ABRE_P expresion_alge2 COMA RESTA NUMERO CIERRA_P 
+            | SMALLER ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
+            | SMALLER ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P 
+            | SMALLER ABRE_P NUMERO COMA expresion_alge2 CIERRA_P 
+            | SMALLER ABRE_P RESTA NUMERO COMA expresion_alge2 CIERRA_P 
+            | SMALLER ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
     '''
     
     if p[3] == '-':
@@ -619,6 +657,11 @@ def p_Smaller(p): ##### Modifado para resta
             p[0] = True
         else:
             p[0] = False
+    elif (p[3] == '-') and (p[6] == '-'):
+        if -p[4] < -p[7]:
+            p[0] = True
+        else:
+            p[0] = False
     else:
         if p[3] < p[5]:
             p[0] = True
@@ -628,10 +671,10 @@ def p_Smaller(p): ##### Modifado para resta
 
  # Funcion booleana AND
 def p_And(p):
-    ''' And : AND ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA 
-            | AND ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P PUNTOCOMA 
-            | AND ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P PUNTOCOMA 
-            | AND ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA 
+    ''' And : AND ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P  
+            | AND ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P  
+            | AND ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P  
+            | AND ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P  
     '''
     
     if p[3] == True and p[5] == True:
@@ -641,10 +684,10 @@ def p_And(p):
 
 # Funcion booleana OR
 def p_Or(p): 
-    ''' Or : OR ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA 
-            | OR ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P PUNTOCOMA 
-            | OR ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P PUNTOCOMA 
-            | OR ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P PUNTOCOMA 
+    ''' Or : OR ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P  
+            | OR ABRE_P expresion_alge1 COMA expresion_alge2 CIERRA_P  
+            | OR ABRE_P expresion_alge2 COMA expresion_alge1 CIERRA_P  
+            | OR ABRE_P expresion_alge2 COMA expresion_alge2 CIERRA_P  
     '''
 
     p[0] = p[2] or p[5]
@@ -835,15 +878,19 @@ def p_Diag(p):
 # Posiciona el lapicero en la posicion X,Y que recibe la funcion
 def p_Pos(p):
     '''
-    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA
-        | POS ABRE_P expresion_alge1 COMA NUMERO CIERRA_P PUNTOCOMA
-        | POS ABRE_P NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA
-        | POS ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA
-        | POS ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA
-        | POS ABRE_P NUMERO COMA Var CIERRA_P PUNTOCOMA
-        | POS ABRE_P Var COMA Var CIERRA_P PUNTOCOMA
-        | POS ABRE_P expresion_alge1 COMA Var CIERRA_P PUNTOCOMA
-        | POS ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA
+    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
+        | POS ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
+        | POS ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
+        | POS ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
+        | POS ABRE_P Var COMA NUMERO CIERRA_P 
+        | POS ABRE_P NUMERO COMA Var CIERRA_P 
+        | POS ABRE_P Var COMA Var CIERRA_P 
+        | POS ABRE_P expresion_alge1 COMA Var CIERRA_P 
+        | POS ABRE_P Var COMA expresion_alge1 CIERRA_P 
+        | POS ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
+        | POS ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
+        | POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
+        | POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
     '''
 
     p[0] = (p[3],p[5])
