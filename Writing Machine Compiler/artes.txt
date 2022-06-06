@@ -51,3 +51,26 @@ Run[Down; ContinueDown 200; Up; ContinueUp 100; Down; Diag ("NE", 100); Up; Diag
 Run[Down; ContinueRight 200; ContinueDown 200;];
 
 Fin
+
+
+
+
+//casa
+
+Main[]
+
+Run[Down; ContinueUp 150; ContinueLeft 200; ContinueDown 300; ContinueRight 200; ContinueUp 150; Up; ContinueUp 150;];
+
+Run[Down; Diag ("NO", 200); Diag ("SO", 200); Up; ContinueDown 40;];
+
+Run[Down; ContinueRight 30; ContinueDown 30; ContinueLeft 30; ContinueUp 30; Up; ContinueRight 200;];
+
+Run[Down; ContinueLeft 30; ContinueDown 30; ContinueRight 30; ContinueUp 30; Up; ContinueUp 40;];
+
+Run[ContinueDown 300; ContinueLeft 66; Down; ContinueUp 130; ContinueLeft 50; ContinueDown 130; Up; ContinueUp 130; ContinueRight 50; ContinueDown 130; ContinueRight 66;];
+
+Run[ContinueRight 100; Down; ContinueUp 300; ContinueLeft 10; ContinueDown 10; ContinueRight 10; ContinueUp 10; Up; ContinueDown 300;];
+
+Run[ContinueRight 70; Down; ContinueLeft 70; ContinueLeft 300; ContinueLeft 70; Up; ContinueDown 30; ContinueRight 70; Down; ContinueRight 300;];
+
+Fin

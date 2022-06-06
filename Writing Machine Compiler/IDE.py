@@ -60,7 +60,7 @@ def abrirArchivo():
         if (valor == "yes"):
             guardarArchivo()
     
-    path = askopenfilename(filetypes=[('Writing Machine Files', '*.writ')])
+    path = askopenfilename()
     with open(path, 'r') as file:
         code = file.readlines()
         scroll.delete('1.0', END)
