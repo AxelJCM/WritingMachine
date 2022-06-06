@@ -10,6 +10,8 @@ cordenada_x = 0
 cordenada_y = 0
 analizandoCoordenadas = False
 
+tiempo = 0
+
 
 def sumarCoordenada(tipo, cant):
     global cordenada_x, cordenada_y
@@ -30,13 +32,13 @@ def sumarCoordenada(tipo, cant):
         print("Coordenada Y = " + str(cordenada_y))
 
 
-#board = pyfirmata.Arduino('COM4')
-board = ""
+board = pyfirmata.Arduino('COM3')
+#board = ""
 print("Communication Successfully started")
 
-#servo = board.get_pin('d:11:s')
-servo = ""
-#servo.write(90)
+servo = board.get_pin('d:11:s')
+#servo = ""
+servo.write(90)
 
 def move_x(pos, dis):
     sumarCoordenada(pos, dis)
@@ -48,7 +50,7 @@ def move_x(pos, dis):
         board.digital[5].write(0)
         board.digital[6].write(0)
 
-    time.sleep(0.5)
+    time.sleep(tiempo)
 
     for i in range(dis):
         board.digital[2].write(1)
@@ -66,7 +68,7 @@ def move_y(pos, dis):
         board.digital[5].write(0)
         board.digital[6].write(1)
 
-    time.sleep(0.5)
+    time.sleep(tiempo)
 
     for i in range(dis):
         board.digital[2].write(1)
@@ -85,7 +87,7 @@ def diagonal(tipo, dis): #SO
         else:
             board.digital[5].write(0)
 
-        time.sleep(0.5)
+        time.sleep(tiempo)
 
         for i in range(dis):
             board.digital[2].write(1)
@@ -98,7 +100,7 @@ def diagonal(tipo, dis): #SO
         else:
             board.digital[6].write(0)
 
-        time.sleep(0.5)
+        time.sleep(tiempo)
 
         for i in range(dis):
             board.digital[3].write(1)
@@ -124,12 +126,13 @@ def color(col):
 
     else:
         servo.write(90)
-    time.sleep(0.5)
+    time.sleep(tiempo)
 
 def inicio_im():
     global analizandoCoordenadas
     print("Estamos en inicio")
     move_y("Y-BACK", 500)
+    time.sleep(0.2)
     move_x("X-LEFT", 800)
     analizandoCoordenadas = True
 
@@ -141,15 +144,19 @@ def analizar_Diagonales():
         print(i.get_tipo())
         if i.get_tipo() == "NE":
             diagonal("SO", abs(i.get_x()))
+            time.sleep(0.2)
 
         elif i.get_tipo() == "SO":
             diagonal("NE", abs(i.get_x()))
+            time.sleep(0.2)
 
         elif i.get_tipo() == "NO":
             diagonal("SE", abs(i.get_x()))
+            time.sleep(0.2)
 
         elif i.get_tipo() == "SE":
             diagonal("NO", abs(i.get_x()))
+            time.sleep(0.2)
 
     listaMovimientos = []
     diagonalMov = True
@@ -165,15 +172,19 @@ def reiniciar():
 
     if cordenada_x < 0:
         move_x("X-RIGHT", abs(cordenada_x))
+        time.sleep(0.2)
 
     elif cordenada_x > 0:
         move_x("X-LEFT", abs(cordenada_x))
+        time.sleep(0.2)
 
     if cordenada_y > 0:
         move_y("Y-BACK", abs(cordenada_y))
+        time.sleep(0.2)
 
     elif cordenada_y < 0:
         move_y("Y-FRONT", abs(cordenada_y))
+        time.sleep(0.2)
 
     analizandoCoordenadas = False
 
@@ -190,15 +201,19 @@ def begin():
 
     if cordenada_x < 0:
         move_x("X-RIGHT", abs(cordenada_x))
+        time.sleep(0.2)
 
     elif cordenada_x > 0:
         move_x("X-LEFT", abs(cordenada_x))
+        time.sleep(0.2)
 
     if cordenada_y > 0:
         move_y("Y-BACK", abs(cordenada_y))
+        time.sleep(0.2)
 
     elif cordenada_y < 0:
         move_y("Y-FRONT", abs(cordenada_y))
+        time.sleep(0.2)
 
     cordenada_x = 0
     cordenada_y = 0
@@ -213,16 +228,20 @@ def begin_espe(x = None, y = None):
     if x != None:
         if cordenada_x < 0:
             move_x("X-RIGHT", abs(x))
+            time.sleep(0.2)
 
         elif cordenada_x > 0:
             move_x("X-LEFT", abs(x))
+            time.sleep(0.2)
 
     else:
         if cordenada_y > 0:
             move_y("Y-BACK", abs(y))
+            time.sleep(0.2)
 
         elif cordenada_y < 0:
             move_y("Y-FRONT", abs(y))
+            time.sleep(0.2)
 
     cordenada_x = x
     cordenada_y = y
@@ -392,6 +411,9 @@ def arte():
     color("")
     
         
+#inicio_im()
+#arte()
+#reiniciar()
 
     #color("black")
     #time.sleep(2)

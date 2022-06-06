@@ -769,8 +769,10 @@ def p_beginning(p):
     '''
     Beginning : BEGINNING PUNTOCOMA
     '''
+    global arduino
     p[0] = p[1]
-    arduino.append(['Beginning', ''])
+    print("P[0] = " + str(p[0]))
+    arduino += [['Beginning', '']]
     
 
 # Generar un numero aleatorio comprendido  entre 0 y n.
@@ -788,8 +790,9 @@ def p_ContinueUp(p): # recibe numero, operacion aritmetica, variables
                | CONTINUEUP expresion_alge2 PUNTOCOMA
                | CONTINUEUP Var PUNTOCOMA 
     '''
+    global arduino
     p[0] = p[2]
-    arduino.append(['ContinueUp',p[2]])
+    arduino += [['ContinueUp',p[2]]]
     
 
 # Se escribe en el liezo las unidades hacia abajo que se le indiquen 
@@ -800,9 +803,9 @@ def p_ContinueDown(p): # recibe numero, operacion aritmetica, variables
                  | CONTINUEDOWN expresion_alge2 PUNTOCOMA
                  | CONTINUEDOWN Var PUNTOCOMA 
     '''
-
+    global arduino
     p[0] = p[2]
-    arduino.append(['ContinueDown',p[2]])
+    arduino += [['ContinueDown',p[2]]]
 
 
 # Se escribe en el liezo las unidades hacia la derecha que se le indiquen 
@@ -813,9 +816,9 @@ def p_ContinueRight(p):
                   | CONTINUERIGHT expresion_alge2 PUNTOCOMA
                   | CONTINUERIGHT Var PUNTOCOMA 
     '''
-
+    global arduino
     p[0] = p[2]
-    arduino.append(['ContinueRight',p[2]])
+    arduino += [['ContinueRight',p[2]]]
 
 # Se escribe en el liezo las unidades hacia la izquierda que se le indiquen 
 def p_ContinueLeft(p):
@@ -825,17 +828,18 @@ def p_ContinueLeft(p):
                  | CONTINUELEFT expresion_alge2 PUNTOCOMA
                  | CONTINUELEFT Var PUNTOCOMA 
     '''
-
+    global arduino
     p[0] = p[2]
-    arduino.append(['ContinueLeft',p[2]])
+    arduino += [['ContinueLeft',p[2]]]
 
 # Levanta el lapicero utilizado para que no toque el lienzo
 def p_Up(p):
     '''
     Up : UP PUNTOCOMA
     '''
+    global arduino
     p[0] = p[1]
-    arduino.append(['Up', ''])
+    arduino += [['Up', '']]
 
     
 
@@ -845,68 +849,85 @@ def p_Down(p):
     '''
     Down : DOWN PUNTOCOMA
     '''
+    global arduino
     p[0] = p[1]
-    arduino.append(['Down', ''])
+    arduino += [['Down', '']]
 
 # Se define la velocidad de impresion
 def p_Speed(p):
     '''
     Speed : SPEED NUMERO PUNTOCOMA
     '''
+    global arduino
     p[0] = p[2]
-    arduino.append(['Speed', p[2]])
+    arduino += [['Speed', p[2]]]
 
 def p_Diag(p):
     '''
-    Diag : POS ABRE_P STRING COMA NUMERO CIERRA_P PUNTOCOMA
+    Diag : DIAG ABRE_P STRING COMA NUMERO CIERRA_P PUNTOCOMA
     '''
-    if str(p[3]) == 'NO':
+    global arduino
+    nuevo = ""
+    for i in p[3]:
+        if i != '"':
+            nuevo += i
+
+    p[3] = nuevo
+    if p[3] == 'NO':
         p[0] = (p[3],p[5])
-        arduino.append(['Pos',[p[3],p[5]]])
-    elif str(p[3]) == 'NE':
+        arduino += [['Diagonal',[p[3],p[5]]]]
+
+    elif p[3] == 'NE':
         p[0] = (p[3],p[5])
-        arduino.append(['Pos',[p[3],p[5]]])
-    elif str(p[3]) == 'SE':
+        arduino += [['Diagonal',[p[3],p[5]]]]
+
+    elif p[3] == 'SE':
         p[0] = (p[3],p[5])
-        arduino.append(['Pos',[p[3],p[5]]])
-    elif str(p[3]) == 'SO':
+        arduino += [['Diagonal',[p[3],p[5]]]]
+
+    elif p[3] == 'SO':
         p[0] = (p[3],p[5])
-        arduino.append(['Pos',[p[3],p[5]]])
+        arduino += [['Diagonal',[p[3],p[5]]]]
+
     else:
         errores.append("Direccion Diagonal no existe, porfavor insertar un NO,SO,SE,NE")
     
 # Posiciona el lapicero en la posicion X,Y que recibe la funcion
 def p_Pos(p):
     '''
-    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
-        | POS ABRE_P expresion_alge1 COMA NUMERO CIERRA_P 
-        | POS ABRE_P NUMERO COMA expresion_alge1 CIERRA_P 
-        | POS ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P 
-        | POS ABRE_P Var COMA NUMERO CIERRA_P 
-        | POS ABRE_P NUMERO COMA Var CIERRA_P 
-        | POS ABRE_P Var COMA Var CIERRA_P 
-        | POS ABRE_P expresion_alge1 COMA Var CIERRA_P 
-        | POS ABRE_P Var COMA expresion_alge1 CIERRA_P 
-        | POS ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
-        | POS ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
-        | POS ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P 
-        | POS ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P
-        | POS ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
-        | POS ABRE_P Var COMA RESTA NUMERO CIERRA_P
-        | POS ABRE_P RESTA NUMERO COMA Var CIERRA_P
+    Pos : POS ABRE_P NUMERO COMA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P expresion_alge1 COMA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA  
+        | POS ABRE_P expresion_alge1 COMA expresion_alge1 CIERRA_P PUNTOCOMA  
+        | POS ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P NUMERO COMA Var CIERRA_P PUNTOCOMA  
+        | POS ABRE_P Var COMA Var CIERRA_P PUNTOCOMA  
+        | POS ABRE_P expresion_alge1 COMA Var CIERRA_P PUNTOCOMA  
+        | POS ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA  
+        | POS ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P PUNTOCOMA  
+        | POS ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P PUNTOCOMA 
+        | POS ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P PUNTOCOMA
+        | POS ABRE_P Var COMA RESTA NUMERO CIERRA_P PUNTOCOMA
+        | POS ABRE_P RESTA NUMERO COMA Var CIERRA_P PUNTOCOMA
     '''
+    global arduino
     if p[3] == '-':
         p[0] = (-p[4],p[6])
-        arduino.append(['Pos',[-p[4],p[6]]])
+        arduino += [['Pos',[-p[4],p[6]]]]
+
     elif p[3] == '-' and p[6] == '-':
         p[0] = (-p[4],-p[7])
-        arduino.append(['Pos',[-p[4],-p[7]]])
+        arduino += [['Pos',[-p[4],-p[7]]]]
+
     elif p[5] == '-':
         p[0] = (p[3],-p[5])
-        arduino.append(['Pos',[p[3],-p[5]]])
+        arduino += [['Pos',[p[3],-p[5]]]]
+
     else:
         p[0] = (p[3],p[5])
-        arduino.append(['Pos',[p[3],p[5]]])
+        arduino += [['Pos',[p[3],p[5]]]]
     
 
 
@@ -920,11 +941,12 @@ def p_PosX(p): #### Modificado para negativo
         | POSX expresion_alge2 PUNTOCOMA
         | POSX Var PUNTOCOMA
     '''
+    global arduino
     if p[2] == '-':
         p[0] = -p[3]
     else: 
         p[0] = p[2]
-    arduino.append(['PosX',p[2]])
+    arduino += [['PosX',p[2]]]
  
 # Posiciona el lapicero en la posicion equivalente al numero que recibe la funcion
 def p_PosY(p): 
@@ -936,12 +958,15 @@ def p_PosY(p):
         | POSY expresion_alge2 PUNTOCOMA
         | POSY Var PUNTOCOMA
     '''
+    global arduino
     if p[2] == '-':
         p[0] = -p[3]
         arduino.append(['PosY',-p[3]])
     else: 
         p[0] = p[2] 
-        arduino.append(['PosY',p[2]])
+
+    arduino += [['PosY',p[2]]]
+
 
 # Se verifica que el numero de color que se quiere utilizar es aceptado
 def p_UseColor(p):
@@ -950,13 +975,14 @@ def p_UseColor(p):
     UseColor : USECOLOR NUMERO PUNTOCOMA
              | USECOLOR empty PUNTOCOMA
     '''
+    global arduino
     if p[2] == '$':
         p[0] = 1
-        arduino.append(['UseColor',1])
-    elif p[2] in range(1,2):
+        arduino += [['UseColor',1]]
+    elif p[2] in range(1,3):
         p[0] = p[2]
         print("UseColor "+ str(p[2]))
-        arduino.append(['UseColor',p[2]])
+        arduino += [['UseColor',p[2]]]
     else:
         errores.append("Indice para seleccion de color fuera de rango")
 
@@ -1015,6 +1041,10 @@ parser = yacc.yacc()
 
 # Funcion que inicia el analizador sintactico
 def sintacticAnalizer(cadena):
+    arduino.clear()
+    prints.clear()
+    errores.clear()
+    nombres.clear()
     parser = yacc.yacc()
     parser.parse(cadena)
 

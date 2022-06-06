@@ -24,7 +24,7 @@ def inicio(body):
 def procedimientos(body): #[['continuedown', 200], ['begin', None]]
     global color_impr, tiempoPausa
     print("----Iniciando impresion---- ")
-
+    color("")
     inicio_im()
 
     for i in body:
@@ -74,6 +74,9 @@ def procedimientos(body): #[['continuedown', 200], ['begin', None]]
         elif i[0] == "Speed": #tiempo en milisegundos
             tiempoPausa = i[1] / (1000)
 
-        time.sleep(tiempoPausa)
+        elif i[0] == "Diagonal":
+            diagonal(i[1][0], i[1][1])
 
+        time.sleep(tiempoPausa)
+    color("")
     reiniciar()
