@@ -91,6 +91,8 @@ def p_cuerpo3(p):
             | empty
             | Put
             | Put2
+            | Run
+            | Repeat
             '''
     global contproc
     global contmain
@@ -139,8 +141,6 @@ def p_main(p):
     '''
     global contmain
     global contproc
-    print("dawdwa")
-    print(contmain)
     if contmain == 0:
         contmain = 1
         if p[6] != '$':
@@ -250,21 +250,31 @@ def p_orden(p):
             | PosX empty
             | PosY empty
             | UseColor empty
-            | PUNTOCOMA ordenes
-            | empty empty
+            
+            | Beginning ordenes
+            | ContinueUp ordenes
+            | ContinueDown ordenes
+            | ContinueRight ordenes
+            | ContinueLeft ordenes
+            | Up ordenes
+            | Down ordenes
+            | Speed ordenes
+            | Diag ordenes
+            | Pos ordenes
+            | PosX ordenes
+            | PosY ordenes
+            | UseColor ordenes
     '''
-    if p[2] != '$':
-            p[0] = p[1]
+    if (p[2] != '$'):
+        p[0] = (p[1], p[2])
     else:
-        p[0] = (p[1],p[2])
+        p[0] = p[1]
         
 def p_funcion(p):
     '''
     funcion : Random empty
-            | Run empty
             | If empty
             | IfElse empty
-            | Repeat empty
             | Until empty
             | While empty
             | PrintLine empty
@@ -729,7 +739,7 @@ def p_While(p):
 # Se repiten las funciones NUMERO cantidad de veces
 def p_Repeat(p):
     ''' 
-    Repeat : REPEAT NUMERO BRACKET1 ordenes BRACKET2
+    Repeat : REPEAT NUMERO BRACKET1 ordenes BRACKET2 cuerpo3
     '''
     for i in range(p[2]):
          p[0] = p[4]
@@ -871,9 +881,20 @@ def p_Diag(p):
     '''
     Diag : POS ABRE_P STRING COMA NUMERO CIERRA_P PUNTOCOMA
     '''
-
-    p[0] = (p[3],p[5])
-    arduino.append(['Pos',[p[3],p[5]]])
+    if str(p[3]) == 'NO':
+        p[0] = (p[3],p[5])
+        arduino.append(['Pos',[p[3],p[5]]])
+    elif str(p[3]) == 'NE':
+        p[0] = (p[3],p[5])
+        arduino.append(['Pos',[p[3],p[5]]])
+    elif str(p[3]) == 'SE':
+        p[0] = (p[3],p[5])
+        arduino.append(['Pos',[p[3],p[5]]])
+    elif str(p[3]) == 'SO':
+        p[0] = (p[3],p[5])
+        arduino.append(['Pos',[p[3],p[5]]])
+    else:
+        errores.append("Direccion Diagonal no existe, porfavor insertar un NO,SO,SE,NE")
     
 # Posiciona el lapicero en la posicion X,Y que recibe la funcion
 def p_Pos(p):
@@ -889,12 +910,24 @@ def p_Pos(p):
         | POS ABRE_P Var COMA expresion_alge1 CIERRA_P 
         | POS ABRE_P RESTA NUMERO COMA RESTA NUMERO CIERRA_P 
         | POS ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
-        | POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
-        | POS ABRE_P NUMERO COMA NUMERO CIERRA_P 
+        | POS ABRE_P NUMERO COMA RESTA NUMERO CIERRA_P 
+        | POS ABRE_P RESTA NUMERO COMA expresion_alge1 CIERRA_P
+        | POS ABRE_P expresion_alge1 COMA RESTA NUMERO CIERRA_P
+        | POS ABRE_P Var COMA RESTA NUMERO CIERRA_P
+        | POS ABRE_P RESTA NUMERO COMA Var CIERRA_P
     '''
-
-    p[0] = (p[3],p[5])
-    arduino.append(['Pos',[p[3],p[5]]])
+    if p[3] == '-':
+        p[0] = (-p[4],p[6])
+        arduino.append(['Pos',[-p[4],p[6]]])
+    elif p[3] == '-' and p[6] == '-':
+        p[0] = (-p[4],-p[7])
+        arduino.append(['Pos',[-p[4],-p[7]]])
+    elif p[5] == '-':
+        p[0] = (p[3],-p[5])
+        arduino.append(['Pos',[p[3],-p[5]]])
+    else:
+        p[0] = (p[3],p[5])
+        arduino.append(['Pos',[p[3],p[5]]])
     
 
 
@@ -935,23 +968,23 @@ def p_UseColor(p):
     
     '''
     UseColor : USECOLOR NUMERO PUNTOCOMA
-            | USECOLOR Var PUNTOCOMA
-            | USECOLOR empty PUNTOCOMA
+             | USECOLOR empty PUNTOCOMA
     '''
     if p[2] == '$':
         p[0] = 1
+        arduino.append(['UseColor',1])
     elif p[2] in range(1,2):
         p[0] = p[2]
         print("UseColor "+ str(p[2]))
+        arduino.append(['UseColor',p[2]])
     else:
         errores.append("Indice para seleccion de color fuera de rango")
 
-    arduino.append(['UseColor',p[2]])
 
 # corresponde al cuerpo de las instrucciones. 
 def p_Run(p): 
     '''
-    Run : RUN BRACKET1 ordenes BRACKET2 PUNTOCOMA
+    Run : RUN BRACKET1 ordenes BRACKET2 PUNTOCOMA cuerpo3
     '''
     p[0] = p[3]
 
