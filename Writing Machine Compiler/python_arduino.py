@@ -2,6 +2,7 @@
 import pyfirmata
 import movimientos as movs
 import time
+import winsound
 
 listaMovimientos = []
 diagonalMov = True
@@ -130,6 +131,7 @@ def color(col):
 
 def inicio_im():
     global analizandoCoordenadas
+    winsound.PlaySound("Writing Machine Compiler/iniciando_impresion.wav", winsound.SND_FILENAME)
     print("Estamos en inicio")
     move_y("Y-BACK", 500)
     time.sleep(0.2)
@@ -166,6 +168,7 @@ def analizar_Diagonales():
 def reiniciar():
     global analizandoCoordenadas, cordenada_x, cordenada_y
     print("----Reiniciando----")
+    winsound.PlaySound("Writing Machine Compiler/impresion_finalizada.wav", winsound.SND_FILENAME)
     
     analizar_Diagonales()
 
@@ -414,10 +417,6 @@ def arte():
     izq(150)
     color("")
     
-        
-#inicio_im()
-#arte()
-#reiniciar()
 
     #color("black")
     #time.sleep(2)

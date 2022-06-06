@@ -1,9 +1,5 @@
 import winsound
 
-from pydub import *
-
-s1 = "./prueba/iniciando_impresion.mp3"
-
-sound = AudioSegment.from_mp3("C:/Users/sebas/OneDrive/Documentos/GitHub/WritingMachine/prueba/iniciando_impresion.mp3")
-sound.export("C:/Users/sebas/OneDrive/Documentos/GitHub/WritingMachine/prueba/iniciando_impresion.wav", format="wav")
+print("inc")
+winsound.PlaySound("C:/Users/sebas/OneDrive/Documentos/GitHub/WritingMachine/Writing Machine Compiler/logica_arduino/iniciando_impresion.wav", winsound.SND_FILENAME)
 
