@@ -46,7 +46,8 @@ reservadas = {
     'Substr' : 'SUBSTR',
     'Main' : 'MAIN',
     'True' : 'TRUE',
-    'False' : 'FALSE' 
+    'False' : 'FALSE',
+    'Diag' : 'DIAG' 
 }  
 
 # Lista de tokens 
@@ -91,25 +92,7 @@ t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabu
 
 """Definicion de algunos tokens como funciones(nota: definir palabras especificas antes de la definicion de variable)"""
 
-############################## Esta vara se usa cuando se escribe el codigo #############################
-# board = pyfirmata.Arduino('COM3')
-#
-# it = pyfirmata.util.Iterator(board)
-# it.start()
-# angle = 0
-#
-# pin3 = board.get_pin('d:3:s')
-# pin5 = board.get_pin('d:5:s')
-# pin6 = board.get_pin('d:6:s')
-# pin9 = board.get_pin('d:9:s')
-# pin10 = board.get_pin('d:10:s')
-#
-# pin3.write(angle)
-# pin5.write(angle)
-# pin6.write(angle)
-# pin9.write(angle)
-# pin10.write(angle)
-########################################################################################################
+
 
 def t_STRING(t):
     r'["][A-Za-z ,._]+["]'

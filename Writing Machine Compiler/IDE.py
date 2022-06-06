@@ -153,6 +153,8 @@ def reiniciarAreas():
 def compilar():
     global errores_sintactico, errores_lexico
 
+    
+
     reiniciarAreas()
     limpiarErrores()
     limpiarError()
@@ -174,6 +176,7 @@ def compilar():
 
         print("---Sintactico---")#analisis sintactico
         sintacticAnalizer(texto)
+        print("Se analizo el sintactico")
         errores_sintactico = sintac_getErrores()
         agregarErrores(errores_sintactico)
 
@@ -195,7 +198,8 @@ def compilar():
 
 def correr():
     compilar()
-    if lex_getErrores() == [] and sintac_getErrores() == []:
+    print("()()() Vacio = " + str(lex_getErrores() == []))
+    if errores_lexico == [] and errores_sintactico == []:
         print("Procedimientos es: ")
         print(sintac_getArduino())
         procedimientos(sintac_getArduino())
