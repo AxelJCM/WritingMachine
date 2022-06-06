@@ -127,7 +127,7 @@ def reiniciarAreas():
 def agregarErrores(lista_errores):
     areaConsola.config(state=NORMAL)
     for i in lista_errores:
-        areaConsola.insert(1.0, i)
+        areaConsola.insert(1.0, "-> " + i + "\n" + "\n")
     areaConsola.config(state=DISABLED)
 
 def getTexto(area):

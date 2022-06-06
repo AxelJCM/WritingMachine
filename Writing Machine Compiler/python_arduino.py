@@ -30,12 +30,13 @@ def sumarCoordenada(tipo, cant):
         print("Coordenada Y = " + str(cordenada_y))
 
 
-board = pyfirmata.Arduino('COM4')
-#board = ""
+#board = pyfirmata.Arduino('COM4')
+board = ""
 print("Communication Successfully started")
 
-servo = board.get_pin('d:11:s')
-servo.write(90)
+#servo = board.get_pin('d:11:s')
+servo = ""
+#servo.write(90)
 
 def move_x(pos, dis):
     sumarCoordenada(pos, dis)
@@ -343,6 +344,7 @@ def arte():
     color("") #rombo rectagular 5
     back(100)
     back(150)
+    color("black")
     diagonal("NO", 300)
     diagonal("SO", 150)
     diagonal("SE", 300)
@@ -351,42 +353,44 @@ def arte():
     #LETRAS TEC
     color("")
     back(250)
-    der(300)
+    izq(300)
     color("black")
 
     
-    izq(150) #letra T
+    der(150) #letra T
+    back(150)
     color("")
-    der(75)
+    front(150)
     color("black")
-    back(100)
-    color("")
-    izq(75)
-    izq(150)
-
-    color("black") #letra E
-    izq(150)
-    color("")
-    front(33)
-    der(75)
-    color("black")
-    der(75)
-    color("")
-    back(33)
-    color("black")
-    front(100)
-    izq(150)
-    color("")
-    izq(150)
-
-    color("black") #letra C
-    izq(150)
+    der(150)
     color("")
     der(150)
+    
+
+    color("red") #letra E
+    back(150)
+    der(150)
+    color("")
+    front(75)
+    izq(75)
+    color("red")
+    izq(75)
+    color("")
+    front(75)
+    color("red")
+    der(150)
+    color("")
+    der(150)
+
+    color("black") #letra C
+    back(150)
+    der(150)
+    color("")
+    front(150)
     color("black")
-    back(100)
     izq(150)
     color("")
+    
         
 
     #color("black")

@@ -1,0 +1,35 @@
+//codigo para nuestra obra de arte :)
+
+
+Main[]
+
+//rectangulo 1
+Run[UseColor 1;ContinueLeft 300; ContinueDown 300; ContinueRight 300; ContinueUp 300;];
+
+//rectangulo 2
+Run[UseColor 2; ContinueUp 100; ContinueRight 300; ContinueContinueLeft 300; ];
+
+// rombo 3
+Run[UseColor 1; Diagonal ("NE", 500); Diagonal ("SE", 500); Diagonal ("SO", 500); Diagonal ("NO", 500);];
+
+
+//rombo rectangular 4
+Run[Up; ContinueUp 100; UseColor 2; Down; Diagonal ("NE", 800); Diagonal ("NO", 500); Diagonal ("SO", 800); Diagonal ("NO", 500);];
+
+//Rombo rectangular 5
+Run[Up; ContinueDown 100; ContinueDown 150; UseColor 1; Down; Diagonal ("NO", 300); Diagonal ("SO", 150); Diagonal ("SE", 300); Diagonal ("NE", 150);];
+
+//Letras para TEC
+
+//T
+Run[Up; ContinueDown 250; ContinueLeft 300; UseColor 1; Down; ContinueRight 150; ContinueDown 150; Up; ContinueUp 150; Down; ContinueRight 150; Up; ContinueRight 150;];
+
+//E
+Run[UseColor 2; Down; ContinueDown 150; ContinueRight 150; Up; ContinueUp 75; ContinueLeft 75; Down; ContinueLeft 75; Up; ContinueUp 75; Down; ContinueRight 150; Up; ContinueRight 150;];
+
+
+//C
+Run[UseColor 1; Down; ContinueDown 150; ContinueRight 150; Up; ContinueUp 150; Down; ContinueLeft 150; Up;];
+
+
+Fin
