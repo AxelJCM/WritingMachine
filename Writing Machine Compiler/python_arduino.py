@@ -222,29 +222,33 @@ def begin():
 def begin_espe(x = None, y = None):
     global analizandoCoordenadas, cordenada_x, cordenada_y
 
-    analizandoCoordenadas = False
     analizar_Diagonales()
 
     if x != None:
         if cordenada_x < 0:
-            move_x("X-RIGHT", abs(x))
+            move_x("X-RIGHT", abs(cordenada_x))
+            print("Valor de X = " + str(cordenada_x))
             time.sleep(0.2)
 
         elif cordenada_x > 0:
-            move_x("X-LEFT", abs(x))
+            move_x("X-LEFT", abs(cordenada_x))
             time.sleep(0.2)
 
-    else:
+    elif cordenada_y != None:
         if cordenada_y > 0:
-            move_y("Y-BACK", abs(y))
+            move_y("Y-BACK", abs(cordenada_y))
             time.sleep(0.2)
 
         elif cordenada_y < 0:
-            move_y("Y-FRONT", abs(y))
+            move_y("Y-FRONT", abs(cordenada_y))
             time.sleep(0.2)
 
-    cordenada_x = x
-    cordenada_y = y
+    if x != None:   
+        cordenada_x = x
+
+    if y != None:
+        cordenada_y = y
+
     analizandoCoordenadas = True
     
 def Pos(x, y):

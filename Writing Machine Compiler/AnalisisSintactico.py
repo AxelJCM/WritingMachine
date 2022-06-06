@@ -3,15 +3,16 @@ import os
 import codecs
 import re
 from AnalisisLexico import *
-#from AnalisisSemantico import runSemanticAnalizer
 from sys import stdin
 from pip._vendor.distlib.compat import raw_input
 import random
 
+# Variables globales para el analizador sintactico
 contproc = 0
 global contmain
 contmain = 0
 
+# Lista de precedencia de los tokens del analizador lexico
 precedence = (
     ('right', 'PUNTOCOMA'),
     ('left', 'BRACKET2'),
@@ -37,8 +38,8 @@ prints = []
 
 errores = []
 
-# Funciones para el arbol
-
+####### Funciones para el arbol de parseo #######
+# Funcion inicial de la gramatica
 def p_Start(p):
     '''
     Start : COMMENT cuerpo
@@ -48,7 +49,7 @@ def p_Start(p):
     else:
         p[0] = p[2]
     
-
+# Primer tipo de cuerpo mas basico de la gramatica 
 def p_cuerpo(p):
     '''
     cuerpo : variable
@@ -64,7 +65,8 @@ def p_cuerpo(p):
         p[0] = (p[1],p[2])
     else:
         p[0] = p[1]
-        
+
+# Segundo tipo de cuerpo para los procedimientos 
 def p_cuerpo2(p):
     '''
     cuerpo2 : variablexd
@@ -81,6 +83,7 @@ def p_cuerpo2(p):
     else:
         p[0] = p[1]
 
+# Tercer tipo de cuerpo para los procedimientos 
 def p_cuerpo3(p):
     '''
     cuerpo3 : variablexdd
@@ -101,8 +104,8 @@ def p_cuerpo3(p):
     else:
         p[0] = p[1]
 
-        
-def p_procedimiento(p): # no puede haber dos o mas procedimientos con el mismo nombre
+# Producciones para los procedimientos
+def p_procedimiento(p):
     '''
     procedimiento : PARA ID BRACKET1 empty BRACKET2 cuerpo2 FIN cuerpo
                   | PARA ID BRACKET1 parametro BRACKET2 cuerpo2 FIN cuerpo
@@ -113,7 +116,8 @@ def p_procedimiento(p): # no puede haber dos o mas procedimientos con el mismo n
         p[0] = (p[2], p[4], p[6],p[8])
     else:
         p[0] = (p[2], p[4],p[6])
-              
+
+# Producciones para la funcion main (funcion principal del codigo)
 def p_main(p):
     '''
     main : MAIN BRACKET1 BRACKET2 cuerpo3 FIN cuerpo
@@ -130,6 +134,7 @@ def p_main(p):
         contmain = 0
         errores.append("Error. Método Main definido más de una vez.")
 
+# Producciones para tipos de varaiables posibles con primer tipo de cuerpo
 def p_Variable(p):
     '''
     variable : variable1 cuerpo
@@ -140,7 +145,8 @@ def p_Variable(p):
         p[0] = (p[1])
     else:
         p[0] = (p[1],p[2])
-    
+
+# Producciones para tipos de varaiables posibles con segundo tipo de cuerpo
 def p_Variablexd(p):
     '''
     variablexd : variable1 cuerpo2
@@ -151,7 +157,8 @@ def p_Variablexd(p):
         p[0] = (p[1])
     else:
         p[0] = (p[1],p[2])
-        
+
+# Producciones para tipos de varaiables posibles con tercer tipo de cuerpo
 def p_Variablexdd(p):
     '''
     variablexdd : variable1 cuerpo3
@@ -163,7 +170,7 @@ def p_Variablexdd(p):
     else:
         p[0] = (p[1],p[2])
 
-
+# Producciones para la definicion de variables (sin asignacion)
 def p_Variable1(p):
     '''
     variable1 : DEF VAR PUNTOCOMA
@@ -171,8 +178,8 @@ def p_Variable1(p):
     p[0] = (p[1], p[2])
     print(p[1], p[2])
 
-
-def p_Variable2(p): ##### Modificado para resta
+# Producciones para la definicion de variables (con asignacion de varaiables)
+def p_Variable2(p): 
     '''
     variable2 : DEF VAR IGUAL NUMERO PUNTOCOMA
               | DEF VAR IGUAL RESTA NUMERO PUNTOCOMA
@@ -200,6 +207,7 @@ def p_Variable2(p): ##### Modificado para resta
         print(p[2], p[3], p[4])
         print(nombres)
 
+# Producciones para las expresiones que pueden tener una funcion
 def p_expresion(p):
     '''
     expresion : funcion expresion
@@ -223,7 +231,8 @@ def p_expresion(p):
         p[0] = (p[1], p[2])
     else:
         p[0] = p[1]
-        
+
+# Producciones para las ordenes utilizadas para que la maquina dibuje
 def p_orden(p):
     '''
     ordenes : Beginning empty
@@ -258,7 +267,8 @@ def p_orden(p):
         p[0] = (p[1], p[2])
     else:
         p[0] = p[1]
-        
+
+# Producciones para las funciones que se pueden utilizar para crear las funciones necesarias
 def p_funcion(p):
     '''
     funcion : Random empty
@@ -280,7 +290,7 @@ def p_funcion(p):
     else:
         p[0] = (p[1],p[2])
 
-
+# Producciones para posicionar el lapicero en las coordenadas dadas
 def p_Put(p):
     '''
     Put : PUT ABRE_P VAR COMA VAR CIERRA_P PUNTOCOMA
@@ -291,8 +301,9 @@ def p_Put(p):
             p[0] = (p[1], p[3], p[5])
     except:
         errores.append("Variable no declarada")
-        
-def p_Put2(p): ##### Modificado para resta
+
+# Producciones para posicionar el lapicero en las coordenadas dadas
+def p_Put2(p): 
     '''
     Put2 : PUT ABRE_P VAR COMA NUMERO CIERRA_P PUNTOCOMA
         | PUT ABRE_P VAR COMA RESTA NUMERO CIERRA_P PUNTOCOMA
@@ -312,7 +323,8 @@ def p_Put2(p): ##### Modificado para resta
         p_error
         
     print(nombres)
-        
+
+# Producciones para las condiciones 
 def p_condicion(p):
     '''
     condicion : Equal
@@ -320,7 +332,8 @@ def p_condicion(p):
               | Smaller
     '''
     p[0] = p[1]    
-    
+
+# Producciones para las diferentes expresiones algebraicas 
 def expresion_alge(p):
     '''
     expresion_alge : expresion_alge1
@@ -329,6 +342,7 @@ def expresion_alge(p):
     '''
     p[0] = p[1]
 
+# Producciones para el primer tipo de expresiones algebraicas
 def p_expresion_alge1(p):
 
     '''
@@ -354,6 +368,7 @@ def p_expresion_alge1(p):
 
     print(p[0])
 
+# Producciones para las segundas expresines algebraicas
 def p_expresion_alge2(p):
 
     '''
@@ -369,8 +384,8 @@ def p_expresion_alge2(p):
     elif p[4] == '/' : p[0] = p[2]/p[6]
     elif p[4] == '^' : p[0] = p[2]**p[6]
     
-
-def p_Sum(p): ##### Modificado para resta
+# Producciones posibles para la funcion de suma
+def p_Sum(p): 
     '''
     Sum : SUM ABRE_P NUMERO COMA NUMERO CIERRA_P
         | SUM ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P
@@ -401,8 +416,8 @@ def p_Sum(p): ##### Modificado para resta
     else:
         p[0] = int(p[3]) + int(p[5])
 
-
-def p_Substr(p): ####### modificado para resta 
+# Producciones posibles para la funcion de restar
+def p_Substr(p): 
     '''
     Substr : SUBSTR ABRE_P NUMERO COMA NUMERO CIERRA_P
            | SUBSTR ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P
@@ -434,7 +449,8 @@ def p_Substr(p): ####### modificado para resta
     else:
         p[0] = int(p[3]) - int(p[5])
 
-def p_Mult(p): #### Modifcado para resta
+# Producciones posibles para la funcion de multiplicacion
+def p_Mult(p): 
     '''
     Mult : MULT ABRE_P NUMERO COMA NUMERO CIERRA_P
         | MULT ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P
@@ -466,6 +482,7 @@ def p_Mult(p): #### Modifcado para resta
     else:
         p[0] = int(p[3]) * int(p[5])
 
+# Producciones posibles para la funcion de division 
 def p_Div(p):
     '''
     Div : DIV ABRE_P NUMERO COMA NUMERO CIERRA_P
@@ -501,6 +518,7 @@ def p_Div(p):
     else:
         p[0] = int(p[3]) / int(p[5])
 
+# Producciones para las variables
 def p_var(p):
     '''
     Var : VAR
@@ -513,7 +531,9 @@ def p_var(p):
     except:
         errores.append("Error. Variable no declarada")
     print(nombres)
-def p_Equal(p): ##### Modificado para resta
+
+# Producciones posibles para la funcion de comparacion equal
+def p_Equal(p): 
     '''
     Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P 
           | EQUAL ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
@@ -563,7 +583,8 @@ def p_Equal(p): ##### Modificado para resta
             p[0] = False
         
 
-def p_Greater(p): ###### Modificado para resta
+# Producciones posibles para la funcion de comparacion greater
+def p_Greater(p):
     '''
     Greater : GREATER ABRE_P NUMERO COMA NUMERO CIERRA_P 
             | GREATER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
@@ -614,8 +635,8 @@ def p_Greater(p): ###### Modificado para resta
         else:
             p[0] = False
 
-
-def p_Smaller(p): ##### Modifado para resta
+# Producciones posibles para la funcion de comparacion smaller
+def p_Smaller(p): 
     '''
     Smaller : SMALLER ABRE_P NUMERO COMA NUMERO CIERRA_P 
             | SMALLER ABRE_P RESTA NUMERO COMA NUMERO CIERRA_P 
@@ -930,8 +951,8 @@ def p_Pos(p):
         arduino += [['Pos',[-p[4],-p[7]]]]
 
     elif p[5] == '-':
-        p[0] = (p[3],-p[5])
-        arduino += [['Pos',[p[3],-p[5]]]]
+        p[0] = (p[3],-p[6])
+        arduino += [['Pos',[p[3],-p[6]]]]
 
     else:
         p[0] = (p[3],p[5])
@@ -952,9 +973,10 @@ def p_PosX(p): #### Modificado para negativo
     global arduino
     if p[2] == '-':
         p[0] = -p[3]
+        arduino += [['PosX', -p[3]]]
     else: 
         p[0] = p[2]
-    arduino += [['PosX',p[2]]]
+        arduino += [['PosX',p[2]]]
  
 # Posiciona el lapicero en la posicion equivalente al numero que recibe la funcion
 def p_PosY(p): 
@@ -969,11 +991,11 @@ def p_PosY(p):
     global arduino
     if p[2] == '-':
         p[0] = -p[3]
-        arduino.append(['PosY',-p[3]])
+        arduino += [['PosY',-p[3]]]
     else: 
         p[0] = p[2] 
 
-    arduino += [['PosY',p[2]]]
+        arduino += [['PosY',p[2]]]
 
 
 # Se verifica que el numero de color que se quiere utilizar es aceptado

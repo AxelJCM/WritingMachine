@@ -22,3 +22,32 @@ Run[UseColor 1; ContinueRight 150; Down; ContinueDown 150; ContinueRight 150; Up
 Run[UseColor 1; Down; ContinueDown 150; ContinueRight 150; Up; ContinueUp 150; Down; ContinueLeft 150;];
 
 Fin
+
+
+
+########################################################################################
+
+
+//2022 ak7
+
+Main[]
+
+Run[Down; ContinueUp 200; ContinueLeft 200; ContinueDown 400; ContinueRight 200; ContinueUp 200; Up; ContinueUp 200; ContinueLeft 300;];
+
+Run[UseColor 2; ContinueLeft 200; Down; ContinueRight 200; ContinueDown 200; ContinueLeft 200; ContinueDown 200; ContinueRight 200; Up; ContinueUp 400; ContinueRight 400;];
+
+Run[UseColor 1; Down; ContinueRight 200; ContinueDown 200; ContinueLeft 200; ContinueDown 200; ContinueRight 200; Up; ContinueUp 400; ContinueRight 100;];
+
+Run[UseColor 2; Down; ContinueRight 200; ContinueDown 200; ContinueLeft 200; ContinueDown 200; ContinueRight 200; Up; ContinueUp 400; ContinueRight 100;];
+
+Run[Beginning;];
+
+Run[ContinueLeft 500; ContinueDown 400; Down; ContinueRight 200; Up; ContinueRight 100; Down; Diag ("NO", 100); Up; Diag ("SE", 100); Down; Diag ("SO", 100); Up; Diag ("NE", 100); ContinueRight 200; ContinueDown 100;];
+
+Run[Down; ContinueUp 200; ContinueRight 200; ContinueDown 200; Up; ContinueUp 100; Down; ContinueLeft 100; Up; ContinueUp 100; ContinueRight 300;];
+
+Run[Down; ContinueDown 200; Up; ContinueUp 100; Down; Diag ("NE", 100); Up; Diag ("SO", 100); Down; Diag ("SE", 100); Up; Diag ("NO", 100); ContinueUp 100; ContinueRight 300;];
+
+Run[Down; ContinueRight 200; ContinueDown 200;];
+
+Fin

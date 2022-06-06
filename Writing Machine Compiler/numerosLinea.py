@@ -1,7 +1,7 @@
 import tkinter as tk
  
  
-# This is a scrollable text widget
+# Este es un widget de texto con barra scroll para la escritura del codigo fuente
 class ScrollText(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -49,7 +49,7 @@ class ScrollText(tk.Frame):
         self.numberLines.redraw()
 
 
-
+# Clase para los numeros de linea del codigo
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
         tk.Canvas.__init__(self, *args, **kwargs, highlightthickness=0)
