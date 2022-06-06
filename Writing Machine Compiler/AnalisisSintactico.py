@@ -70,7 +70,7 @@ def p_cuerpo2(p):
     cuerpo2 : variablexd
             | COMMENT cuerpo2
             | expresion
-            | llamadoproc
+            
             | empty
             | Put2
             | Put
@@ -102,39 +102,20 @@ def p_cuerpo3(p):
     else:
         p[0] = p[1]
 
-def p_id(p):
-    '''
-    id : ID
-    '''
-    try:
-        if ids[p[1]] == None:
-            p[0] = p[1]
-            ids[p[1]]
-        else:
-            p_error
-    except:
-        errores.append("Procedimiento ya existe")
         
 def p_procedimiento(p): # no puede haber dos o mas procedimientos con el mismo nombre
     
     '''
-    procedimiento : PARA id BRACKET1 empty BRACKET2 cuerpo2 FIN cuerpo
-                  | PARA id BRACKET1 parametro BRACKET2 cuerpo2 FIN cuerpo
+    procedimiento : PARA ID BRACKET1 empty BRACKET2 cuerpo2 FIN cuerpo
+                  | PARA ID BRACKET1 parametro BRACKET2 cuerpo2 FIN cuerpo
     '''
     
-    global contproc
+    ids[p[2]] = p[2]
     if p[8] != '$':
         p[0] = (p[2], p[4], p[6],p[8])
-    else:   
+    else:
         p[0] = (p[2], p[4],p[6])
-    ids[p[2]] = (p[4],p[6])
-    print(ids)
-        
-def p_llamadoproc(p):
-    '''
-    llamadoproc : PARA id BRACKET1 parametro BRACKET2 PUNTOCOMA
-    '''
-                
+              
 def p_main(p):
     '''
     main : MAIN BRACKET1 BRACKET2 cuerpo3 FIN cuerpo
@@ -285,8 +266,6 @@ def p_funcion(p):
             | Put empty
             | PUNTOCOMA funcion
             | empty empty
-         
-       
     '''
     if p[2] != '$':
         p[0] = p[1]
@@ -525,7 +504,7 @@ def p_var(p):
             p_error
     except:
         errores.append("Error. Variable no declarada")
-    
+    print(nombres)
 def p_Equal(p): ##### Modificado para resta
     '''
     Equal : EQUAL ABRE_P NUMERO COMA NUMERO CIERRA_P 
@@ -959,9 +938,10 @@ def p_PosY(p):
     '''
     if p[2] == '-':
         p[0] = -p[3]
+        arduino.append(['PosY',-p[3]])
     else: 
         p[0] = p[2] 
-    arduino.append(['PosY',p[2]])
+        arduino.append(['PosY',p[2]])
 
 # Se verifica que el numero de color que se quiere utilizar es aceptado
 def p_UseColor(p):
