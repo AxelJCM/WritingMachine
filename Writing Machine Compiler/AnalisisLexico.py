@@ -15,10 +15,6 @@ reservadas = {
     'While'	 : 'WHILE',
     'If'	 : 'IF',
     'EndIf'  : 'ENDIF',
-    #'True'	 : 'BOOLEAN_T',
-    #'False'	 : 'BOOLEAN_F',
-    #'Boolean' : 'BOOLEAN_TXT',
-    'Integer' : 'INTEGER_TXT',
     'Put'   : 'PUT',
     'Add'   : 'ADD',
     'ContinueUp'   : 'CONTINUEUP',
@@ -70,17 +66,14 @@ tokens = [
     'RESTA', # -
     'MULTI', # *
     'IGUAL_IGUAL', # ==
-    'NEGACION', # !
     'NUMERO', # 0...9
     'COMMENT',
-    'BOOLE', 
     'STRING', 
-    'COMILLAS'
 ] + list(reservadas.values())   # first turn into a set to remove duplicate BOOLEAN values
 # ver video de analizador lexico en el minuto 51:32 en caso de que de problemas de reconocimiento de tokens
 
 """Le dice a lex como se ven los tokens definidos anteriormente"""
-t_IGUAL = r'\='
+t_IGUAL = r'\=' # token de asignacion
 t_DIVISION = r'\/'
 t_MULTI = r'\*'
 t_SUMA = r'\+'
@@ -92,8 +85,6 @@ t_BRACKET1 = r'\['
 t_BRACKET2 = r'\]'
 t_COMA = r'\,'
 t_PUNTOCOMA = r'\;'
-t_NEGACION = r'\!'
-t_COMILLAS = r'\"'
 t_ignore = '  \t' # verificar que funciona para espacios, saltos de linea y tabulaciones
 
 

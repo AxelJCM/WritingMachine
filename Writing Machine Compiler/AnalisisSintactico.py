@@ -16,7 +16,7 @@ precedence = (
     ('right', 'PUNTOCOMA'),
     ('left', 'BRACKET2'),
     ('right', 'BRACKET1'),
-    ('right', 'IGUAL_IGUAL', 'IGUAL', 'NEGACION'), 
+    ('right', 'IGUAL_IGUAL', 'IGUAL'), 
     ('right', 'COMA'),
     ('left', 'SUMA', 'RESTA'),
     ('left', 'SMALLER', 'GREATER'),
@@ -201,6 +201,8 @@ def p_Variable2(p): ##### Modificado para resta
     if p[4] == '-':
         nombres[p[2]] = -p[5]
         p[0] = (p[1], p[2], p[3], -p[5])
+        print(p[2], p[3], -p[5])
+        print(nombres)
     else:
         nombres[p[2]] = p[4]
         p[0] = (p[1], p[2], p[3], p[4])
@@ -243,6 +245,7 @@ def p_orden(p):
             | Up empty
             | Down empty
             | Speed empty
+            | Diag empty
             | Pos empty
             | PosX empty
             | PosY empty
@@ -310,6 +313,8 @@ def p_Put2(p): ##### Modificado para resta
     
     else:
         p_error
+        
+    print(nombres)
         
 def p_condicion(p):
     '''
@@ -703,12 +708,15 @@ def p_add(p):
     '''
     Add : ADD ABRE_P Var empty empty CIERRA_P PUNTOCOMA
         | ADD ABRE_P Var COMA NUMERO CIERRA_P PUNTOCOMA
+        | ADD ABRE_P Var COMA RESTA NUMERO CIERRA_P PUNTOCOMA
         | ADD ABRE_P Var COMA expresion_alge1 CIERRA_P PUNTOCOMA
         | ADD ABRE_P Var COMA Var CIERRA_P PUNTOCOMA
         | ADD ABRE_P Var COMA expresion_alge2 CIERRA_P PUNTOCOMA
     '''
     if p[4] == '$':
         p[0]= p[3]+1
+    elif p[4] == '-':
+        p[0] == p[3] + (-p[6])
     else:
         p[0]= p[3]+ p[5]
     
@@ -816,6 +824,14 @@ def p_Speed(p):
     p[0] = p[2]
     arduino.append(['Speed', p[2]])
 
+def p_Diag(p):
+    '''
+    Diag : POS ABRE_P STRING COMA NUMERO CIERRA_P PUNTOCOMA
+    '''
+
+    p[0] = (p[3],p[5])
+    arduino.append(['Pos',[p[3],p[5]]])
+    
 # Posiciona el lapicero en la posicion X,Y que recibe la funcion
 def p_Pos(p):
     '''
